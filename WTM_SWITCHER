@@ -10,6 +10,8 @@ import requests
 import sys
 import urllib
 import urllib2
+import dfl_Zpool    ## DRAGONFLY
+
 configFile = "./WTM.json"
 topCoinLogFile = "./Logs/WTM_top_coin"
 
@@ -78,6 +80,8 @@ except:
 
 # filter WTM coins by user selection only
 for i in reversed(data):
+    if i["tag"] == "ETH":   # DRAGONFLY
+        ethRev = float(i["btc_revenue"])    # DRAGONFLY
     if i["tag"] not in includedCoins:
         data.remove(i)
 
@@ -86,6 +90,7 @@ for i in reversed(data):
 newRev = {}
 for i in data:
     newRev[i["tag"]] = float(i["btc_revenue"])
+newRev = dfl_Zpool.AddPoolData(newRev)  # DRAGONFLY
 newRev = sorted(newRev.items(), key=lambda x: x[1], reverse=True)
 #save current revenue
 RevLog = open("/home/m1/Logs/WTM_current_revenue", "w")
@@ -113,6 +118,7 @@ RevLog.close()
 newProfits = {}
 for i in data:
     newProfits[i["tag"]] = i["profitability"]
+newProfits = dfl_Zpool.AddPoolProfitData(newProfits, ethRev)    # DRAGONFLY
 newProfits = sorted(newProfits.items(), key=lambda x: x[1], reverse=True)
 
 # save current profit
