@@ -1,0 +1,7 @@
+#!/bin/bash
+curl -s https://whattomine.com/calculators.json | ./jq --compact-output '[.coins | .[] | {(.tag) : (.algorithm)}]' | grep '"":""' |while read -r "tag"
+    read -r "algorithm"; 
+do
+   #cat <<':q' >> test.file
+   echo "$tag:$algorithm" >> testfile.txt
+done
