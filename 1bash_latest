@@ -23,11 +23,21 @@ if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
 COIN="ZEC"
 
 #######################################################################################
+#			WebGui Settings
+#######################################################################################
+# Edit this section with your "DOMAINHERE" information to control your rig
+USE_WEBGUI="YES"    # This is to control your rig via a web control panel at "DOMAINHERE"
+
+USERNAME="poisonxa" # This is the username you created at "DOMAINHERE"
+
+RIGNAME="Beast6"    # This is the rigname you provided at "DOMAINHERE"
+
+#######################################################################################
 #			What to mine auto switcher settings.
 #######################################################################################
-WTM_AUTO_SWITCH="NO"  #( whattomine.com switcher) remember to disable Parallax MODE (_Parallax_MODE="NO")
+WTM_AUTO_SWITCH="YES"  #( whattomine.com switcher)
 
-WTM_PROFIT_CHECK="NO" # whattomine.com Profit check for webinfo
+WTM_PROFIT_CHECK="YES" # whattomine.com Profit check for webinfo
 
 # note!! all selected COINS must HAVE ADDRESSES below (no need address if switch=no and profit=yes )
 # select which coins you want to mine/check profit (profit switch only uses this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
@@ -60,13 +70,6 @@ TEMPERATURE_CONTROL="YES" ###### THIS IS TEMPERATURE CONTROL WILL SET FANS AND P
 WATCHDOG="YES" ##### WATCHDOG IS MEANT TO KEEP THE SYSTEM RUNNING
 
 #######################################################################################
-#			ALGO SPECIFIC OC
-#######################################################################################
-# SET OC and POWERLIMIT by ALGO (see end of 1bash for ALGO OC settings)
-# for OPT use of PAPAMPI_WTM_AUTO_SWITCH use damNmad_ALGO_SPECIFIC_OC !!
-# DONT USE THIS IF USING AUTO OVERCLOCK PLEASE
-damNmad_ALGO_SPECIFIC_OC="NO"
-#######################################################################################
 #			REMOTE - LOCAL SETTINGS
 #######################################################################################
 # LOCAL will attach the mining process to the gnome or guake terminal
@@ -78,7 +81,7 @@ LOCALorREMOTE="LOCAL"          # LOCAL  or  REMOTE
 # Remember to kill the miner select the window and press ctrl+c closing the window will not close miner.
 DualWindows="YES"
 
-TEAMVIEWER="NO"                 # YES NO
+TEAMVIEWER="YES"                 # YES NO
 
 SSH="YES"                       # YES NO
 #######################################################################################
@@ -136,8 +139,8 @@ TELEGRAM_TIMEOUT_IN_MINUTES=60  # This is how often it will alert you.
 TELEGRAM_NAME="PXA TELEGRAM"	# This is what your telegram name will be to identify your miner/group.
 TELEGRAM_MINERRESTARTS="YES"    # This will notify you of miner software restarts by Watchdog.
 TELEGRAM_SYSTEMRESTARTS="YES"   # This will notify you of system restarts by Watchdog.
-TELEGRAM_CHATID="CHATID_HERE"
-TELEGRAM_APIKEY="APIKEY_HERE"                                     
+TELEGRAM_CHATID="475279584"
+TELEGRAM_APIKEY="458417317:AAHVeP1b7ej_kyj3IT_vcQucDI-qYWQb-LI"                                   
 #######################################################################################
 # Mine XMR with CPU
 plusCPU="NO"	# YES NO
@@ -280,7 +283,7 @@ ZEN_ADDRESS="poisonxa"
 ZEN_POOL="zen.suprnova.cc"
 ZEN_PORT="3618"
 
-#For BTX
+#BTX
 BTX_WORKER="yourSuprNovaWorker"
 BTX_ADDRESS="yourSuprNovaLogin"
 BTX_POOL="stratum+tcp://btx.suprnova.cc:3629"
@@ -389,12 +392,13 @@ XMY_INTENSITY="23"
 #MONA
 MONA_WORKER=$WORKERNAME
 MONA_ADDRESS="poisonxa"
-MONA_POOL="stratum+tcp://mona.suprnova.cc:2995"
+MONA_POOL="mona.suprnova.cc"
+MONA_PORT="2995"
 
 #XVG
 XVG_WORKER=$WORKERNAME
 XVG_ADDRESS="DA2TmgUdVmWJxgLwgCiwPAUiADritpn9ge"
-XVG_POOL="stratum+tcp://yiimp.eu:3777"
+XVG_POOL="stratum+tcp://yiimp.eu:3737"
 # PASSWORD = SYMBOL
 XVG_PASSWORD="c=XVG"
 
@@ -550,163 +554,4 @@ SMART_POOL="stratum+tcp://pool-eu.smartcash.cc:3333"
 SMART_INTENSITY="25"
 
 
-######################################################################################
-# this has been abandon may or may not work use if you want.
-# SALFTER_NICEHASH_PROFIT_SWITCHING & SALFTER_MPH_PROFIT_SWITCHING Settings
-
-CURRENCY=USD
-
-POWER_COST=0.20
-
-MINIMUM_PROFIT=0.0
-
-MPH_USERNAME=replace_with_your_MPH_username
-
-PAYMENT_ADDRESS=replace_with_your_BTC_address
-
-WORKER_NAME=$WORKERNAME
-
-PROFIT_CHECK_TIMEOUT=600
-########################################################################################
 fi
-########################################################################################
-# + contributors:
-
-# PoisonXA For Fixing Bugs And Adding Improvments To Version 1.4
-#
-
-# BaliMiner: BaliMiner_TELEGRAM_ALERTS
-# BaliMiner BTC address:  1HbzxQ6AVeWYvFm322KtxZcJJLAqfJHpN8
-
-# Leenoox For his sexy colours ;)
-
-# damNmad: damNmad_ALGO_SPECIFIC_OC
-#          nvOC discord channel https://discordapp.com/invite/8YDFEvY
-#          Added Lots of COIN selections
-#          Alternative telegram alert 
-# damNmad BTC address:  1Mtf6K7c3ZhBDcPz91c4wcQ95DxLn88zC
-
-# IAmNotAJeep: IAmNotAJeep_and_Maxximus007_WATCHDOG
-#              Methods for improved system stability
-# IAmNotAJeep BTC address:  13PnEKpfVzNseWkrm6LoueKcCMPj74zPv7
-
-# kk003: Alternative telegram alert ( very extensive )
-#        Telegram Setup Video           
-# kk003 BTC address:  196pMZnByg5UaPvJPK67ErAHgDPeSyu8QV
-
-# lost_post: upPASTE (timeout based _Parallax_ Mode auto-updating)
-#            Methods for separating settings and implementation
-#            Methods for AUTO_UPDATE
-# lost_post BTC address:  1GFTEtLLvvwoa4ogDntD5oaXBgJLYokzTC
-
-# Maxximus007: Maxximus007_AUTO_TEMPERATURE_CONTROL 
-#              Expectless 1bash 
-#	       IAmNotAJeep_and_Maxximus007_WATCHDOG
-#		PoisonXA Added extra sensitivity to watch dog
-# Maxximus007 BTC address:  1JAFefdPVAs3WQiTqnYWbsjifJAEjQcjQ8
-
-# meligo: FAQ website nvoc-mining-os.com        
-# meligo BTC address:  1AwUJMztX2ARZp8ULqR5UsK3b27om8j3vq
-
-# papampi: PAPAMPI_WTM_AUTO_SWITCH
-#	   PAPAMPI_WTM_PROFIT_CHECK
-#	   added multiple COIN selections
-#          Alternative telegram alert and guide         
-# papampi BTC address:  1NsnsnqkkVuopTGvUSGrkMhhug8kg6zgP9
-
-# _Parallax_:  _Parallax_ Mode ( wget + pastebin oneBash updating )
-#              Methods for image size reduction
-#              Methods for logging and system enhancements (with next version)     
-# _Parallax_ BTC address:  329k8rDgxHHcHAEXfwznqv25Go5LERGWLp
-
-# salfter: SALFTER_NICEHASH_PROFIT_SWITCHING
-#          SALFTER_MPH_PROFIT_SWITCHING
-# salfter BTC address:  1TipsGocnz2N5qgAm9f7JLrsMqkb3oXe2
-
-# xleejohnx: SRR support
-# xleejohnx BTC address:  1EY5WbiW3YkWanSKEGcjCETpQfCR81wc56
-
-# Open a terminal to launch miner; will auto launch on boot
-
-# firefox has an OP bookmark; look at the OP for more information
-
-# USE ALL CAPS
-########################################################################################
-# CHOOSE COIN FROM:
-
-#ALGO - X11-GOST
-######### SIB
-
-#ALGO - CryptoNight
-######### XMR  KRB  ETN
-
-#ALGO - Skunk 
-######### SIGT  ZPOOL_SKUNK  
-
-#ALGO - Ethash
-######### ETH  ETC  EXP  UBQ  MUSIC  SOIL
-
-#ALGO - Equihash
-######### ZEC  ZEN  HUSH  ZCL  KMD  BTG  MNX
-
-#ALGO - NiceHash
-######### DUAL_NICEHASH (Ethash + Decred)  NICE_EQUIHASH  NICE_ETHASH
-
-#ALGO - X13
-######### ONION
-
-#ALGO - Neoscrypt
-######### PXC  FTC  ORB
-
-#ALGO - Myriad-Groestl
-######### XMY
-
-#ALGO - LYRA2V2
-######### MONA  VTC  ZCOIN
-
-#ALGO - SKEIN
-######### DGB
-
-#ALGO - GROESTL
-######### GRS
-
-#ALGO - SIA
-######### SIA
-  
-#ALGO - LBRY
-######### LBC (LBRY)
-
-#ALGO - Decred
-######### DCR
-
-#ALGO - Pascal
-######### PASC PASL
-
-#ALGO - timetravel10
-######### BTX
-
-#TYPE - Zpool (auto converts to BTC)
-######### ZPOOL_LYRA2V2  ZPOOL_BLAKE2S  ZPOOL_EQUIHASH  ZPOOL_LBC  ZPOOL_NEOSCRYPT  ZPOOL_LBRY  ZPOOL_SKEIN
-
-#TYPE - DUAL Claymore (ETHASH + DCR/LBC/PASC/PASL/SC)
-######### DUAL_ETH_DCR    DUAL_ETH_PASC    DUAL_ETH_PASL    DUAL_ETH_LBC    DUAL_ETH_SC
-######### DUAL_ETC_DCR    DUAL_ETC_PASC    DUAL_ETC_PASL    DUAL_ETC_LBC    DUAL_ETC_SC
-######### DUAL_EXP_DCR    DUAL_EXP_PASC    DUAL_EXP_PASL    DUAL_EXP_LBC    DUAL_EXP_SC
-######### DUAL_MUSIC_DCR  DUAL_MUSIC_PASC  DUAL_MUSIC_PASL  DUAL_MUSIC_LBC  DUAL_MUSIC_SC
-######### DUAL_UBQ_DCR    DUAL_UBQ_PASC    DUAL_UBQ_PASL    DUAL_UBQ_LBC    DUAL_UBQ_SC
-######### DUAL_SOIL_DCR   DUAL_SOIL_PASC   DUAL_SOIL_PASL   DUAL_SOIL_LBC   DUAL_SOIL_SC
-
-#TYPE - Miningpoolhub Auto Coin Switches based on Algo
-######### MPH_ETHASH  MPH_EQUIHASH
-
-#TYPE - Profit Switchers
-######### SALFTER_NICEHASH_PROFIT_SWITCHING
-######### SALFTER_MPH_PROFIT_SWITCHING
-
-### NEW COINS THIS VERSION:
-
-######### BTCZ
-######### SMART
-########################################################################################
-
-
