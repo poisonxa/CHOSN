@@ -1,0 +1,171 @@
+#!/bin/bash
+########## DONT TOUCH BELOW THIS LINE ############
+source ~/1bash
+source ~/Resources
+3Main_Coin_Sequence(){
+CHECK_CARD
+CHECK_I
+miner_fix2
+#Paths of the miners
+$GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
+$ETHMiner='/home/m1/Miners/eth/ethminer_12dev2/ethminer'
+$claymore='/home/m1/Miners/eth/$CLAYMORE_VERSION/ethdcrminer64'
+
+$ccminer='/home/m1/Miners/ccminer/ccminer'
+$alccminer = '/home/m1/Miners/alccminer/ccminer'
+$zm='/home/m1/Miners/zec/zm/5_7/zm'
+$optiminer='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
+$ewbf='/home/m1/Miners/zec/v3_4/ewbf'
+$vertminer='/home/m1/Miners/vertminer/ccminer'
+$kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
+$tpccminer='/home/m1/Miners/TPccminer/ccminer'
+########## DONT TOUCH ABOVE THIS LINE ############
+#update password arguments , extend 1bash with per coin password
+case $Coin in 
+	"BTG")
+	Set_Miner $BTG_ADDRESS $BTG_WORKER $BTG_POOL $BTG_PORT $MINER_PWD "equihash";;
+	"ONION")
+	Set_Miner $ONION_ADDRESS "NoWorker" $ONION_POOL "NoPort" $ONION_PASSWD "x13";;
+	"NICE_ETHASH")
+	Set_Miner $BTC_ADDRESS $NICE_ETHASH_WORKER $GENOIL_NICE_ETHASH_POOL "NoPort" "algo";; ##look into because of multiple pools possible for 1 coin
+	"SMART")
+	Set_Miner $SMART_ADDRESS $SMART_WORKER $SMART_POOL "NoPort" $SMART_PASSWD  "keccak";;
+	"MINEXCOIN")
+	Set_Miner $MNX_ADDRESS $MNX_WORKER $MNX_POOL $MNX_PORT $MNX_PASSWD "optiminer";;
+	"ZEC")
+	Set_Miner $ZEC_ADDRESS $ZEC_WORKER $ZEC_POOL $ZEC_PORT $ZEC_PASSWD "equihash";;
+	"ZCL")
+	Set_Miner $ZCL_ADDRESS $ZCL_WORKER $ZCL_POOL $ZCL_PORT $ZCL_PASSWD"equihash";;
+	"BTCZ")
+	Set_Miner $BTCZ_ADDRESS $BTCZ_WORKER $BTCZ_POOL $BTCZ_PORT $BTCZ_PASSWD "equihash";;
+	"KMD")
+	Set_Miner $KMD_ADDRESS $KMD_WORKER $KMD_POOL $KMD_PORT $KMD_PASSWD "equihash";;
+	"ZEN")
+	Set_Miner $ZEN_ADDRESS $ZEN_WORKER $ZEN_POOL $ZEN_PORT $ZEN_PASSWD "equihash";;
+	"HUSH")
+	Set_Miner $HUSH_ADDRESS $HUSH_WORKER $HUSH_POOL $HUSH_PORT $HUSH_PASSWD "equihash";;
+	"MPH_EQUIHASH")
+	Set_Miner $MPH_USERNAME $MPH_WORKER $MPH_EQUIHASH_POOL $MPH_EQUIHASH_PORT $MPH_PASSWD "equihash";;
+	"ZPOOL_EQUIHASH")
+	Set_Miner $BTC_ADDRESS "NoWorker" $ZPOOL_EQUIHASH_POOL $ZPOOL_EQUIHASH_PORT "x" "zpool-equihash";;
+	"ZCOIN")
+	Set_Miner $ZCOIN_ADDRESS $ZCOIN_WORKER $ZCOIN_POOL "NoPort" $ZCOIN_PASSWD "lyra2z";;
+	"BTX")
+	Set_Miner $BTX_ADDRESS $BTX_WORKER $BTX_POOL "NoPort" $BTX_PASSWD "timetravel10";;
+	"ZPOOL_lyra2v2")
+	Set_Miner $BTC_ADDRESS "NoWorker" $ZPOOL_lyra2v2 "NoPort" "x" "lyra2v2";;
+	"ZPOOL_LBRY")
+	Set_Miner $BTC_ADDRESS "NoWorker" $ZPOOL_LBRY_POOL "NoPort" "x" "lbry";;
+	"ZPOOL_NEOSCRYPT")
+	Set_Miner $BTC_ADDRESS "NoWorker" $ZPOOL_NEOSCRYPT_POOL "NoPort" "x" "neoscrypt";;
+	"ZPOOL_SKEIN")
+	Set_Miner $BTC_ADDRESS "NoWorker" $ZPOOL_SKEIN_POOL "NoPort" "x" "skein";;
+	"ZPOOL_BLAKE2S")
+	Set_Miner $BTC_ADDRESS "NoWorker" $ZPOOL_BLAKE2S_POOL "NoPort" "x" "blake2s";;
+	"MONA")
+	Set_Miner $MONA_ADDRESS $MONA_WORKER $MONA_POOL "NoPort" $MONA_PASSWD "lyra2v2Mona";;
+	"XVG")
+	Set_Miner $XVG_ADDRESS $XVG_WORKER $XVG_POOL "NoPort" $WVG_PASSWD "x17";;
+	"DMD")
+	Set_Miner $DMD_ADDRESS $DMD_WORKER $DMD_POOL "NoPort" $DMD_PASSWD "dmd-gr";;
+	"GRS")
+	Set_Miner $GRS_ADDRESS $GRS_WORKER $GRS_POOL "NoPort" $GRS_PASSWD "groestl";;
+	"XMY")
+	Set_Miner $XMY_ADDRESS $XMY_WORKER $XMY_POOL "NoPort" $XMY_PASSWD "myr-gr";;
+	"VTC")
+	Set_Miner $VTC_ADDRESS $VTC_WORKER $VTC_POOL "NoPort" $VTC_PASSWD "lyra2v2";; ##Update 1BASH with the 2 options
+	"DGB")
+	Set_Miner $DGB_ADDRESS "NoWorker" $DBG_POOL "NoPort" $DBG_PASSWD "skein";; #Update 1BASH with the 2 options
+	"ZPOOL_SKUNK")
+	Set_Miner $SKUNK_ADDRESS $SKUNK_WORKER $SKUNK_POOL "NoPort" $SKUNK_PASSWD "skunk";; #Uupdate 1bash with the 2 options
+	"LBC")
+	Set_Miner $LBC_ADDRESS $LBC_WORKER $LBC_POOL "NoPort" $LBC_PASSWD "lbry";;
+	"FTC")
+	Set_Miner $FTC_ADDRESS $FTC_WORKER $FTC_POOL "NoPort" $MINER_PWD "neoscrypt";;
+	"KRB")
+	Set_Miner $KRB_ADDRESS $KRB_WORKER $KREB_POOL "NoPort" $MINER_PWD "cryptonight";;
+	"ETN")
+	Set_Miner $ETN_ADDRESS $ETN_WORKER $ETN_POOL "NoPort" $MINER_PWD "cryptonight";;
+	
+esac
+
+
+Set_Miner() {
+
+	$address = $1
+	$workerName = $2
+	$poolName = $3
+	$poolPort = $4
+	$password = $5
+	$algo = $6
+
+	$pool = poolName + ":" + poolPort
+
+	if (workerName -ne "NoWorker") # if Noworker than no name and just address, most of the cases a worker is given
+	then
+	case $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT in
+		"DOT")
+		$ADDR = address + "." + workerName;;
+		"SLASH")
+		$ADDR = address + "/" + workerName;;
+	esac
+	else #no worker is given
+		$ADDR = address;
+	fi
+
+	case algo in
+		"x13")
+			screen -dmSL miner $ccminer -a x13 -o $pool -u $ADDR -p $password -i $OCIT;; 
+		"equihash")
+			screen -dmSL miner $zm --server $poolName --user $ADDR --pass $password --port $poolPort  --time $ZM_OPTS ;;
+		"keccak")
+			screen -dmSL miner $ccminer -a keccak -o $pool -u $ADDR -p $password -i $OCIT;;
+		"optiminer")
+			export GPU_FORCE_64BIT_PTR=1
+			screen -dmSL miner $optiminer -s $pool -u $ADDR -p $password -a equihash96_5 --watchdog-timeout 30 --watchdog-cmd "./watchdog-cmd.sh" $@;;
+		"zpool-equihash")
+			screen -dmSL miner $zm --server $pool --user $address --pass $password --port $poolPort;;
+		"lyra2z")
+			screen -dmSL miner $alccminer -a lyra2z -o $pool -u $ADDR -p $password -i $OCIT;;
+		"timetravel10")
+			screen -dmSL miner $alccminer -a timetravel10 -o $pool -u $ADDR -p $password -i $OCIT;;
+		"lyra2v2")
+			screen -dmSL miner $ccminer -a lyra2v2 --cpu-priority 0 -o $pool --cpu-priority 0_POOL -u $address -p $password -i $ZPOOL_lyra2v2 --cpu-priority 0 -i $OCIT
+		"lbry")
+			screen -dmSL miner $ccminer -a lbry -o $pool -u $address -p $password -i $OCIT;;
+		"neoscrypt")
+			screen -dmSL miner $ccminer -a neoscrypt -o $pool -u $address -p $password -i $OCIT;;
+		"skein")
+			screen -dmSL miner $ccminer -a skein -o $pool -u $address -p $password -i $OCIT;;
+		"blake2s")
+			screen -dmSL miner $ccminer -a blake2s -o $pool -u $address -p $password -i $OCIT;;
+		"lyra2v2Mona")
+			miner_start1
+			screen -dmSL miner $alccminer -a lyra2v2 --cpu-priority 0 -o $pool -u $ADDR -p $password -i $OCIT;;
+		"x17")
+			miner_start1
+			screen -dmSL miner $alccminer -a x17 --cpu-priority 0 -o $pool -u $ADDR -p $password -i $OCIT;;
+		"dmd-gr")
+			screen -dmSL miner $ccminer -a dmd-gr -o $pool -u $ADDR -p $password -i $OCIT;;
+		"groestl")
+			screen -dmSL miner $ccminer -a groestl -o $pool -u $ADDR -p $password -i $OCIT;;
+		"myr-gr")
+			screen -dmSL miner $ccminer -a myr-gr -o $pool -u $ADDR -p $password -i $OCIT;;
+		"skunk")
+			screen -dmSL miner $tpccminer -a skunk -o $pool -u $ADDR -p $password -i $OCIT;;
+		"cryptonight")
+			screen -dmSL miner $tpccminer -o $pool -u $ADDR -p $password ;;
+	esac
+	
+
+	if [ $LOCALorREMOTE == "LOCAL" ]
+	then
+	bash '/home/m1/Miners/Miner_Starter'
+	fi
+	
+	while [ $BITCOIN == "theGROUND" ]
+	do
+	sleep 60
+	done
+
+}
