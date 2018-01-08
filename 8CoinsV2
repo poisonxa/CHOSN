@@ -5,7 +5,7 @@ source ~/Resources
 3Main_Coin_Sequence(){
 CHECK_CARD
 CHECK_I
-miner_fix2
+
 #Paths of the miners
 $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
 $ETHMiner='/home/m1/Miners/eth/ethminer_12dev2/ethminer'
