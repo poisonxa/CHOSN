@@ -5,7 +5,7 @@ source ~/Resources
 3Main_Coin_Sequence(){
 CHECK_CARD
 CHECK_I
-
+miner_fix2
 #Paths of the miners
 $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
 $ETHMiner='/home/m1/Miners/eth/ethminer_12dev2/ethminer'
@@ -156,16 +156,5 @@ Set_Miner() {
 		"cryptonight")
 			screen -dmSL miner $tpccminer -o $pool -u $ADDR -p $password ;;
 	esac
-	
-
-	if [ $LOCALorREMOTE == "LOCAL" ]
-	then
-	bash '/home/m1/Miners/Miner_Starter'
-	fi
-	
-	while [ $BITCOIN == "theGROUND" ]
-	do
-	sleep 60
-	done
 
 }
