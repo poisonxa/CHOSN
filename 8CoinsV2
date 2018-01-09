@@ -7,7 +7,7 @@ CHECK_CARD
 CHECK_I
 miner_fix2
 
-#Paths of the miners
+######## Paths of the miners ##################
 
 $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
 $ETHMiner='/home/m1/Miners/eth/ethminer_12dev2/ethminer'
@@ -26,10 +26,10 @@ $tpccminer='/home/m1/Miners/TPccminer/ccminer'
 ##################################################
 COIN=$COIN
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
-  echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
+  echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/calculators.json
 fi
   # this commande requiere insatallation jq with: sudo apt install jq
-ALGO=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+ALGO=$(cat $HOME/CoinToAlgo/calculators.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
 #####################################################
 
 
