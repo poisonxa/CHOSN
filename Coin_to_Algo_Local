@@ -1,0 +1,9 @@
+#!/bin/bash 
+COIN="ETN"
+if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
+  echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
+fi
+
+ALGO=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+echo $ALGO
+
