@@ -1,5 +1,6 @@
 #!/bin/bash 
-COIN=$(cat $HOME/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+source ~/1bash
+COIN=$COIN
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
   echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
 fi
