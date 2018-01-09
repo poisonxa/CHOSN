@@ -6,11 +6,12 @@ source ~/Resources
 CHECK_CARD
 CHECK_I
 miner_fix2
+
 #Paths of the miners
+
 $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
 $ETHMiner='/home/m1/Miners/eth/ethminer_12dev2/ethminer'
 $claymore='/home/m1/Miners/eth/$CLAYMORE_VERSION/ethdcrminer64'
-
 $ccminer='/home/m1/Miners/ccminer/ccminer'
 $alccminer = '/home/m1/Miners/alccminer/ccminer'
 $zm='/home/m1/Miners/zec/zm/5_7/zm'
@@ -19,7 +20,19 @@ $ewbf='/home/m1/Miners/zec/v3_4/ewbf'
 $vertminer='/home/m1/Miners/vertminer/ccminer'
 $kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
 $tpccminer='/home/m1/Miners/TPccminer/ccminer'
+
 ########## DONT TOUCH ABOVE THIS LINE ############
+
+##################################################
+COIN=$COIN
+if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
+  echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
+fi
+  # this commande requiere insatallation jq with: sudo apt install jq
+ALGO=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+#####################################################
+
+
 #update password arguments , extend 1bash with per coin password
 case $Coin in 
 	"BTG")
