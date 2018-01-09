@@ -3,7 +3,6 @@ COIN=$(cat $HOME/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
   echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
 fi
-
-ALGO=$(cat $HOME/CoinToAlgo/WTM.json | ./jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
-echo $ALGO
-
+  # this commande requiere insatallation jq with: sudo apt install jq
+algo=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+echo $algo
