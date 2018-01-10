@@ -10,7 +10,7 @@ miner_fix2
 ######## Paths of the miners ##################
 
 $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
-$ETHMiner='/home/m1/Miners/eth/ethminer_12dev2/ethminer'
+$ETHMiner='/home/m1/Miners/eth/ethminer/ethminer' # ethminer is bin only update is simply
 $claymore='/home/m1/Miners/eth/$CLAYMORE_VERSION/ethdcrminer64'
 $ccminer='/home/m1/Miners/ccminer/ccminer'
 $alccminer = '/home/m1/Miners/alccminer/ccminer'
