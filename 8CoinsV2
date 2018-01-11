@@ -34,17 +34,17 @@ COINLISTWTM=$(jq '.coins | .[] | .tag' $HOME/CoinToAlgo/WTM.json | sed 's/\"//' 
     echo " le coin est $COIN" # test
     echo " l'algo est $ALGO" # test
 if [ "$COIN" != "$COINLISTWTM" ] ; then
-    echo " coin not found "
+    echo " coin not found " # test
 elif [ "$ALGO" == 'Equihash' ] ;  then 
-    echo " le mineur sera zm " #minersoft=$($HOME/Miners/zec/zm/5_8/zm)    # $zm in 8coinsV2
+    echo " le mineur sera zm " #minersoft=$($HOME/Miners/zec/zm/5_8/zm)    # $zm in 8coinsV2 # test
 elif [ "$COIN" == 'ETH' ] ; then 
-    echo " le mineurs sera ethermine " #minersoft=$($HOME/Miners/eth/ethminer_12dev2/ethminer) # $ETHMiner in 8coinsV2
+    echo " le mineurs sera ethermine " #minersoft=$($HOME/Miners/eth/ethminer_12dev2/ethminer) # $ETHMiner in 8coinsV2 # test
 elif [ "$ALGO" == 'Xevan' ] ;  then 
-    echo " le mineur sera ccminer-xevan " #minersoft=$($HOME/Miners/ccminer-xevan/ccminer-xevan)  
+    echo " le mineur sera ccminer-xevan " #minersoft=$($HOME/Miners/ccminer-xevan/ccminer-xevan)   # test
 elif [ "$ALGO" != 'Equihash' ] | [ "$COIN" != 'ETH' ] | [ "$COIN" != 'XEVAN' ]; then 
-    echo " le miner sera ccminer " #minersoft=$( $HOME/Miners/ccminer/ccminer ) # $ccminer in 8coinsV2
+    echo " le miner sera ccminer " #minersoft=$( $HOME/Miners/ccminer/ccminer ) # $ccminer in 8coinsV2 # test
 elif [ "$COIN" != "$COINLISTWTM" ] ; then
-    echo " coin not found "
+    echo " coin not found " # test
 fi
 
 
