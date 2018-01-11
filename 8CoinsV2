@@ -9,17 +9,17 @@ miner_fix2
 
 ######## Paths of the miners ##################
 
-$GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
+# $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
 $ETHMiner='/home/m1/Miners/eth/ethminer/ethminer' # ethminer is updating the bin only is simple
-$claymore='/home/m1/Miners/eth/$CLAYMORE_VERSION/ethdcrminer64'
+# $claymore='/home/m1/Miners/eth/$CLAYMORE_VERSION/ethdcrminer64'
 $ccminer='/home/m1/Miners/ccminer/ccminer'
-$alccminer = '/home/m1/Miners/alccminer/ccminer'
+# $alccminer = '/home/m1/Miners/alccminer/ccminer'
 $zm='/home/m1/Miners/zec/zm/zm'		# zm is updating the bin only is simple
 $optiminer='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
 $ewbf='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf is updating the bin only is simple
-$vertminer='/home/m1/Miners/vertminer/ccminer'
-$kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
-$tpccminer='/home/m1/Miners/TPccminer/ccminer'
+# $vertminer='/home/m1/Miners/vertminer/ccminer'
+# $kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
+# $tpccminer='/home/m1/Miners/TPccminer/ccminer'
 
 ########## DONT TOUCH ABOVE THIS LINE ############
 
