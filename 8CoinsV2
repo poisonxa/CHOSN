@@ -24,12 +24,31 @@ $tpccminer='/home/m1/Miners/TPccminer/ccminer'
 ########## DONT TOUCH ABOVE THIS LINE ############
 
 ##################################################
-COIN=$COIN
+COIN=$(cat $HOME/1bash | grep COIN= | sed s/COIN=// | sed  's/\"//' | sed 's/\"//')
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
-  echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/calculators.json
+    echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
 fi
-  # this commande requiere insatallation jq with: sudo apt install jq
-ALGO=$(cat $HOME/CoinToAlgo/calculators.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+COIN=$(cat $HOME/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+ALGO=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+COINLISTWTM=$(jq '.coins | .[] | .tag' $HOME/CoinToAlgo/WTM.json | sed 's/\"//' | sed 's/\"//')
+    echo " le coin est $COIN" # test
+    echo " l'algo est $ALGO" # test
+if [ "$COIN" != "$COINLISTWTM" ] ; then
+    echo " coin not found "
+elif [ "$ALGO" == 'Equihash' ] ;  then 
+    echo " le mineur sera zm " #minersoft=$($HOME/Miners/zec/zm/5_8/zm)    # $zm in 8coinsV2
+elif [ "$COIN" == 'ETH' ] ; then 
+    echo " le mineurs sera ethermine " #minersoft=$($HOME/Miners/eth/ethminer_12dev2/ethminer) # $ETHMiner in 8coinsV2
+elif [ "$ALGO" == 'Xevan' ] ;  then 
+    echo " le mineur sera ccminer-xevan " #minersoft=$($HOME/Miners/ccminer-xevan/ccminer-xevan)  
+elif [ "$ALGO" != 'Equihash' ] | [ "$COIN" != 'ETH' ] | [ "$COIN" != 'XEVAN' ]; then 
+    echo " le miner sera ccminer " #minersoft=$( $HOME/Miners/ccminer/ccminer ) # $ccminer in 8coinsV2
+elif [ "$COIN" != "$COINLISTWTM" ] ; then
+    echo " coin not found "
+fi
+
+
+
 #####################################################
 
 
