@@ -13,7 +13,7 @@
  - temperature control
  - cpu mining and auto reboot
            
- 8coinsV2 minors management
+ 8coinsV2 soft setting mining management
 
  coincfg coin settings ( new file )
  - name of the coin
