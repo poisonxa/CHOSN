@@ -28,7 +28,7 @@ COIN=$COIN
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
     echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
 fi
-COIN=$(cat $HOME/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+COIN=$COIN
 ALGO=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
 COINLISTWTM=$(jq '.coins | .[] | .tag' $HOME/CoinToAlgo/WTM.json | sed 's/\"//' | sed 's/\"//')
     echo " le coin est $COIN" # test
