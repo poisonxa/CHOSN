@@ -24,7 +24,7 @@ $tpccminer='/home/m1/Miners/TPccminer/ccminer'
 ########## DONT TOUCH ABOVE THIS LINE ############
 
 ##################################################
-COIN=$(cat $HOME/1bash | grep COIN= | sed s/COIN=// | sed  's/\"//' | sed 's/\"//')
+COIN=$COIN
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
     echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
 fi
