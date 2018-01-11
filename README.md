@@ -15,7 +15,7 @@
            
  8coinsV2 minors management
 
- coincfg corner settings ( new file )
+ coincfg coin settings ( new file )
  - name of the coin
  - worker name
  - address
