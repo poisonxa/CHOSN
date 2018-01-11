@@ -1,11 +1,11 @@
 #!/bin/bash
-bash_new="$HOME/Copy/1bash_latest"
-bash_old="$HOME/Copy/1bash"
-oc_new="$HOME/1bash_latest"
-oc_old="$HOME/1bash"
+bash_new="$HOME/1bash_latest"
+bash_old="$HOME/1bash"
+oc_new="$HOME/1oc_latest"
+oc_old="$HOME/1oc"
 
-chmod +777 $HOME/Copy/1bash_latest
-chmod +777 $HOME/Copy/1bash
+chmod +777 $HOME/1bash_latest
+chmod +777 $HOME/1bash
 chmod +777 $HOME/1oc_latest
 chmod +777 $HOME/1oc
 
