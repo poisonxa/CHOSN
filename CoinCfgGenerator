@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COINLIST=$(./jq '.coins | .[] | .tag' calculators.json | sed 's/\"//' | sed 's/\"//')
+COINLIST=$(./jq '.coins | .[] | .tag' calculators.json | sed 's/\"//' | sed 's/\"//' $HOME/CoinToAlgo/WTM.json )
 WKN=$(echo '_WORKER=$WORKERNAME')
 ADDREPL=$(echo '_ADDRESS="replace_with_your_ZCL_address"')
 POOLREPL=$(echo '_POOL="replace_with_your_pool_and_port"')
