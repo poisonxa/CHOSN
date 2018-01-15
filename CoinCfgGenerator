@@ -5,11 +5,11 @@ WKN=$(echo '_WORKER=$WORKERNAME')
 ADDREPL=$(echo '_ADDRESS="replace_with_your_ZCL_address"')
 POOLREPL=$(echo '_POOL="replace_with_your_pool_and_port"')
 PASSREPL=$(echo '_PASSWORD="x"')
-SYMPREPL=$(echo '_SYMBOL=" "')
+SYMBREPL=$(echo '_SYMBOL=" "')
 SPACREPL=$(echo ' ')
 
 for COINGEN  in $COINLIST; do
 
-echo -e "#----  fill in your coins and uncomment the lines concerned  ----\n#$COINGEN\n#${COINGEN}$WKN\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$PASSREPL\n#${COINGEN}$SYMPREL\n#$SPACREPL"  >> coincfg
+echo -e "#----  fill in your coins and uncomment the lines concerned  ----\n#$COINGEN\n#${COINGEN}$WKN\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$PASSREPL\n#${COINGEN}$SYMBREPL\n#$SPACREPL"  >> coincfg
 
 done
