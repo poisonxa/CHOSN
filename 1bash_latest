@@ -20,7 +20,7 @@ if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
 #### COIN SELECTION ####
 #######################################################################################
 
-COIN="ZEC"
+COIN="XVG"
 
 #######################################################################################
 #			WebGui Settings
@@ -139,8 +139,8 @@ TELEGRAM_TIMEOUT_IN_MINUTES=60  # This is how often it will alert you.
 TELEGRAM_NAME="PXA TELEGRAM"	# This is what your telegram name will be to identify your miner/group.
 TELEGRAM_MINERRESTARTS="YES"    # This will notify you of miner software restarts by Watchdog.
 TELEGRAM_SYSTEMRESTARTS="YES"   # This will notify you of system restarts by Watchdog.
-TELEGRAM_CHATID="475279584"
-TELEGRAM_APIKEY="458417317:AAHVeP1b7ej_kyj3IT_vcQucDI-qYWQb-LI"                                   
+TELEGRAM_CHATID="CHATID"
+TELEGRAM_APIKEY="BOT_APIKEY"                                   
 #######################################################################################
 # Mine XMR with CPU
 plusCPU="NO"	# YES NO
