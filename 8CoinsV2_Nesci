@@ -8,8 +8,8 @@
 ##########################################################################
 ##########################################################################
 
-CHOSVN_Ver="nvOC v0000-0.0 - By NESCI,Moi162001"
-CHOSVN_temp_ver="v0000-.0.001"   # Do not edit this
+CHOSN_Ver="CHOSN v0000-0.0 - By NESCI,Moi162001"
+CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 
 # Changelog:
 #
