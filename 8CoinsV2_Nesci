@@ -49,12 +49,13 @@ miner_fix2
 
 $ETHMiner='/home/m1/Miners/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
 $ccminer='/home/m1/Miners/ccminer/ccminer' # -All other
+$ccminer='/home/m1/Miners/ccminer-xevan/ccminer' # special ccminer-xevan
 $zm='/home/m1/Miners/zec/zm/zm'		# zm this program is a binary the update is simple? - Equihash
 $ewbf='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
 $optiminer='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
 $alccminer = '/home/m1/Miners/alccminer/ccminer'
-$cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
 
+# $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
 # $vertminer='/home/m1/Miners/vertminer/ccminer'
 # $kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
 # $tpccminer='/home/m1/Miners/TPccminer/ccminer'
