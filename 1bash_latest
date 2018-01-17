@@ -14,7 +14,7 @@ if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
 #######################################################################################
 ###### LIST OF SUPPORTED COINS AND CONTRIBUTORS ARE LOCATED IN THE BOTTOM OF THIS DOCUMENT
 
-#				NVOC SETTINGS BELOW THIS LINE
+#				CHOSN SETTINGS BELOW THIS LINE
 
 #######################################################################################
 #### COIN SELECTION ####
@@ -265,12 +265,6 @@ ZCL_ADDRESS="replace_with_your_ZCL_address"
 ZCL_POOL="us.zclmine.pro"
 ZCL_PORT="9009"
 
-#For Nice Equihash
-NICE_EQUIHASH_WORKER=$WORKERNAME
-NICE_EQUIHASH_ADDRESS=$BTC_ADDRESS
-NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
-NICE_EQUIHASH_PORT="3357"
-
 #KMD
 KMD_WORKER=$WORKERNAME
 KMD_ADDRESS="replace_with_your_KMD_address"
@@ -286,8 +280,8 @@ ZEN_PORT="3618"
 #BTX
 BTX_WORKER="yourSuprNovaWorker"
 BTX_ADDRESS="yourSuprNovaLogin"
-BTX_POOL="stratum+tcp://btx.suprnova.cc:3629"
-BTX_INTENSITY="21"
+BTX_POOL="btx.suprnova.cc:3629"
+BTX_PORT="3629"
 
 #ZDASH or HUSH
 HUSH_WORKER=$WORKERNAME
@@ -298,96 +292,63 @@ HUSH_PORT="3757"
 #XZC or ZCOIN
 ZCOIN_WORKER="Your Miningpoolhub Worker Name"
 ZCOIN_ADDRESS="replace_with_your_miningpoolhub_account login name"
-ZCOIN_POOL="us-east.lyra2z-hub.miningpoolhub.com:20581"
+ZCOIN_POOL="us-east.lyra2z-hub.miningpoolhub.com"
+ZCOIN_PORT="20581"
 
 #ETN
 ETN_WORKER=$WORKERNAME
 ETN_ADDRESS="yourETNAddress"
-ETN_POOL="STRATUM/POOL:PORT"
+ETN_POOL="ETNPOOL"
+ETN_PORT=""
 
 #KRB
 KRB_WORKER=$WORKERNAME
 KRB_ADDRESS="replace_with_your_KRB_address"
-KRB_POOL="stratum+tcp://krb.sberex.com:5555"
+KRB_POOL="krb.sberex.com"
+KRB_PORT="5555"
 
 #SIB
 SIB_WORKER="Your Suprnova Worker name"
 SIB_ADDRESS="Your Suprnova Account name"
-SIB_POOL="stratum+tcp://sib.suprnova.cc:3458"
-SIB_INTENSITY="21"
+SIB_POOL="sib.suprnova.cc"
+SIB_PORT="3458"
 
 #PXC
 PXC_WORKER="$WORKERNAME"
 PXC_ADDRESS="replace_with_your_GRS_address"
-PXC_POOL="stratum+tcp://atlas.phoenixcoin.org:10554"
-PXC_INTENSITY="23"
+PXC_POOL="atlas.phoenixcoin.org"
+PXC_PORT="10554"
 
 # ZPOOL_SKUNK HERE
 SKUNK_AUTOCONVERT_TO_BTC="YES"        #YES  NO
 SKUNK_WORKER="$WORKERNAME"
 SKUNK_ADDRESS=$BTC_ADDRESS
-SKUNK_POOL="stratum+tcp://skunk.mine.zpool.ca:8433"
-SKUNK_INTENSITY="22"
+SKUNK_POOL="skunk.mine.zpool.ca"
+SKUNK_PORT="8433"
 
 #ALTCOM
 ALTCOM_WORKER="$WORKERNAME"
 ALTCOM_ADDRESS="replace_with_your_ALTCOM_address"
-ALTCOM_POOL="STRATUM:ALTCOM POOL:PORT"
-
-# Used to add worker name on ZPOOL 
-ZPOOLPASS="$WORKERNAME,c=btc"
-
-# ZPOOL uses your BTC_ADDRESS
-ZPOOL_LYRA2V2_POOL="stratum+tcp://lyra2v2.mine.zpool.ca:4533"
-ZPOOL_LYRA2V2_INTENSITY="22"
-
-# ZPOOL uses your BTC_ADDRESS
-ZPOOL_BLAKE2S_POOL="stratum+tcp://blake2s.mine.zpool.ca:5766"
-ZPOOL_BLAKE2S_INTENSITY="21"
-
-# ZPOOL uses your BTC_ADDRESS
-ZPOOL_EQUIHASH_POOL="equihash.mine.zpool.ca"
-ZPOOL_EQUIHASH_PORT="2142"
-
-# ZPOOL uses your BTC_ADDRESS
-ZPOOL_LBRY_POOL="stratum+tcp://lbc.mine.zpool.ca:3334"
-ZPOOL_LBRY_INTENSITY="23"
-
-# ZPOOL uses your BTC_ADDRESS
-ZPOOL_NEOSCRYPT_POOL="stratum+tcp://neoscrypt.mine.zpool.ca:4233"
-ZPOOL_NEOSCRYPT_INTENSITY="22"
-
-# ZPOOL uses your BTC_ADDRESS
-ZPOOL_SKEIN_POOL="stratum+tcp://skein.mine.zpool.ca:4933"
-ZPOOL_SKEIN_INTENSITY="22"
-
-#MPH_EQUIHASH
-MPH_WORKER="Your Miningpoolhub Worker Name"
-MPH_ADDRESS="Your Miningpoolhub account name"
-MPH_EQUIHASH_POOL="us-east.equihash-hub.miningpoolhub.com"
-MPH_EQUIHASH_PORT="20570"
-
-#MPH_ETHASH
-MPH_WORKER="Your Miningpoolhub Worker Name"
-MPH_ADDRESS="Your Miningpoolhub account name"
-MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com:17020"
+ALTCOM_POOL="ALTCOM POOL"
+ALTCOM_PORT=""
 
 #PIRL
 PIRL_WORKER=$WORKERNAME
 PIRL_ADDRESS="ENTER PIRL ADDRESS"
-PIRL_POOL="pirl.pool.sexy:6006"
+PIRL_POOL="pirl.pool.sexy"
+PIRL_PORT="6006"
 
 #GRS
 GRS_WORKER=$WORKERNAME
 GRS_ADDRESS="replace_with_your_GRS_address"
-GRS_POOL="stratum+tcp://moria.dwarfpool.com:3345"
-GRS_INTENSITY="23"
+GRS_POOL="moria.dwarfpool.com"
+GRS_PORT="3345"
 
 #XMY
 XMY_WORKER=$WORKERNAME
 XMY_ADDRESS="Your Miningpoolhub Account Name"
-XMY_POOL="stratum+tcp://us-east1.myriadcoin-groestl.miningpoolhub.com:20479"
-XMY_INTENSITY="23"
+XMY_POOL="us-east1.myriadcoin-groestl.miningpoolhub.com"
+XMY_PORT="20479"
 
 #MONA
 MONA_WORKER=$WORKERNAME
@@ -398,78 +359,134 @@ MONA_PORT="2995"
 #XVG
 XVG_WORKER=$WORKERNAME
 XVG_ADDRESS="DA2TmgUdVmWJxgLwgCiwPAUiADritpn9ge"
-XVG_POOL="stratum+tcp://yiimp.eu:3737"
+XVG_POOL="yiimp.eu"
+XVG_PORT="3737"
 # PASSWORD = SYMBOL
 XVG_PASSWORD="c=XVG"
 
 #XLR
 XLR_WORKER=$WORKERNAME
 XLR_ADDRESS="replace_with_your_CRC_address"
-XLR_POOL="stratum+tcp://lycheebit.com:3739"
+XLR_POOL="lycheebit.com"
+XLR_PORT="3739"
 # PASSWORD = SYMBOL
 XLR_PASSWORD="c=XLR_XEVAN"
 
 #CRC
 CRC_WORKER=$WORKERNAME
 CRC_ADDRESS="replace_with_your_CRC_address"
-CRC_POOL="stratum+tcp://eu1.altminer.net:10004"
+CRC_POOL="eu1.altminer.net"
+CRC_PORT="10004"
 # PASSWORD = SYMBOL
 CRC_PASSWORD="c=CRC"
 
 #LUX 
 LUX_WORKER=$WORKERNAME 
 LUX_ADDRESS="LbULxgii5CVdqQ9U1dvhnkZkBfu99hMm8F" 
-LUX_POOL="stratum+tcp://yiimp.eu:8333"
-
-#BTC
-VTC_AUTOCONVERT_TO_BTC="NO"        #YES  NO
-VTC_WORKER="Your Miningpoolhub Worker Name"
-VTC_ADDRESS="Your Miningpoolhub Account Name"
-VTC_POOL="stratum+tcp://hub.miningpoolhub.com:20507"
+LUX_POOL="yiimp.eu"
+LUX_PORT="8333"
 
 #TZC
-TZC_WORKER="$WORKERNAME"
+TZC_WORKER=$WORKERNAME
 TZC_ADDRESS="TZC ADDRESS"
-TZC_POOL="stratum+tcp://POOL:PORT"
+TZC_POOL="TZCPOOL"
+TZC_PORT=""
 
+#LBC
+LBC_WORKER=$WORKERNAME
+LBC_ADDRESS="Your Suprnova Account name"
+LBC_POOL="lbry.suprnova.cc"
+LBC_PORT="6256"
+
+#FTC
+FTC_WORKER=$WORKERNAME
+FTC_ADDRESS="Your Miningpoolhub Account Name"
+FTC_POOL="hub.miningpoolhub.com"
+FTC_PORT="20510"
+
+#ORB
+ORB_WORKER=$WORKERNAME
+ORB_ADDRESS="Your DNB Account Name"
+ORB_POOL="strat.dnb.io"
+ORB_PORT="3031"
+
+#VIVO
+VIVO_WORKER=$WORKERNAME
+VIVO_ADDRESS="VIVO ADDRESS"
+VIVO_POOL="VIVOPOOL"
+VIVO_PORT=""
+
+#ONION
+ONION_WORKER=$WORKERNAME
+ONION_ADDRESS="replace_with_your_ONION_address"
+ONION_POOL="kawaiipool.party"
+ONION_PORT="3633"
+
+#################################### ZPOOL SECTION ######################################
+# Used to add worker name on ZPOOL 
+ZPOOLPASS="$WORKERNAME,c=btc"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_LYRA2V2_POOL="lyra2v2.mine.zpool.ca"
+ZPOOL_LYRA2V2_PORT="4533"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_BLAKE2S_POOL="blake2s.mine.zpool.ca"
+ZPOOL_BLAKE2S_POOL="5766"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_EQUIHASH_POOL="equihash.mine.zpool.ca"
+ZPOOL_EQUIHASH_PORT="2142"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_LBRY_POOL="lbc.mine.zpool.ca"
+ZPOOL_LBRY_POOL="3334"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_NEOSCRYPT_POOL="neoscrypt.mine.zpool.ca"
+ZPOOL_NEOSCRYPT_POOL="4233"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_SKEIN_POOL="skein.mine.zpool.ca"
+ZPOOL_SKEIN_POOL="4933"
+
+############################# MPH SECTION ############################
+#MPH_EQUIHASH
+MPH_EQUIHASH_WORKER="Your Miningpoolhub Worker Name"
+MPH_EQUIHASH_ADDRESS="Your Miningpoolhub account name"
+MPH_EQUIHASH_POOL="us-east.equihash-hub.miningpoolhub.com"
+MPH_EQUIHASH_PORT="20570"
+
+#MPH_ETHASH
+MPH_ETHASH_WORKER="Your Miningpoolhub Worker Name"
+MPH_ETHASH_ADDRESS="Your Miningpoolhub account name"
+MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com"
+MPH_ETHASH_PORT="17020"
+
+#VTC
+VTC_WORKER="Your Miningpoolhub Worker Name"
+VTC_ADDRESS="Your Miningpoolhub Account Name"
+VTC_POOL="hub.miningpoolhub.com"
+VTC_PORT="20507"
+
+#DGB
+DGB_WORKER="Your Miningpoolhub Worker Name"
+DGB_ADDRESS="Your Miningpoolhub Account Name"
+DGB_POOL="hub.miningpoolhub.com"
+DGB_PORT="20527"
+
+##########################################NICE HAS SECTION########################
 # NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
 NICE_ETHASH_WORKER="$WORKERNAME"
 NICE_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
 GENOIL_NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com:3353"
 NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
 
-# if YES ensure you update BTC_ADDRESS
-DGB_AUTOCONVERT_TO_BTC="NO"        #YES  NO
-DGB_INTENSITY="24"
-DGB_WORKER="Your Miningpoolhub Worker Name"
-DGB_ADDRESS="Your Miningpoolhub Account Name"
-DGB_POOL="stratum+tcp://hub.miningpoolhub.com:20527"
-
-#LBC
-LBC_WORKER="Your Suprnova Worker name"
-LBC_ADDRESS="Your Suprnova Account name"
-LBC_POOL="stratum+tcp://lbry.suprnova.cc:6256"
-LBC_INTENSITY="23"
-
-#FTC
-FTC_WORKER="Your Miningpoolhub Worker Name"
-FTC_ADDRESS="Your Miningpoolhub Account Name"
-FTC_POOL="stratum+tcp://hub.miningpoolhub.com:20510"
-FTC_INTENSITY="23"
-
-#ORB
-ORB_WORKER="Your DNB Worker Name"
-ORB_ADDRESS="Your DNB Account Name"
-ORB_POOL="stratum+tcp://strat.dnb.io:3031"
-
-#VIVO
-VIVO_WORKER="$WORKERNAME"
-VIVO_ADDRESS="VIVO ADDRESS"
-VIVO_POOL="stratum+tcp://VIVOPOOL:PORT"
-
-#ONION
-ONION_ADDRESS="replace_with_your_ONION_address"
-ONION_POOL="stratum+tcp://kawaiipool.party:3633"
+#For Nice Equihash
+NICE_EQUIHASH_WORKER=$WORKERNAME
+NICE_EQUIHASH_ADDRESS=$BTC_ADDRESS
+NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
+NICE_EQUIHASH_PORT="3357"
 
 ####################################################################################################################
 USE_ENVIRONMENTAL_VARIBLES="NO"   #YES  NO
@@ -485,40 +502,46 @@ ETH_WORKER=$WORKERNAME
 # replace_with_your_ETH_address
 ETH_ADDRESS="0x4dcA66d28328dbd65cb701661B2984AC6d43d642"    
 # NOTE DEFAULT ETH POOL CHANGED TO ETHERMINE.ORG
-ETH_POOL="us2.ethermine.org:4444"
+ETH_POOL="us2.ethermine.org"
+ETH_PORT="4444"
 ETH_EXTENSION_ARGUMENTS=""    # add any additional claymore arguments desired here
-
-ETC_WORKER=$WORKERNAME
-ETC_ADDRESS="replace_with_your_ETC_address" 
-# NOTE DEFAULT ETC POOL CHANGED TO ETHERMINE.ORG
-ETC_POOL="us1-etc.ethermine.org:4444"
-ETC_EXTENSION_ARGUMENTS=""    # add any additional claymore arguments desired here
-
-EXP_WORKER=$WORKERNAME
-EXP_ADDRESS="replace_with_your_EXP_address"
-EXP_POOL="exp-us.dwarfpool.com:81"
-EXP_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
-
-UBQ_WORKER=$WORKERNAME
-UBQ_ADDRESS="replace_with_your_UBIQ_address"
-UBQ_POOL="stratum+tcp://us.ubiqpool.io:8008"
-UBQ_EXTENSION_ARGUMENTS=""
-
-MUSIC_WORKER=$WORKERNAME
-MUSIC_ADDRESS="replace_with_your_MUSIC_address"
-MUSIC_POOL="eus.gmc.epool.io:8008"
-MUSIC_EXTENSION_ARGUMENTS=""
-
-SOIL_WORKER=$WORKERNAME
-SOIL_ADDRESS="replace_with_your_SOIL_address"
-SOIL_POOL="stratum+tcp://soil.pool.sexy:9009"
-SOIL_EXTENSION_ARGUMENTS=""
 
 DUAL_WORKER=$WORKERNAME
 DUAL_BTC_ADDRESS=$BTC_ADDRESS
 DUAL_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
 DUAL_DCR_POOL="stratum+tcp://decred.usa.nicehash.com:3354"
 DUAL_EXTENSION_ARGUMENTS="-dcri 40"
+
+ETC_WORKER=$WORKERNAME
+ETC_ADDRESS="replace_with_your_ETC_address" 
+# NOTE DEFAULT ETC POOL CHANGED TO ETHERMINE.ORG
+ETC_POOL="us1-etc.ethermine.org"
+ETC_PORT="4444"
+ETC_EXTENSION_ARGUMENTS=""    # add any additional claymore arguments desired here
+
+EXP_WORKER=$WORKERNAME
+EXP_ADDRESS="replace_with_your_EXP_address"
+EXP_POOL="exp-us.dwarfpool.com"
+EXP_PORT="81"
+EXP_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
+
+UBQ_WORKER=$WORKERNAME
+UBQ_ADDRESS="replace_with_your_UBIQ_address"
+UBQ_POOL="us.ubiqpool.io"
+UBQ_PORT="8008"
+UBQ_EXTENSION_ARGUMENTS=""
+
+MUSIC_WORKER=$WORKERNAME
+MUSIC_ADDRESS="replace_with_your_MUSIC_address"
+MUSIC_POOL="eus.gmc.epool.io"
+MUSIC_PORT="8008"
+MUSIC_EXTENSION_ARGUMENTS=""
+
+SOIL_WORKER=$WORKERNAME
+SOIL_ADDRESS="replace_with_your_SOIL_address"
+SOIL_POOL="stratum+tcp://soil.pool.sexy
+SOIL_PORT="9009"
+SOIL_EXTENSION_ARGUMENTS=""
 
 SC_WORKER=$WORKERNAME
 SC_ADDRESS="replace_with_your_SIA_address"
