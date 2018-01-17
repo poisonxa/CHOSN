@@ -10,6 +10,7 @@
 ########## DONT TOUCH BELOW THIS LINE ############
 source ~/1bash
 source ~/Resources
+source ~/8coinscfg
 3Main_Coin_Sequence(){
 CHECK_CARD
 CHECK_I
