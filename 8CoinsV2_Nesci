@@ -1,9 +1,38 @@
 #!/bin/bash
 
+##########################################################################
+##########################################################################
+#################                                        #################
+##############                                              ##############
+##########                                                      ##########
+##########################################################################
+##########################################################################
+
+CHOSVN_Ver="nvOC v0000-0.0 - By NESCI,Moi162001"
+CHOSVN_temp_ver="v0000-.0.001"   # Do not edit this
+
+# Changelog:
+#
+# 
+#
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# Removed repetitive GPUFanControlState setting, it only needs to be set once, not every cycle (prevent API overload)
+# Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
+#
+# 
+
 ################## TO DO ##################
 
-#ADD CC_OR_CG VARIABLE IN 1BASH FOR SCRYPT ALGORITHM
-#RENAME VARIABLES FOR DUAL CHOICES (ZM_EWBF, CC_CG, CG_SG)
+# ADD CC_OR_CG VARIABLE IN 1BASH FOR SCRYPT ALGORITHM
+# RENAME VARIABLES FOR DUAL CHOICES (ZM_EWBF, CC_CG, CG_SG)
 
 ###########################################
 
@@ -18,11 +47,13 @@ miner_fix2
 
 ######## Paths of the miners ##################
 
-$ETHMiner='/home/m1/Miners/eth/ethminer/ethminer' # ethminer is updating the bin only is simple??? - Ethereum
+$ETHMiner='/home/m1/Miners/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
 $ccminer='/home/m1/Miners/ccminer/ccminer' # -All other
-$zm='/home/m1/Miners/zec/zm/zm'		# zm is updating the bin only is simple??? - Equihash
-$ewbf='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf is updating the bin only is simple??? - Equihash
+$zm='/home/m1/Miners/zec/zm/zm'		# zm this program is a binary the update is simple? - Equihash
+$ewbf='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
 $optiminer='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
+$alccminer = '/home/m1/Miners/alccminer/ccminer'
+$cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
 
 # $vertminer='/home/m1/Miners/vertminer/ccminer'
 # $kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
@@ -34,7 +65,12 @@ $optiminer='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
 ########## DONT TOUCH ABOVE THIS LINE ############
 
 ##################################################
+
+
 COIN=$COIN
+
+
+# get the algo list an control file is present
 if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
     echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
 fi
@@ -43,11 +79,13 @@ COINLISTWTM=$(jq '.coins | .[] | .tag' $HOME/CoinToAlgo/WTM.json | sed 's/\"//' 
     echo "Selected coin is : $COIN"
     echo "Algorithm is : $ALGO"
 
+    
+    #warned that algo is not present
 if [ "$COIN" != "$COINLISTWTM" ] ; then
     echo "Coin not found, check 1bash and start over" 
     exit
 
-#ZM or EWBF - EQUIHASH
+# ZM or EWBF - EQUIHASH
 elif [ $ALGO = "Equihash" ] ;  then   
   ZM_OR_EWBF=$ZM_or_EWBF
   if [ $ZM_OR_EWBF = "ZM" ]; then
@@ -59,7 +97,7 @@ elif [ $ALGO = "Equihash" ] ;  then
     exit
   fi
 
-#CCMINER or CGMINER - SCRYPT
+# CCMINER or CGMINER - SCRYPT
 elif [ $ALGO = "Scrypt" ] ;  then   
   CC_OR_CG=$CC_OR_CG
   if [ $CC_OR_CG = "CC" ]; then
@@ -71,31 +109,32 @@ elif [ $ALGO = "Scrypt" ] ;  then
     exit
   fi
 
+# automatic soft miner selection
 #CGMINER or SGMINER - X11
 elif [ $ALGO = "X11" ] ;  then   
   echo "$ALGO - Opening ALCCMiner" 
 
-#ETHMINER - HASHIMOTO
+# ETHMINER - HASHIMOTO
 elif [ $ALGO = "Hashimoto" ] ; then 
   echo "$ALGO - Opening Ethmminer" 
 
-#XEVAN
+# XEVAN
 elif [ $ALGO = "Xevan" ] ;  then 
   echo "$ALGO - Opening CCMiner-Xevan" 
 
-#OPTIMINEREQUIHASH - MIX
+# OPTIMINEREQUIHASH - MIX
 elif [ $ALGO = "Equi192,7" ] || [ $ALGO = "Mars" ]; then
   echo "$ALGO - Opening OptiminerEquihash" 
 
-#CCMINER - MIX
+# CCMINER - MIX
 elif [ $ALGO = "Lyra2rev2" ] || [ $ALGO = "Skunkhashs" ] || [ $ALGO = "Lyra2Z" ] || [ $ALGO = "Myriad-Groestl" ] || [ $ALGO = "X17" ] || [ $ALGO = "Blake14" ] || [ $ALGO = "C11" ] || [ $ALGO = "Qubit" ]; then
   echo "$ALGO - Opening CCMiner" 
 
-#CGMINER - MIX
+# CGMINER - MIX
 elif [ $ALGO = "SHA-256" ] || [ $ALGO = "Polytimos" ] || [ $ALGO = "CryptoNight" ] || [ $ALGO = "Keccak" ] || [ $ALGO = "Timetraval10" ] || [ $ALGO = "X11-GOST" ] || [ $ALGO = "Skein" ]
   echo "$ALGO - Opening CGMiner"
 
-#SGMINER
+# SGMINER
 elif [ $ALGO = "LBRY" ] || [ $ALGO = "Groestl" ]
   echo "$ALGO - Opening SGMiner"
 
@@ -105,7 +144,7 @@ fi
 
 #####################################################
 
-#update password arguments , extend 1bash with per coin password
+# update password arguments , extend 8coinlist with per coin password
 case $COIN in 
   
   #########################SINGLE POOL########################
@@ -264,4 +303,3 @@ Set_Miner() {
 	esac
 
 }
-
