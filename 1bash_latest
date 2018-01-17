@@ -539,26 +539,31 @@ MUSIC_EXTENSION_ARGUMENTS=""
 
 SOIL_WORKER=$WORKERNAME
 SOIL_ADDRESS="replace_with_your_SOIL_address"
-SOIL_POOL="stratum+tcp://soil.pool.sexy
+SOIL_POOL="soil.pool.sexy"
 SOIL_PORT="9009"
 SOIL_EXTENSION_ARGUMENTS=""
 
 SC_WORKER=$WORKERNAME
 SC_ADDRESS="replace_with_your_SIA_address"
-SC_POOL="sia-us-east1.nanopool.org:7777"
-SC_GW_POOL="sia-us-east1.nanopool.org:9980"
+SC_POOL="sia-us-east1.nanopool.org"
+SC_PORT="7777"
+SC_GW_POOL="sia-us-east1.nanopool.org"
+SC_GW_PORT="9980"
 
 DCR_WORKER=$WORKERNAME
 DCR_ADDRESS="replace_with_your_DCR_address"
-DCR_POOL="stratum+tcp://yiimp.eu:3252"
+DCR_POOL="yiimp.eu"
+DCR_PORT="3252"
 
 PASC_WORKER=$WORKERNAME
 PASC_ADDRESS="replace_with_your_PASC_ACCOUNT"
-PASC_POOL="pasc-us-east1.nanopool.org:15555"
+PASC_POOL="pasc-us-east1.nanopool.org"
+PASC_PORT="15555"
 
 PASL_WORKER=$WORKERNAME
 PASL_ADDRESS="replace_with_your_PASL_ACCOUNT"
-PASL_POOL="stratum+tcp://mine.pasl.fairpool.xyz:4009"
+PASL_POOL="mine.pasl.fairpool.xyz"
+PASL_POOL="4009"
 
 # XMR : if plusCPU is "YES" replace with your XMR info  ##
 XMR_WORKER=$WORKERNAME
@@ -573,7 +578,8 @@ BTCZ_PORT="5586"
 
 SMART_WORKER="yourWorkerName"
 SMART_ADDRESS="yourPoolLoginName"
-SMART_POOL="stratum+tcp://pool-eu.smartcash.cc:3333"
+SMART_POOL="stratum+tcp://pool-eu.smartcash.cc"
+SMART_PORT="3333"
 SMART_INTENSITY="25"
 
 
