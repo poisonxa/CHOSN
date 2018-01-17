@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ~/8coinsv2
-
 #----  fill in your coins and uncomment the lines concerned  ----
 #365
 #365_WORKER=$WORKERNAME
