@@ -14,7 +14,7 @@ if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
 #######################################################################################
 ###### LIST OF SUPPORTED COINS AND CONTRIBUTORS ARE LOCATED IN THE BOTTOM OF THIS DOCUMENT
 
-#				NVOC SETTINGS BELOW THIS LINE
+#				CHOSN SETTINGS BELOW THIS LINE
 
 #######################################################################################
 #### COIN SELECTION ####
