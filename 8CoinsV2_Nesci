@@ -12,22 +12,11 @@ CHOSN_Ver="CHOSN v0000-0.0 - By NESCI,Moi162001"
 CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 
 # Changelog:
-#
-# 
-#
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+
 # 
 # Removed repetitive GPUFanControlState setting, it only needs to be set once, not every cycle (prevent API overload)
 # Workaround for some 1050's reporting "Unknown" or "ERR" when power.draw is queried from nvidi-smi
 #
-# 
 
 ################## TO DO ##################
 
@@ -47,19 +36,18 @@ miner_fix2
 
 ######## Paths of the miners ##################
 
-$ETHMiner='/home/m1/Miners/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
-$ccminer='/home/m1/Miners/ccminer/ccminer' # -All other
-$ccminer='/home/m1/Miners/ccminer-xevan/ccminer' # special ccminer-xevan
-$zm='/home/m1/Miners/zec/zm/zm'		# zm this program is a binary the update is simple? - Equihash
-$ewbf='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
-$optiminer='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
-$alccminer = '/home/m1/Miners/alccminer/ccminer'
+$ETHMINER='/home/m1/Miners/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
+$CCMINER='/home/m1/Miners/ccminer/ccminer' # -All other
+$CCMINERXEVAN='/home/m1/Miners/ccminer-xevan/ccminer' # special ccminer-xevan
+$ZM='/home/m1/Miners/zec/zm/zm'		# zm this program is a binary the update is simple? - Equihash
+$EWBF='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
+$OPTIMINER='/home/m1/Miners/optiminer-equihash/optiminer-equihash'
+$ALCCMINER = '/home/m1/Miners/alccminer/ccminer'
 
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
 # $vertminer='/home/m1/Miners/vertminer/ccminer'
 # $kxccminer='/home/m1/Miners/KXccminer-skunk/ccminer'
 # $tpccminer='/home/m1/Miners/TPccminer/ccminer'
-# $alccminer = '/home/m1/Miners/alccminer/ccminer'
 # $claymore='/home/m1/Miners/eth/$CLAYMORE_VERSION/ethdcrminer64'
 # $GenoilU='/home/m1/Miners/eth/Genoil-U/ethminer'
 
@@ -71,236 +59,156 @@ $alccminer = '/home/m1/Miners/alccminer/ccminer'
 COIN=$COIN
 
 
-# get the algo list an control file is present
-if [ ! -f $HOME/CoinToAlgo/WTM.json ]; then
-    echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/CoinToAlgo/WTM.json
-fi
-ALGO=$(cat $HOME/CoinToAlgo/WTM.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
-COINLISTWTM=$(jq '.coins | .[] | .tag' $HOME/CoinToAlgo/WTM.json | sed 's/\"//' | sed 's/\"//')
-    echo "Selected coin is : $COIN"
-    echo "Algorithm is : $ALGO"
+# Download algorithm list if it doesnt exist
 
-    
-    #warned that algo is not present
-if [ "$COIN" != "$COINLISTWTM" ] ; then
-    echo "Coin not found, check 1bash and start over" 
-    exit
+if [ ! -f $HOME/8Coins/Algo.json ]; then
+    echo `/usr/bin/curl -s https://whattomine.com/calculators.json` > $HOME/8Coins/Algo.json
+fi
+
+# Generate 1Coins-Nicehash and 1Coins if they dont exist
+if [ ! -f $HOME/1Coins.json ] || [ ! -f $HOME/1Coins-Nicehash.json ]; then
+	rm $HOME/8Coins/Coins.json
+	rm $HOME/1Coins
+	rm $HOME/1Coins-Nicehash
+	echo `/usr/bin/curl -s http://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_280x=0&adapt_q_380=0&adapt_q_fury=0&adapt_q_470=0&adapt_q_480=3&adapt_q_570=0&adapt_q_580=0&adapt_q_vega56=0&adapt_q_vega64=0&adapt_q_750Ti=0&adapt_q_1050Ti=0&adapt_q_10606=6&adapt_10606=true&adapt_q_1070=0&adapt_q_1070Ti=0&adapt_q_1080=0&adapt_q_1080Ti=0&eth=true&factor%5Beth_hr%5D=135.0&factor%5Beth_p%5D=540.0&grof=true&factor%5Bgro_hr%5D=123.0&factor%5Bgro_p%5D=540.0&x11gf=true&factor%5Bx11g_hr%5D=43.2&factor%5Bx11g_p%5D=540.0&cn=true&factor%5Bcn_hr%5D=2580.0&factor%5Bcn_p%5D=420.0&eq=true&factor%5Beq_hr%5D=1620.0&factor%5Beq_p%5D=540.0&lre=true&factor%5Blrev2_hr%5D=121800.0&factor%5Blrev2_p%5D=540.0&ns=true&factor%5Bns_hr%5D=3000.0&factor%5Bns_p%5D=540.0&lbry=true&factor%5Blbry_hr%5D=1020.0&factor%5Blbry_p%5D=540.0&bk2bf=true&factor%5Bbk2b_hr%5D=5940.0&factor%5Bbk2b_p%5D=480.0&bk14=true&factor%5Bbk14_hr%5D=9300.0&factor%5Bbk14_p%5D=540.0&pas=true&factor%5Bpas_hr%5D=3480.0&factor%5Bpas_p%5D=540.0&skh=true&factor%5Bskh_hr%5D=108.0&factor%5Bskh_p%5D=540.0&factor%5Bl2z_hr%5D=420.0&factor%5Bl2z_p%5D=300.0&factor%5Bcost%5D=0.1&sort=Profit&volume=0&revenue=current&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=abucoins&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=bleutrade&factor%5Bexchanges%5D%5B%5D=cryptopia&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=yobit&dataset=&commit=Calculate` > $HOME/8Coins/Coins.json
+	COINLIST=$(jq '.coins | .[] | .tag' $HOME/8Coins/Coins.json | sed 's/\"//' | sed 's/\"//')
+	WKN=$(echo '_WORKER=$WORKERNAME')
+	ADDREPL=$(echo '_ADDRESS="replace_with_your_address - Account.WorkerName if on Suprnova"')
+	POOLREPL=$(echo '_POOL="replace_with_the_pool_server"')
+	POOLPORT=$(echo '_PORT="replace_with_the_pool_port"')
+	PASSREPL=$(echo '_PASSWORD="x"')
+	SYMBREPL=$(echo '_SYMBOL=" "')
+
+	echo -e "#---- You can add any other coin by following the same template ----\n#---- If you get the message to enter the algorithm manually, add : ----\n# (COIN-SYMBOL)_ALGO=COIN_ALGORITHM\n#Example : ZEN_ALGO=EQUIHASH" >> $HOME/1Coins
+	
+	echo -e "#---- You can add any other coin by following the same template ----\n#---- If you get the message to enter the algorithm manually, add : ----\n# (COIN-SYMBOL)_ALGO=COIN_ALGORITHM\n#Example : ZEN_ALGO=EQUIHASH" >> $HOME/1Coins-Nicehash
+	
+	for COINGEN  in $COINLIST; do
+		if [ `expr "$COIGEN" : ".*[-].*"` -gt 0 ]; then
+			echo -e "#----  BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$WKN\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$SYMBREPL\n#----  END OF $COINGEN ----"  >> $HOME/1Coins-Nicehash
+		elif
+			echo -e "#----  BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$WKN\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$SYMBREPL\n#----  END OF $COINGEN ----"  >> $HOME/1Coins
+	done
+fi
+
+ALGO=$(cat $HOME/8Coins/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+if [ -z "$ALGO" ]; then
+	$ALGO=${COIN}_ALGO
+fi
+COINLISTWTM=$(jq '.coins | .[] | .tag' $HOME/8Coins/Algo.json | sed 's/\"//' | sed 's/\"//')
+echo "Selected coin is : $COIN"
+echo "Algorithm is : $ALGO"
+
+WORKER=${COIN}_WORKER
+ADDRESS=${COIN}_ADDRESS
+POOL=${COIN}_POOL
+PORT=${COIN}_PORT
+PASSWORD=${COIN}_PASSWORD
+SYMBOL=${COIN}_SYMBOL
 
 # ZM or EWBF - EQUIHASH
-elif [ $ALGO = "Equihash" ] ;  then   
+elif [ $ALGO = "Equihash" ];  then   
   ZM_OR_EWBF=$ZM_or_EWBF
   if [ $ZM_OR_EWBF = "ZM" ]; then
     echo "$ALGO - Opening ZM"
+	ZM
   elif [ $ZM_OR_EWBF = "EWBF" ]; then
     echo "$ALGO - Opening EWBF"
+	EWBF
   else 
     echo "Error in your ZM_or_EWBF variable in 1bash"
     exit
   fi
 
 # CCMINER or CGMINER - SCRYPT
-elif [ $ALGO = "Scrypt" ] ;  then   
+elif [ $ALGO = "Scrypt" ];  then   
   CC_OR_CG=$CC_OR_CG
   if [ $CC_OR_CG = "CC" ]; then
     echo "$ALGO - Opening CCMiner"
+	CCMINER
   elif [ $CC_OR_CG = "CG" ]; then
     echo "$ALGO - Opening CGMiner"
+	CGMINER
   else 
     echo "Error in your CC_OR_CG variable in 1bash"
     exit
   fi
 
-# automatic soft miner selection
-#CGMINER or SGMINER - X11
-elif [ $ALGO = "X11" ] ;  then   
-  echo "$ALGO - Opening ALCCMiner" 
-
+elif [ $ALGO = "X11" ];  then   
+	echo "$ALGO - Opening ALCCMiner"
+	ALCCMINER
+	
 # ETHMINER - HASHIMOTO
-elif [ $ALGO = "Hashimoto" ] ; then 
-  echo "$ALGO - Opening Ethmminer" 
+elif [ $ALGO = "Hashimoto" ]; then 
+	echo "$ALGO - Opening Ethmminer" 
+	ETHMINER
 
 # XEVAN
-elif [ $ALGO = "Xevan" ] ;  then 
-  echo "$ALGO - Opening CCMiner-Xevan" 
+elif [ $ALGO = "Xevan" ];  then 
+	echo "$ALGO - Opening CCMiner-Xevan" 
+	CCMINERXEVAN
+  
+# X17
+elif [ $ALGO = "X17" ]; then
+	echo "$ALGO - Opening ALCCMiner" 
+	ALCCMINER
 
-# OPTIMINEREQUIHASH - MIX
+# OPTIMINER - MIX
 elif [ $ALGO = "Equi192,7" ] || [ $ALGO = "Mars" ]; then
-  echo "$ALGO - Opening OptiminerEquihash" 
+	echo "$ALGO - Opening Optiminer"
+	OPTIMINER
 
 # CCMINER - MIX
-elif [ $ALGO = "Lyra2rev2" ] || [ $ALGO = "Skunkhashs" ] || [ $ALGO = "Lyra2Z" ] || [ $ALGO = "Myriad-Groestl" ] || [ $ALGO = "X17" ] || [ $ALGO = "Blake14" ] || [ $ALGO = "C11" ] || [ $ALGO = "Qubit" ]; then
-  echo "$ALGO - Opening CCMiner" 
+elif [ $ALGO = "Lyra2rev2" ] || [ $ALGO = "Skunkhashs" ] || [ $ALGO = "Lyra2Z" ] || [ $ALGO = "Myriad-Groestl" ] || [ $ALGO = "Blake14" ] || [ $ALGO = "C11" ] || [ $ALGO = "Qubit" ] || [ $ALGO = "LBRY" ] || [ $ALGO = "Groestl" ]; then
+	echo "$ALGO - Opening CCMiner" 
+	CCMINER
 
 # CGMINER - MIX
 elif [ $ALGO = "SHA-256" ] || [ $ALGO = "Polytimos" ] || [ $ALGO = "CryptoNight" ] || [ $ALGO = "Keccak" ] || [ $ALGO = "Timetraval10" ] || [ $ALGO = "X11-GOST" ] || [ $ALGO = "Skein" ]
-  echo "$ALGO - Opening CGMiner"
-
-# SGMINER
-elif [ $ALGO = "LBRY" ] || [ $ALGO = "Groestl" ]
-  echo "$ALGO - Opening SGMiner"
-
+	echo "$ALGO - Opening CGMiner"
+	CGMINER
 fi
 
+ZM() {
+	screen -dmSL miner $ZM --server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --telemetry 127.0.0.1:42000
+	exit
+}
 
+EWBF() {
+	screen -dmSL miner $EWBF --server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --api 127.0.0.1:42000
+	exit
+}
 
-#####################################################
+CCMINER() {
+	POOL=$POOL ":" $PORT
+	screen -dmSL miner $CCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD ############# -i $OCIT
+	exit
+}
 
-# update password arguments , extend 8coinlist with per coin password
-case $COIN in 
-  
-  #########################SINGLE POOL########################
+CGMINER() {
+	##########
+	exit
+}
 
-  #EQUIHASH
-  "BTG")
-  Set_Miner $BTG_ADDRESS $BTG_WORKER $BTG_POOL $BTG_PORT $MINER_PWD ;;
-  "ZEC")
-  Set_Miner $ZEC_ADDRESS $ZEC_WORKER $ZEC_POOL $ZEC_PORT $ZEC_PASSWD ;;
-  "ZCL")
-  Set_Miner $ZCL_ADDRESS $ZCL_WORKER $ZCL_POOL $ZCL_PORT $ZCL_PASSWD ;;
-  "BTCZ")
-  Set_Miner $BTCZ_ADDRESS $BTCZ_WORKER $BTCZ_POOL $BTCZ_PORT $BTCZ_PASSWD ;;
-  "KMD")
-  Set_Miner $KMD_ADDRESS $KMD_WORKER $KMD_POOL $KMD_PORT $KMD_PASSWD ;;
-  "ZEN")
-  Set_Miner $ZEN_ADDRESS $ZEN_WORKER $ZEN_POOL $ZEN_PORT $ZEN_PASSWD ;;
-  "HUSH")
-  Set_Miner $HUSH_ADDRESS $HUSH_WORKER $HUSH_POOL $HUSH_PORT $HUSH_PASSWD ;;
-  
-  #LYRA2REV2
-  "MONA")
-  Set_Miner $MONA_ADDRESS $MONA_WORKER $MONA_POOL $MONA_PASSWD ;;
-  "VTC")
-  Set_Miner $VTC_ADDRESS $VTC_WORKER $VTC_POOL $VTC_PASSWD ;;
+ALCCMINER() {
+	POOL=$POOL ":" $PORT
+	screen -dmSL miner $ALCCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD ######## -i $OCIT
+	exit
+}
 
-  #NEOSCRYPT
-  "FTC")
-  Set_Miner $FTC_ADDRESS $FTC_WORKER $FTC_POOL $MINER_PWD ;;
+ETHMINER() {
+	##########
+	exit
+}
 
-  #CRYPTNIGHT
-  "KRB")
-  Set_Miner $KRB_ADDRESS $KRB_WORKER $KREB_POOL $MINER_PWD ;;
-  "ETN")
-  Set_Miner $ETN_ADDRESS $ETN_WORKER $ETN_POOL $MINER_PWD ;;
+CCMINERXEVAN() {
+	##########
+	exit
+}
 
-  #OTHERS
-  "ONION")
-  Set_Miner $ONION_ADDRESS $ONION_POOL $ONION_PASSWD ;;
-  "SMART")
-  Set_Miner $SMART_ADDRESS $SMART_WORKER $SMART_POOL $SMART_PASSWD ;;
-  "MINEXCOIN")
-  Set_Miner $MNX_ADDRESS $MNX_WORKER $MNX_POOL $MNX_PORT $MNX_PASSWD ;;
-  "ZCOIN")
-  Set_Miner $ZCOIN_ADDRESS $ZCOIN_WORKER $ZCOIN_POOL $ZCOIN_PASSWD ;;
-  "BTX")
-  Set_Miner $BTX_ADDRESS $BTX_WORKER $BTX_POOL $BTX_PASSWD ;;
-  "XVG")
-  Set_Miner $XVG_ADDRESS $XVG_WORKER $XVG_POOL $WVG_PASSWD ;;
-  "DMD")
-  Set_Miner $DMD_ADDRESS $DMD_WORKER $DMD_POOL $DMD_PASSWD ;;
-  "GRS")
-  Set_Miner $GRS_ADDRESS $GRS_WORKER $GRS_POOL $GRS_PASSWD ;;
-  "XMY")
-  Set_Miner $XMY_ADDRESS $XMY_WORKER $XMY_POOL $XMY_PASSWD ;;
-  "DGB")
-  Set_Miner $DGB_ADDRESS $DBG_POOL $DBG_PASSWD ;;
-  "LBC")
-  Set_Miner $LBC_ADDRESS $LBC_WORKER $LBC_POOL $LBC_PASSWD ;;
-
-
-  #########################MULTI POOL#######################
-
-  #MPH
-  "MPH_EQUIHASH")
-  Set_Miner $MPH_USERNAME $MPH_WORKER $MPH_EQUIHASH_POOL $MPH_EQUIHASH_PORT $MPH_PASSWD ;;
-
-  #ZPOOL
-  "ZPOOL_EQUIHASH")
-  Set_Miner $BTC_ADDRESS $ZPOOL_EQUIHASH_POOL $ZPOOL_EQUIHASH_PORT ;;
-  "ZPOOL_NEOSCRYPT")
-  Set_Miner $BTC_ADDRESS $ZPOOL_NEOSCRYPT_POOL ;;
-  "ZPOOL_lyra2v2")
-  Set_Miner $BTC_ADDRESS $ZPOOL_lyra2v2 ;;
-  "ZPOOL_LBRY")
-  Set_Miner $BTC_ADDRESS $ZPOOL_LBRY_POOL ;;
-  "ZPOOL_SKEIN")
-  Set_Miner $BTC_ADDRESS $ZPOOL_SKEIN_POOL  ;;
-  "ZPOOL_BLAKE2S")
-  Set_Miner $BTC_ADDRESS $ZPOOL_BLAKE2S_POOL ;;
-  "ZPOOL_SKUNK")
-  Set_Miner $SKUNK_ADDRESS $SKUNK_WORKER $SKUNK_POOL $SKUNK_PASSWD ;;
-
-  #NICEHASH
-  "NICE_ETHASH")
-  Set_Miner $BTC_ADDRESS $NICE_ETHASH_WORKER $GENOIL_NICE_ETHASH_POOL ;; 
-
-esac
-
-
-Set_Miner() {
-
-	$address = $1
-	$workerName = $2
-	$poolName = $3
-	$poolPort = $4
-	$password = $5
-	$algo = $6
-
-	$pool = poolName + ":" + poolPort
-
-	if (workerName -ne "NoWorker") # if Noworker than no name and just address, most of the cases a worker is given
-	then
-	case $DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT in
-		"DOT")
-		$ADDR = address + "." + workerName;;
-		"SLASH")
-		$ADDR = address + "/" + workerName;;
-	esac
-	else #no worker is given
-		$ADDR = address;
-	fi
-
-	case algo in
-		"x13")
-			screen -dmSL miner $ccminer -a x13 -o $pool -u $ADDR -p $password -i $OCIT;; 
-		"equihash")
-			screen -dmSL miner $zm --server $poolName --user $ADDR --pass $password --port $poolPort  --time $ZM_OPTS ;;
-		"keccak")
-			screen -dmSL miner $ccminer -a keccak -o $pool -u $ADDR -p $password -i $OCIT;;
-		"optiminer")
-			export GPU_FORCE_64BIT_PTR=1
-			screen -dmSL miner $optiminer -s $pool -u $ADDR -p $password -a equihash96_5 --watchdog-timeout 30 --watchdog-cmd "./watchdog-cmd.sh" $@;;
-		"zpool-equihash")
-			screen -dmSL miner $zm --server $pool --user $address --pass $password --port $poolPort;;
-		"lyra2z")
-			screen -dmSL miner $alccminer -a lyra2z -o $pool -u $ADDR -p $password -i $OCIT;;
-		"timetravel10")
-			screen -dmSL miner $alccminer -a timetravel10 -o $pool -u $ADDR -p $password -i $OCIT;;
-		"lyra2v2")
-			screen -dmSL miner $ccminer -a lyra2v2 --cpu-priority 0 -o $pool --cpu-priority 0_POOL -u $address -p $password -i $ZPOOL_lyra2v2 --cpu-priority 0 -i $OCIT
-		"lbry")
-			screen -dmSL miner $ccminer -a lbry -o $pool -u $address -p $password -i $OCIT;;
-		"neoscrypt")
-			screen -dmSL miner $ccminer -a neoscrypt -o $pool -u $address -p $password -i $OCIT;;
-		"skein")
-			screen -dmSL miner $ccminer -a skein -o $pool -u $address -p $password -i $OCIT;;
-		"blake2s")
-			screen -dmSL miner $ccminer -a blake2s -o $pool -u $address -p $password -i $OCIT;;
-		"lyra2v2Mona")
-			miner_start1
-			screen -dmSL miner $alccminer -a lyra2v2 --cpu-priority 0 -o $pool -u $ADDR -p $password -i $OCIT;;
-		"x17")
-			miner_start1
-			screen -dmSL miner $alccminer -a x17 --cpu-priority 0 -o $pool -u $ADDR -p $password -i $OCIT;;
-		"dmd-gr")
-			screen -dmSL miner $ccminer -a dmd-gr -o $pool -u $ADDR -p $password -i $OCIT;;
-		"groestl")
-			screen -dmSL miner $ccminer -a groestl -o $pool -u $ADDR -p $password -i $OCIT;;
-		"myr-gr")
-			screen -dmSL miner $ccminer -a myr-gr -o $pool -u $ADDR -p $password -i $OCIT;;
-		"skunk")
-			screen -dmSL miner $tpccminer -a skunk -o $pool -u $ADDR -p $password -i $OCIT;;
-		"cryptonight")
-			screen -dmSL miner $tpccminer -o $pool -u $ADDR -p $password ;;
-	esac
-
+OPTIMINER() {
+	POOL=$POOL ":" $PORT
+	export GPU_FORCE_64BIT_PTR=1
+	screen -dmSL miner $OPTIMINER -s $POOL -u $ADDRESS -p $PASSWORD -a $ALGO
+	exit
 }
