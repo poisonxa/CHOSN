@@ -112,9 +112,6 @@ echo $POOL
 echo $PORT
 echo $PASSWORD
 # echo $SYMBOL
-ZENEWBFSET=
-CCMINERSET=
-
 
 
 ##################DYNAMIC VARIABLES####################
@@ -139,9 +136,10 @@ fi
 if [ $ALGO = "Scrypt" ]; then   
 # CC_OR_CG=$CC_OR_CG
 # if [ $CC_OR_CG = "CC" ]; then
-    echo "$ALGO - Opening CCMiner"
+    #echo "$ALGO - Opening CCMiner"
     MINSOFT=$CCMINER
-#  fi
+    echo $MINSOFT
+    #  fi
 #  if [ $CC_OR_CG = "CG" ]; then
 #    echo "$ALGO - Opening CGMiner"
 #    CGMINER
@@ -200,15 +198,22 @@ ZMEWBFSET=$(echo "--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT -
 CCMINERSET=$(echo "-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD -i $OCIT") 
 ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD") 
 
+echo $ZMZWBFSET
+echo $CCMINERSET
+echo $ETHSET
+
 ####### and run ########
 
-if [ $MINSOFT = $ZM_OR_EWBF ]; then
- screen -dmSL miner $MINSOFT $ZMEWBFSET
-fi
+if [ "$MINSOFT" == "$ZM_OR_EWBF" ]; then
+ echo $MINSOFT $ZMEWBFSET
 
-if [ $MINSOFT = $CCMINER ] || [ $MINSOFT = $CCMINERXEVAN ] || [ $MINSOFT = $ALCCMINER ]; then
- screen -dmSL miner $MINSOFT $CCMINERSET
- fi
-if [ $MINSOFT = $ETHMINER ]; then
- screen -dmSL miner $MINSOFT $ETHSET
+ # screen -dmSL miner $MINSOFT $ZMEWBFSET
+#fi
+elif [ "$MINSOFT" == "$CCMINER" ] || [ "$MINSOFT" == "$CCMINERXEVAN" ] || [ "$MINSOFT" == "$ALCCMINER" ]; then
+ echo "$MINSOFT $CCMINERSET"
+# screen -dmSL miner $MINSOFT $CCMINERSET
+# fi
+elif [ "$MINSOFT" == "$ETHMINER" ]; then
+    echo "$MINSOFT $ETHSET"
+# screen -dmSL miner $MINSOFT $ETHSET
 fi
