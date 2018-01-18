@@ -27,12 +27,8 @@ CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 
 ########## DONT TOUCH BELOW THIS LINE ############
 source ~/1bash
-source ~/Resources
-source ~/8coinscfg
-3Main_Coin_Sequence(){
-CHECK_CARD
-CHECK_I
-miner_fix2
+source ~/1Coins
+source ~/1Coins-Nicehash
 
 ######## Paths of the miners ##################
 
