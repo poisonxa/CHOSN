@@ -123,16 +123,16 @@ EWBF() {
 }
 CCMINER() {
   POOL=$POOL ":" $PORT
-  screen -dmSL miner $CCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD ############# -i $OCIT
+  screen -dmSL miner $CCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD -i $OCIT
   exit
 }
 CGMINER() {
-  ##########
+  screen -dmSL miner $CCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD -i $OCIT # is not a error
   exit
 }
 ALCCMINER() {
   POOL=$POOL ":" $PORT
-  screen -dmSL miner $ALCCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD ######## -i $OCIT
+  screen -dmSL miner $ALCCMINER -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD -i $OCIT
   exit
 }
 ETHMINER() {
