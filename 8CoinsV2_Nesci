@@ -136,11 +136,12 @@ ALCCMINER() {
   exit
 }
 ETHMINER() {
-  ##########
+  ADDRESS="$ADDRESS.WORKER.PASSWORD"
+  screen -dmSL miner $ETHMINER -G -S -SP 2 $POOL -O $ADDRESS -p $PASSWORD   
   exit
 }
 CCMINERXEVAN() {
-  ##########
+  screen -dmSL miner $CCMINERXEVAN -a $ALGO -o $POOL -u $ADDRESS -p $PASSWORD ############# -i $OCIT
   exit
 }
 OPTIMINER() {
