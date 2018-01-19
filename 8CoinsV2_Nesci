@@ -26,20 +26,22 @@ source /home/m1/1bash
 #source ~/1Coins-Nicehash
 
 DIR="/home/m1/8CoinsV2"
-#rm $DIR/Coins.json
-#rm $DIR/1Coins
-#rm $DIR/1Coins-Nicehash
-#rm $DIR/Algo.json
+rm $DIR/Coins.json
+rm $DIR/1Coins
+rm $DIR/1Coins-Nicehash
+rm $DIR/Algo.json
 
 ######## Paths of the miners ##################
 
-ETHMINER="/home/m1/eth/ethminer/ethminer" # ethminer this program is a binary the update is simple - Ethereum
-CCMINER="/home/m1/Miners/ccminer/ccminer" # -All other
-CCMINERXEVAN="/home/m1/Miners/ccminer-xevan/ccminer" # special ccminer-xevan
-ZM="/home/m1/Miners/zec/zm/zm"		# zm this program is a binary the update is simple? - Equihash
-EWBF="/home/m1/Miners/zec/ewbf/ewbf"	# ewbf this program is a binary the update is simple - Equihash
+DIRSOFTMIN="/home/m1/Miners"
+
+ETHMINER='$DIRSOFTMIN/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
+CCMINER='$DIRSOFTMIN/ccminer/ccminer' # -All other
+CCMINERXEVAN='$DIRSOFTMIN/ccminer-xevan/ccminer' # special ccminer-xevan
+ZM='$DIRSOFTMIN/zec/zm/zm'		# zm this program is a binary the update is simple? - Equihash
+EWBF='$DIRSOFTMIN/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
 # OPTIMINER="/home/m1/Miners/optiminer-equihash/optiminer-equihash"
-ALCCMINER="/home/m1/Miners/alccminer/ccminer"
+ALCCMINER='$DIRSOFTMIN/alccminer/ccminer'
 
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
 # $vertminer='/home/m1/Miners/vertminer/ccminer'
@@ -99,13 +101,13 @@ echo "Selected coin is : $COIN"
 echo "Algorithm is : $ALGO"
 
 ##################DYNAMIC VARIABLES####################
-WORKER=${$COIN_WORKER}
-ADDRESS=${COIN}_ADDRESS.$WORKER
-POOL=${COIN}_POOL
-PORT=${COIN}_PORT
-POOLSTRATUM=$POOL.$PORT   
-PASSWORD=${COIN}_PASSWORD
-# SYMBOL=${COIN}_SYMBOL
+WORKER=$(eval "echo \$$(echo ${COIN}_WORKER)")
+ADDRESS=$(eval "echo \$$(echo ${COIN}_ADDRESS)")
+POOL=$(eval "echo \$$(echo ${COIN}_POOL)")
+PORT=$(eval "echo \$$(echo ${COIN}_PORT)")
+POOLSTRATUM=$POOL":"$PORT   
+PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
+# SYMBOL=$(eval "echo \$$(echo ${COIN}_SYMBOL)")
 echo $WORKER
 echo $ADDRESS
 echo $POOL
@@ -193,9 +195,9 @@ fi
 ###################################################
 #### set Miners
 ###################################################
-
+ALGO=${ALGO,,}
 ZMEWBFSET=$(echo "--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --api 127.0.0.1:42000")
-CCMINERSET=$(echo "-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD -i $OCIT") 
+CCMINERSET=$(echo "-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD -i ${OCIT}") 
 ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD") 
 
 echo $ZMZWBFSET
@@ -204,16 +206,15 @@ echo $ETHSET
 
 ####### and run ########
 
-if [ "$MINSOFT" == "$ZM_OR_EWBF" ]; then
- echo $MINSOFT $ZMEWBFSET
-
- # screen -dmSL miner $MINSOFT $ZMEWBFSET
+if [ "$MINSOFT" = "$ZM_OR_EWBF" ]; then
+ #echo $MINSOFT $ZMEWBFSET
+screen -dmSL miner $MINSOFT $ZMEWBFSET
 #fi
-elif [ "$MINSOFT" == "$CCMINER" ] || [ "$MINSOFT" == "$CCMINERXEVAN" ] || [ "$MINSOFT" == "$ALCCMINER" ]; then
- echo "$MINSOFT $CCMINERSET"
-# screen -dmSL miner $MINSOFT $CCMINERSET
+elif [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ]; then
+ #echo "$MINSOFT $CCMINERSET"
+screen -dmSL miner $MINSOFT $CCMINERSET
 # fi
-elif [ "$MINSOFT" == "$ETHMINER" ]; then
-    echo "$MINSOFT $ETHSET"
-# screen -dmSL miner $MINSOFT $ETHSET
+elif [ "$MINSOFT" = "$ETHMINER" ]; then
+    #echo "$MINSOFT $ETHSET"
+screen -dmSL miner $MINSOFT $ETHSET
 fi
