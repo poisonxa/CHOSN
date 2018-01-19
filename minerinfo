@@ -1,0 +1,246 @@
+#!/bin/bash
+# 
+# 
+export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+echo "Content-type: text/html"
+echo ""
+echo '<html>'
+echo '<head>'
+echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8\n\n">'
+echo '<meta http-equiv="refresh" content="15">'
+echo '<h1 style="color: #5e9ca0; text-align: center;"><span style="text-decoration: underline; color: #339966;"><strong>CHOSN Miner Information Page</strong></span></h1>'
+source /home/m1/1bash
+source /home/m1/Resources
+source /home/m1/8Coins
+
+echo '<style>; .button {background-color: black ; border: none; color: black; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin: 4px 2px;cursor: pointer;}'
+echo '</style>'
+
+
+LSB_RELEASE=$(lsb_release -s -d)
+TAIL_GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1 |awk '{ SUM += $1+3}  ; { print SUM }')
+SYSTEM_BOOT_TIME=$(uptime -s)
+SYSTEM_UP_TIME=$(uptime -p)
+LOAD_AVERAGE=$(cat /proc/loadavg | awk '{print $1,$2,$3}')
+GPU_COUNT=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+REBOOT_REQUIRED=$([ -f /var/run/reboot-required ] && echo "<tt style=\"text-align:left; color:red\">"YES!!!"</tt>" || echo "No")
+#MINER_PID=$(ps ax | grep miner | grep -v grep | cut -f1 -d" " - | awk '{print $0}')
+MINER_PID=$(pgrep -f -o  miner)
+MINER_UP_TIME=$(ps -p $MINER_PID  -o etime | grep -v ELAPSED)
+GPU_UTILIZATIONS=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits)
+TEMP_FAN_POWER=$(tail  -n 50 /home/m1/Logs/6_autotemplog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+OCSETTINGS=$(tail  -n 50 /home/m1/Logs/6_autooclog  | grep GPU | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+TEMP_ALERT_LOG=$(tail  -n 50 /home/m1/Alerts/6_temp_alertlog | grep WARNING | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+WDOG_ALERT_LOG=$(tail  -n 50 /home/m1/Alerts/7_wdog_alertlog | grep WARNING | awk '{gsub(/:/,": ")}1' |tail -n $GPU_COUNT | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'  | awk '{print $0,"<br>"}' )
+NIVIDIA_VERSION=$( nvidia-smi | grep Version | sed 's/[|]//g' |  sed -n 's/^.*Version://p')
+DISK=$(df -h / | awk '{ a = $2 } END { print a }')
+DISK_FREE=$(df -h / | awk '{ a = $4 } END { print a }')
+MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $2'})
+FREE_MEMORY=$(free -m | head -n 2 | tail -n 1 | awk {'print $4'})
+CPU=$(cat /proc/cpuinfo | grep 'model name' | head -1 | cut -d':' -f2)
+
+if [ $TEMPERATURE_CONTROL == "YES" ]
+then
+  AUTO_TEMPERATURE_CONTROL=("Enabled,")
+  if ps aux | grep -v grep | grep -q 6TempControl
+  then
+    TEMP_CHECK=(" Running")
+  else
+    TEMP_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
+  fi
+else
+  AUTO_TEMPERATURE_CONTROL=("Disabled")
+fi
+
+if [ $WATCHDOG == "YES" ]
+then
+  WATCHDOG=("Enabled,")
+  if ps aux | grep -v grep | grep -q 5WatchDog
+  then
+    WDOG_CHECK=(" Running")
+  else
+    WDOG_CHECK=("<tt style=\"text-align:left; color:red\"> Not Running</tt>")
+  fi
+else
+  WATCHDOG=("Disabled")
+fi
+
+#################################################################
+########### Auto Switch History and current mining ##############
+
+if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+then
+  CURRENT_COIN=$(head -n 1 /home/m1/Logs/current-profit)
+  MINING_HISTORY=$(tail -n 5 /home/m1/Logs/algo_log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter MPH Auto Switch")
+
+
+elif [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+then
+  CURRENT_COIN=$(head -n 1 /home/m1/Logs/current-profit)
+  MINING_HISTORY=$(tail -n 5 /home/m1/Logs/algo_log |  awk '{print $0,"<br>"}')
+  AUTO_SWITCH=("Salfter Nicehash Auto Switch")
+
+
+elif [ $WTM_AUTO_SWITCH == "YES" ]
+then
+  CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  MINING_HISTORY=$(cat /home/m1/Alerts/WTM_switch_history | grep 'Mining switched'|tail -n 10 |  awk '{print $0,"<br>"}')
+  P_MINING_HISTORY="$MINING_HISTORY <br>"
+  WTM_PROFIT=$(cat /home/m1/Logs/WTM_current_profit | awk '{print $0,"%"}')
+  P_WTM_PROFIT="$WTM_PROFIT <br>"
+  WTM_REV=$(cat /home/m1/Logs/WTM_current_revenue | awk '{print $0,""}')
+  P_WTM_REV=$"$WTM_REV <br>"
+  WTM_AVERAGE_REV=$(awk '{s+=$1}END{print "",s/NR}' RS="\n"  /home/m1/Alerts/WTM_24H_REV)
+  P_WTM_AVERAGE_REV="$WTM_AVERAGE_REV <br>"
+  BTC_PRICE_VALUE=$(cat /home/m1/Logs/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}' )
+  BTC_PRICE="BTC PRICE: "
+  WTM_Current_Profitabilty="WTM Current Profitabilty:"
+  WTM_Current_Revenue="WTM Current Revenue: "
+  Average_Revenue="24H Average Revenue: "
+  LAST_10_AUTO_SWITCHES="<br> LAST 10 AUTO SWITCHES: <br>"
+
+  if ps aux | grep -v grep | grep -q 8wtm_auto_switch
+  then
+    WTM_SWITCH=("Running")
+  else
+    WTM_SWITCH=("<tt style=\"text-align:left; color:red\">Not Running</tt>")
+  fi
+
+#if python script syncing
+  if ps aux | grep -v grep | grep -q WTM_SWITCHER
+  then
+    WTM_A_S="Syncing data with WTM.com"
+  fi
+  AUTO_SWITCH=("WTM Auto Switch $WTM_SWITCH $WTM_A_S")
+
+
+elif [ $WTM_PROFIT_CHECK == "YES" ] && [ $WTM_AUTO_SWITCH == "NO" ]
+then
+  CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  MINING_HISTORY=""
+  WTM_PROFIT=$(cat /home/m1/Logs/WTM_current_profit | awk '{print $0,"%"}')
+  P_WTM_PROFIT="$WTM_PROFIT <br>"
+  WTM_REV=$(cat /home/m1/Logs/WTM_current_revenue | awk '{print $0,""}')
+  P_WTM_REV=$"$WTM_REV <br>"
+  WTM_SWITCH=("WTM Profit Check Running. ")
+  BTC_PRICE_VALUE=$(cat /home/m1/Logs/WTM_BTC_EXCHANGE_RATE | awk '{printf("%d\n",$1 + 0)}')
+  BTC_PRICE="BTC PRICE: "
+  WTM_AVERAGE_REV=""
+  WTM_Current_Profitabilty="WTM Current Profitabilty: "
+  WTM_Current_Revenue="WTM Current Revenue: "
+  Average_Revenue=""
+  LAST_10_AUTO_SWITCHES=""
+#if python script syncing
+  if ps aux | grep -v grep | grep -q WTM_SWITCHER
+  then
+    WTM_A_S="Syncing data with WTM.com"
+  fi
+  AUTO_SWITCH=("$WTM_SWITCH $WTM_A_S" )
+
+
+else
+  CURRENT_COIN=$(head -n 200 /home/m1/1bash | grep COIN= | sed 's/COIN=//')
+  AUTO_SWITCH="No Auto Switch"
+  MINING_HISTORY=""
+  BTC_PRICE=""
+  BTC_PRICE_VALUE=""
+  WTM_PROFIT=""
+  WTM_REV=""
+  WTM_AVERAGE_REV=""
+  WTM_CURRENCY=""
+  LAST_10_AUTO_SWITCHES=""
+  WTM_Current_Profitabilty=""
+  WTM_Current_Revenue=""
+fi
+
+##################################################################
+########################### Miner Logs ###########################
+
+  MINER_LOG=$(tail -n $TAIL_GPU_COUNT /home/m1/Logs/screenlog.0 |  sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' |  awk '{print $0,"<br>"}')
+
+###################################################################
+######################### BODY ####################################
+
+
+echo '<body style="background-color:black; color:#ffff66;font-size: 16px ">'
+echo "<strong>"
+echo '<title>Worker: '$WORKERNAME'</title>'
+echo '</head>'
+echo '<body>'
+echo '<h4>'  "Worker : ""<tt style=\"color:white;\">" $WORKERNAME "<br>""</tt>"  '</h4>'
+
+echo "Boot Time: " "<tt style=\"text-align:left; color:white; \">" "$SYSTEM_BOOT_TIME <br> </tt>"
+
+echo "System Up Time: " "<tt style=\"text-align:left; color:white\">" "$SYSTEM_UP_TIME <br> </tt>"
+
+echo "Miner Up Time: " "<tt style=\"text-align:left; color:white\">" "$MINER_UP_TIME<br> </tt>"
+
+echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$LOAD_AVERAGE<br> </tt>"
+
+echo "Distro: " "<tt style=\"text-align:left; color:white; \">" "$LSB_RELEASE $UNAME <br> </tt>"
+
+echo "CPU: " "<tt style=\"text-align:left; color:white\">" "$CPU<br> </tt>"
+
+echo "Disk / Free Disk: " "<tt style=\"text-align:left; color:white\">" "$DISK / $DISK_FREE<br> </tt>"
+
+echo "Memory / Free Memory: " "<tt style=\"text-align:left; color:white\">" "$MEMORY / $FREE_MEMORY<br> </tt>"
+
+echo "Load Average: " "<tt style=\"text-align:left; color:white\">" "$LOAD_AVERAGE<br> </tt>"
+
+echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
+
+echo "Reboot Required: "  "<tt style=\"text-align:left; color:white\">" "$REBOOT_REQUIRED <br> </tt>"
+
+echo "Nvidia Driver Version: "  "<tt style=\"text-align:left; color:white\">" "$NIVIDIA_VERSION <br> </tt>"
+
+echo "Auto Temp Control: "  "<tt style=\"text-align:left; color:white\">" "$AUTO_TEMPERATURE_CONTROL$TEMP_CHECK <br> </tt>"
+
+echo "Watch Dog: "  "<tt style=\"text-align:left; color:white\">" "$WATCHDOG$WDOG_CHECK <br> </tt>"
+
+echo "Gpu Count: " "<tt style=\"text-align:left; color:white\">" "$GPU_COUNT <br> </tt>"
+
+echo "GPU Target Temp: "  "<tt style=\"text-align:left; color:white\">" "$TARGET_TEMP <br> </tt>"
+
+echo "GPU Minimum Fan Speed: "  "<tt style=\"text-align:left; color:white\">" "$MINIMAL_FAN_SPEED <br> </tt>"
+
+echo "GPU Utilization: "  "<tt style=\"text-align:left; color:white\">" "$GPU_UTILIZATIONS <br> </tt>"
+
+echo "Currently Mining: " "<tt style=\"text-align:left; color:white\">" "$CURRENT_COIN <br> </tt>"
+
+echo "Auto Switcher: " "<tt style=\"text-align:left; color:white\">" "$AUTO_SWITCH <br></tt>"
+
+echo "$BTC_PRICE " "<tt style=\"text-align:left; color:white\">" "$BTC_PRICE_VALUE $WTM_CURRENCY<br> </tt>"
+
+echo "$WTM_Current_Profitabilty" "<tt style=\"text-align:left; color:white\">" "$P_WTM_PROFIT </tt>"
+
+echo "$WTM_Current_Revenue" "<tt style=\"text-align:left; color:white\">" "$P_WTM_REV </tt>"
+
+echo "$Average_Revenue" "<tt style=\"text-align:left; color:white\">" "$P_WTM_AVERAGE_REV   </tt>"
+
+echo "$LAST_10_AUTO_SWITCHES  " "<tt style=\"text-align:left; color:white\">" "$P_MINING_HISTORY </tt>"
+
+echo "Miner Hash Rate / Output: <br>" "<tt style=\"text-align:left; color:white\">" "$MINER_LOG <br> </tt>"
+
+echo "GPU Temp, Fan and Power Info: <br>"  "<tt style=\"text-align:left; color:white\">" "$TEMP_FAN_POWER <br> </tt>"
+
+echo "GPU Auto-Overclock Settings: <br>"  "<tt style=\"text-align:left; color:white\">" "$OCSETTINGS <br> </tt>"
+
+echo "GPU Temp, Fan and Power Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$TEMP_ALERT_LOG <br> $LOST_GPU <br> </tt>"
+
+echo "Watch Dog Alerts: <br>"  "<tt style=\"text-align:left; color:red\">" "$WDOG_ALERT_LOG <br> </tt>"
+
+echo '<br></br>'
+
+#echo '<a href="clearalerts">Clear Alerts</a>'
+
+#echo '<a onclick="clearalerts.sh" href="#">Execute the script</a>'
+#echo '<button onclick="clearalerts.sh">Clear Alerts ick me</button>'
+
+
+echo "</strong>"
+echo '</body>'
+
+echo '</html>'
+
+exit 0
