@@ -25,7 +25,7 @@ source /home/m1/1bash
 #source ~/1Coins
 #source ~/1Coins-Nicehash
 
-DIR="/home/m1/8CoinsV2"
+DIR='/home/m1/8CoinsV2'
 rm $DIR/Coins.json
 rm $DIR/1Coins
 rm $DIR/1Coins-Nicehash
@@ -33,7 +33,7 @@ rm $DIR/Algo.json
 
 ######## Paths of the miners ##################
 
-DIRSOFTMIN="/home/m1/Miners"
+DIRSOFTMIN='/home/m1/Miners'
 
 ETHMINER='$DIRSOFTMIN/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
 CCMINER='$DIRSOFTMIN/ccminer/ccminer' # -All other
@@ -122,11 +122,11 @@ echo $PASSWORD
 if [ $ALGO = "Equihash" ]; then   
   ZM_OR_EWBF=$ZM_or_EWBF
   if [ $ZM_OR_EWBF = "ZM" ]; then
-    echo "$ALGO - Opening ZM"
+   # echo "$ALGO - Opening ZM"
     MINSOFT=$ZM
   fi
   if [ $ZM_OR_EWBF = "EWBF" ]; then
-    echo "$ALGO - Opening EWBF"
+    #echo "$ALGO - Opening EWBF"
     MINSOFT=$EWBF
   else 
     echo "Error in your ZM_or_EWBF variable in 1bash"
@@ -140,7 +140,7 @@ if [ $ALGO = "Scrypt" ]; then
 # if [ $CC_OR_CG = "CC" ]; then
     #echo "$ALGO - Opening CCMiner"
     MINSOFT=$CCMINER
-    echo $MINSOFT
+   # echo $MINSOFT
     #  fi
 #  if [ $CC_OR_CG = "CG" ]; then
 #    echo "$ALGO - Opening CGMiner"
@@ -152,7 +152,7 @@ if [ $ALGO = "Scrypt" ]; then
 fi
 
 if [ $ALGO = "X11" ]; then   
-  echo "$ALGO - Opening ALCCMiner"
+  #echo "$ALGO - Opening ALCCMiner"
   MINSOFT=$ALCCMINER
 fi
 	
@@ -164,13 +164,13 @@ fi
 
 # XEVAN
 if [ $ALGO = "Xevan" ];  then 
-  echo "$ALGO - Opening CCMiner-Xevan" 
+  #echo "$ALGO - Opening CCMiner-Xevan" 
   MINSOFT=$CCMINERXEVAN
 fi
   
 # X17
 if [ $ALGO = "X17" ]; then
-  echo "$ALGO - Opening ALCCMiner" 
+  #echo "$ALGO - Opening ALCCMiner" 
   MINSOFT=$ALCCMINER
 fi
 
@@ -181,8 +181,8 @@ fi
 # fi
 
 # CCMINER - MIX
-if [ $ALGO = "Lyra2rev2" ] || [ $ALGO = "Skunkhashs" ] || [ $ALGO = "Lyra2Z" ] || [ $ALGO = "Myriad-Groestl" ] || [ $ALGO = "Blake14" ] || [ $ALGO = "C11" ] || [ $ALGO = "Qubit" ] || [ $ALGO = "LBRY" ] || [ $ALGO = "Groestl" ] || [ $ALGO = "Mars" ]; then
-  echo "$ALGO - Opening CCMiner" 
+if [ $ALGO = "Lyra2rev2" ] || [ $ALGO = "Skunkhashs" ] || [ $ALGO = "Lyra2Z" ] || [ $ALGO = "Myriad-Groestl" ] || [ $ALGO = "Blake14" ] || [ $ALGO = "C11" ] || [ $ALGO = "Qubit" ] || [ $ALGO = "LBRY" ] || [ $ALGO = "Groestl" ] || [ $ALGO = "Mars" ] || [ $ALGO = "Tribus" ]; then
+  #echo "$ALGO - Opening CCMiner" 
   MINSOFT=$CCMINER
 fi
 
@@ -197,10 +197,10 @@ fi
 ###################################################
 ALGO=${ALGO,,}
 ZMEWBFSET=$(echo "--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --api 127.0.0.1:42000")
-CCMINERSET=$(echo "-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD -i ${OCIT}") 
+CCMINERSET=$(echo "-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD") 
 ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD") 
 
-echo $ZMZWBFSET
+echo $ZMEWBFSET
 echo $CCMINERSET
 echo $ETHSET
 
@@ -209,12 +209,12 @@ echo $ETHSET
 if [ "$MINSOFT" = "$ZM_OR_EWBF" ]; then
  #echo $MINSOFT $ZMEWBFSET
 screen -dmSL miner $MINSOFT $ZMEWBFSET
-#fi
-elif [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ]; then
+fi
+if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ]; then
  #echo "$MINSOFT $CCMINERSET"
 screen -dmSL miner $MINSOFT $CCMINERSET
-# fi
-elif [ "$MINSOFT" = "$ETHMINER" ]; then
+fi
+if [ "$MINSOFT" = "$ETHMINER" ]; then
     #echo "$MINSOFT $ETHSET"
 screen -dmSL miner $MINSOFT $ETHSET
 fi
