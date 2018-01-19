@@ -92,8 +92,8 @@ fi
 
 ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
 if [ -z "$ALGO" ]; then
-  echo "ENTER THE ALGORITHM MANUALLY"
-  $ALGO=${COIN}_ALGO
+  read -p  'ENTER THE ALGORITHM MANUALLY : ' ALGO 
+    $ALGO=${COIN}_ALGO
 fi
 
 COINLISTWTM=$(jq '.coins | .[] | .tag' $DIR/Algo.json | sed 's/\"//' | sed 's/\"//')
