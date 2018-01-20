@@ -28,7 +28,7 @@ DIR='/home/m1/8CoinsV2'
 #rm $DIR/1Coins
 #rm $DIR/1Coins-Nicehash
 #rm $DIR/Algo.json
-COIN="ZEN"
+#COIN="ZEN"
 
 ###########################################
 
