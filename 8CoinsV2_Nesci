@@ -184,7 +184,7 @@ fi
 if [ "$ALGO" != 'Equihash' ] | [ "$COIN" != 'ETH' ] | [ "$COIN" != 'XEVAN' ] | [ $ALGO != "Hashimoto" ] | [ $ALGO != "Scrypt" ] | [ $ALGO != "X11" ] | [ $ALGO != "X17" ]; then
 
 #"Lyra2rev2" ] || [ $ALGO = "Skunkhashs" ] || [ $ALGO = "Lyra2Z" ] || [ $ALGO = "Myriad-Groestl" ] || [ $ALGO = "Blake14" ] || [ $ALGO = "C11" ] || [ $ALGO = "Qubit" ] || [ $ALGO = "LBRY" ] || [ $ALGO = "Groestl" ] || [ $ALGO = "Mars" ] || [ $ALGO = "Tribus" ]
-; then
+# ; then
   #echo "$ALGO - Opening CCMiner" 
   MINSOFT=$CCMINER
 fi
