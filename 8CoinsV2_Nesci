@@ -15,6 +15,12 @@ CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 ################## SETUP ##################
 
 source ~/1bash
+source ~/Resources
+3Main_Coin_Sequence(){
+CHECK_CARD
+CHECK_I
+miner_fix2
+
 if [ -f ~/1Coins ] && [ -f ~/1Coins-Nicehash ]; then
   source ~/1Coins
   source ~/1Coins-Nicehash
@@ -34,14 +40,14 @@ DIR='/home/m1/8CoinsV2'
 
 ############### MINERS PATH ###############
 
-DIRSOFTMIN='/home/m1/Miners'
+# DIRSOFTMIN='/home/m1/Miners'
 
-ETHMINER='$DIRSOFTMIN/eth/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
-CCMINER='$DIRSOFTMIN/ccminer/ccminer' # -All other
-CCMINERXEVAN='$DIRSOFTMIN/ccminer-xevan/ccminer' # special ccminer-xevan
-ZM='$DIRSOFTMIN/zec/zm/zm'		# zm this program is a binary the update is simple? - Equihash
-EWBF='$DIRSOFTMIN/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
-ALCCMINER='$DIRSOFTMIN/alccminer/ccminer'
+ETHMINER='/home/m1/Miners/eth/ethminer/./ethminer' # ethminer this program is a binary the update is simple - Ethereum
+CCMINER='/home/m1/Miners/ccminer/./ccminer' # -All other
+CCMINERXEVAN='/home/m1/Miners/ccminer-xevan/./ccminer' # special ccminer-xevan
+ZM='/home/m1/Miners/zec/zm/./zm'		# zm this program is a binary the update is simple? - Equihash
+EWBF='/home/m1/Miners/zec/ewbf/./ewbf'	# ewbf this program is a binary the update is simple - Equihash
+ALCCMINER='/home/m1/Miners/alccminer/./ccminer'
 
 # OPTIMINER="/home/m1/Miners/optiminer-equihash/optiminer-equihash"
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
