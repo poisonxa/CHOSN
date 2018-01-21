@@ -272,3 +272,4 @@ if [ "$MINSOFT" = "$ETHMINER" ]; then
   #echo "$MINSOFT $ETHSET"
   screen -dmSL miner $MINSOFT $ETHSET
 fi
+}
