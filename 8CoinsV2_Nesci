@@ -41,6 +41,7 @@ DIR='/home/m1/8CoinsV2'
 ############### MINERS PATH ###############
 
 # DIRSOFTMIN='/home/m1/Miners'
+# soft launch with ./  which is much more readable and less error-prone
 
 ETHMINER='/home/m1/Miners/eth/ethminer/./ethminer' # ethminer this program is a binary the update is simple - Ethereum
 CCMINER='/home/m1/Miners/ccminer/./ccminer' # -All other
