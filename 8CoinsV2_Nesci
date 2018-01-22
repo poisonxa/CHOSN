@@ -15,11 +15,11 @@ CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 ################## SETUP ##################
 
 source ~/1bash
-# source ~/Resources
-# 3Main_Coin_Sequence(){
-# CHECK_CARD
-# CHECK_I
-# miner_fix2
+ source ~/Resources
+ 3Main_Coin_Sequence(){
+ CHECK_CARD
+ CHECK_I
+ miner_fix2
 
 if [ -f ~/1Coins ] && [ -f ~/1Coins-Nicehash ]; then
   source ~/1Coins
@@ -282,4 +282,4 @@ if [ "$MINSOFT" = "$ETHMINER" ]; then
 #  echo "$MINSOFT $ETHSET"
   screen -dmSL miner $MINSOFT $ETHSET
 fi
-# }
+ }
