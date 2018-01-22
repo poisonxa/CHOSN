@@ -217,7 +217,7 @@ if [ $ALGO = "NeoScrypt" ]; then
 fi
 
 # CCMINER
-if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ] && [ $ALGO = "Neoscrypt" ]; then
+if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ] && [ $ALGO = "NeoScrypt" ]; then
   echo "$ALGO - Opening CCMiner (MIX)" 
   MINSOFT=$CCMINER
 fi
