@@ -15,11 +15,11 @@ CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 ################## SETUP ##################
 
 source ~/1bash
-source ~/Resources
-3Main_Coin_Sequence(){
-CHECK_CARD
-CHECK_I
-miner_fix2
+# source ~/Resources
+# 3Main_Coin_Sequence(){
+# CHECK_CARD
+# CHECK_I
+# miner_fix2
 
 if [ -f ~/1Coins ] && [ -f ~/1Coins-Nicehash ]; then
   source ~/1Coins
@@ -34,21 +34,22 @@ DIR='/home/m1/8CoinsV2'
 #rm $DIR/1Coins
 #rm $DIR/1Coins-Nicehash
 #rm $DIR/Algo.json
-#COIN="ZEN"
+COIN="CRC"
 
 ###########################################
 
 ############### MINERS PATH ###############
 
 # DIRSOFTMIN='/home/m1/Miners'
-# soft launch with ./  which is much more readable and less error-prone
+# soft launch with ./  which is much more readable and less error-prone 
 
-ETHMINER='/home/m1/Miners/eth/ethminer/./ethminer' # ethminer this program is a binary the update is simple - Ethereum
+ETHMINER='/home/m1/Miners/ethminer/./ethminer' # ethminer this program is a binary the update is simple - Ethereum
 CCMINER='/home/m1/Miners/ccminer/./ccminer' # -All other
 CCMINERXEVAN='/home/m1/Miners/ccminer-xevan/./ccminer' # special ccminer-xevan
 ZM='/home/m1/Miners/zec/zm/./zm'		# zm this program is a binary the update is simple? - Equihash
 EWBF='/home/m1/Miners/zec/ewbf/./ewbf'	# ewbf this program is a binary the update is simple - Equihash
 ALCCMINER='/home/m1/Miners/alccminer/./ccminer'
+TKCCMINER='/home/m1/Miners/TKccminer/./ccminer'
 
 # OPTIMINER="/home/m1/Miners/optiminer-equihash/optiminer-equihash"
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
@@ -176,12 +177,12 @@ if [ $ALGO = "Equihash" ]; then
   if [ $ZM_OR_EWBF = "ZM" ]; then
     echo "$ALGO - Opening ZM"
     API="telemetry=127.0.0.1:42000"
-    MINSOFT="ZM"
+    MINSOFT=$ZM
   fi
   if [ $ZM_OR_EWBF = "EWBF" ]; then
     echo "$ALGO - Opening EWBF"
     API="api 127.0.0.1:42000"
-    MINSOFT="EWBF"
+    MINSOFT=$EWB
   fi
   if [ $ZM_OR_EWBF != "ZM" ] && [ $ZM_OR_EWVF != "EWBF" ]; then 
     echo "Error in your ZM_or_EWBF variable in 1bash"
@@ -192,23 +193,29 @@ fi
 # ALCCMINER
 if [ $ALGO = "X11" ] || [ $ALGO = "X17" ]; then   
   echo "$ALGO - Opening ALCCMiner"
-  MINSOFT="ALCCMINER"
+  MINSOFT=$ALCCMINER
 fi
 	
 # ETHMINER
 if [ $ALGO = "Hashimoto" ]; then 
   echo "$ALGO - Opening Ethmminer" 
-  MINSOFT="ETHMINER"
+  MINSOFT=$ETHMINER
 fi
 
 # XEVAN
-if [ $ALGO = "Xevan" ];  then 
+if [ $ALGO = "Xevan" ]; then 
   echo "$ALGO - Opening CCMiner-Xevan" 
-  MINSOFT="CCMINERXEVAN"
+  MINSOFT=$CCMINERXEVAN
 fi
-  
+
+# TKCCMINER
+if [ $ALGO = "NeoScrypt" ]; then
+ echo "$ALGO - Opening TKCCMiner " 
+ MINSOFT=$TKCCMINER
+fi
+
 # CCMINER
-if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ]; then
+if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ] && [ $ALGO = "Neoscrypt" ]; then
   echo "$ALGO - Opening CCMiner (MIX)" 
   MINSOFT=$CCMINER
 fi
@@ -262,15 +269,15 @@ ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD")
 ################### RUN ###################
 
 if [ $MINSOFT = $ZM_OR_EWBF ]; then
-  #echo $MINSOFT $ZMEWBFSET
-  screen -dmSL miner $MINSOFT $ZMEWBFSET
+  echo $MINSOFT $ZMEWBFSET
+#  screen -dmSL miner $MINSOFT $ZMEWBFSET
 fi
-if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ]; then
-  #echo "$MINSOFT $CCMINERSET"
-  screen -dmSL miner $MINSOFT $CCMINERSET
+if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ] || [ "$MINSOFT" = "$TKCCMINER" ]; then
+  echo "$MINSOFT $CCMINERSET"
+#  screen -dmSL miner $MINSOFT $CCMINERSET
 fi
 if [ "$MINSOFT" = "$ETHMINER" ]; then
-  #echo "$MINSOFT $ETHSET"
-  screen -dmSL miner $MINSOFT $ETHSET
+  echo "$MINSOFT $ETHSET"
+#  screen -dmSL miner $MINSOFT $ETHSET
 fi
-}
+# }
