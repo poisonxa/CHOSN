@@ -34,7 +34,9 @@ DIR='/home/m1/8CoinsV2'
 #rm $DIR/1Coins
 #rm $DIR/1Coins-Nicehash
 #rm $DIR/Algo.json
-COIN="CRC"
+
+#for test only
+#COIN="CRC"
 
 ###########################################
 
@@ -269,15 +271,15 @@ ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD")
 ################### RUN ###################
 
 if [ $MINSOFT = $ZM_OR_EWBF ]; then
-  echo $MINSOFT $ZMEWBFSET
-#  screen -dmSL miner $MINSOFT $ZMEWBFSET
+#  echo $MINSOFT $ZMEWBFSET
+  screen -dmSL miner $MINSOFT $ZMEWBFSET
 fi
 if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ] || [ "$MINSOFT" = "$TKCCMINER" ]; then
-  echo "$MINSOFT $CCMINERSET"
-#  screen -dmSL miner $MINSOFT $CCMINERSET
+#  echo "$MINSOFT $CCMINERSET"
+  screen -dmSL miner $MINSOFT $CCMINERSET
 fi
 if [ "$MINSOFT" = "$ETHMINER" ]; then
-  echo "$MINSOFT $ETHSET"
-#  screen -dmSL miner $MINSOFT $ETHSET
+#  echo "$MINSOFT $ETHSET"
+  screen -dmSL miner $MINSOFT $ETHSET
 fi
 # }
