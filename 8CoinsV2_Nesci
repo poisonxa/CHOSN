@@ -53,6 +53,7 @@ ZM='/home/m1/Miners/zec/zm/./zm'		# zm this program is a binary the update is si
 EWBF='/home/m1/Miners/zec/ewbf/./ewbf'	# ewbf this program is a binary the update is simple - Equihash
 ALCCMINER='/home/m1/Miners/alccminer/./ccminer'
 TKCCMINER='/home/m1/Miners/TKccminer/./ccminer'
+CLAYMORE='/home/m1/Miners/eth/Claymore/ethdcrminer64'
 
 # OPTIMINER="/home/m1/Miners/optiminer-equihash/optiminer-equihash"
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
