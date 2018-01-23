@@ -179,10 +179,15 @@ fi
 
 ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
 if [ -z "$ALGO" ]; then
-  echo -e "${RED}Couldnt find the algorithm in our list of coin"
-  read -p "Enter the algorithm : " ALGO 
-    $ALGO=${COIN}_ALGO
+  ALGO=$(eval "echo \$$(echo ${COIN}_ALGO)")
+  if [ -z "$ALGO" ]; then
+    echo -e "${RED}Couldnt find the algorithm in our list of coin"
+    read -p "Enter the algorithm : " ALGO 
+    echo "${COIN}_ALGO=${ALGO}" >> $DIR/1Coins
+  fi
 fi
+
+### TEST IF VARIABLE HAS MULTIPLE ALGOS ###
 
 echo "Selected coin is : $COIN"
 echo "Algorithm is : $ALGO"
