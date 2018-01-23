@@ -19,8 +19,10 @@ if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
 #######################################################################################
 #### COIN SELECTION ####
 #######################################################################################
-
+# select one coin 
 COIN="XVG"
+#for dual seclect fisrt and second / check compatible pairs
+#COIN="ETH;DCR" 
 
 #######################################################################################
 #			WebGui Settings
