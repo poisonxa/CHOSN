@@ -139,7 +139,7 @@ if [ ! -f $DIR/1Coins ] || [ ! -f $DIR/1Coins-Nicehash ]; then
   #CHOICE 1 - ALL COINS
   
   if [ $CHOICE = 1 ]; then
-    echo `/usr/bin/curl -s "https://whattomine.com/coins.json"` >> $DIR/Coins.json
+    echo `/usr/bin/curl -s "https://whattomine.com/calculators.json"` >> $DIR/Coins.json
     COIN_WTM
     echo -e "${RED}1Coins has been created!"
     echo -e "Go configure it and restart afterwards!${NC}"  
