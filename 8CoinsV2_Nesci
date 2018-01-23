@@ -1,9 +1,7 @@
 #!/bin/bash
 
-CHOSN_Ver="CHOSN v0000-0.0 - By NESCI,Moi162001"
-CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
-
 # Changelog:
+# 1.0 - Creation
 
 ################## TO DO ##################
 
@@ -15,28 +13,31 @@ CHOSN_Coin_ver="v0000-.0.002"   # Do not edit this
 ################## SETUP ##################
 
 source ~/1bash
- source ~/Resources
- 3Main_Coin_Sequence(){
- CHECK_CARD
- CHECK_I
- miner_fix2
+source ~/Resources
 
-if [ -f ~/1Coins ] && [ -f ~/1Coins-Nicehash ]; then
+if [ -f ~/1Coins ]; then
   source ~/1Coins
+fi
+
+if [ -f ~/1Coins-Nicehash ]; then
   source ~/1Coins-Nicehash
 fi
+
+###########################################
+
+################## VARIABLES ##################
 
 BLUE='\033[0;34m'
 RED='\033[1;31m'
 NC='\033[0m'
 DIR='/home/m1/8CoinsV2'
+
+#for testing purposes only
+#COIN="CRC"
 #rm $DIR/Coins.json
 #rm $DIR/1Coins
 #rm $DIR/1Coins-Nicehash
 #rm $DIR/Algo.json
-
-#for test only
-#COIN="CRC"
 
 ###########################################
 
@@ -65,6 +66,22 @@ TKCCMINER='/home/m1/Miners/TKccminer/./ccminer'
 
 ################ FUNCTIONS ################
 
+ifExist(){
+result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
+if [ $result -ge 1 ]; then
+  echo -e "${BLUE}Miner is running!${NC}"
+  exit
+else
+  echo -e "${RED}Miner is not running, trying a lib fix $TRY/2${NC}"
+  if [[ TRY < 2 ]]; then  
+    lib_fix
+  else
+    echo -e "${RED}Error${NC}"
+    exit
+  fi
+fi
+}
+
 COIN_WTM(){
   COINLIST=$(jq '.coins | .[] | .tag' $DIR/Coins.json | sed 's/\"//' | sed 's/\"//')
   WKN=$(echo '_WORKER=$WORKERNAME')
@@ -75,7 +92,7 @@ COIN_WTM(){
   # SYMBREPL=$(echo '_SYMBOL=" "')
 
   echo -e '########################################################################\n#---- You can add any other coin by following the same template ----\n########################################################################\n\n\n' >> $DIR/1Coins
-  echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
+  #echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
 
   for COINGEN in $COINLIST; do
     if [ $COINGEN != "NICEHASH" ]; then
@@ -85,11 +102,11 @@ COIN_WTM(){
 
   COINLIST=$(jq -c '[paths|.[1:2]]|unique' $DIR/Coins.json | sed 's/\[]//g' | sed 's/\["//g' | sed 's/\"]//g' | sed 's/,/ /g' | sed 's/\s*(\s*/(/g')
   
-  for COINGEN in $COINLIST; do
-    if [ ${COINGEN:0:8} = "Nicehash" ]; then
-      echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins-Nicehash
-    fi
-  done
+#  for COINGEN in $COINLIST; do
+#    if [ ${COINGEN:0:8} = "Nicehash" ]; then
+#      echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins-Nicehash
+#    fi
+#  done
 }
 
 COIN_QUESTION(){
@@ -143,7 +160,7 @@ if [ ! -f $DIR/1Coins ] || [ ! -f $DIR/1Coins-Nicehash ]; then
   
   if [ $CHOICE = 3 ]; then
     echo -e '########################################################################\n#---- You can add any other coin by following the same template ----\n########################################################################\n\n\n' >> $DIR/1Coins
-    echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
+    #echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
     while [[ ${CFG_CONTINUE} != "n" ]]; do
       echo -e "${BLUE}"
       read -p "Enter the symbol of the coin you want to configure (Ex: Zencash = ZEN) : " COINGEN
@@ -162,7 +179,8 @@ fi
 
 ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
 if [ -z "$ALGO" ]; then
-  read -p  "ENTER THE ALGORITHM MANUALLY : " ALGO 
+  echo -e "${RED}Couldnt find the algorithm in our list of coin"
+  read -p "Enter the algorithm : " ALGO 
     $ALGO=${COIN}_ALGO
 fi
 
@@ -177,48 +195,50 @@ echo "Algorithm is : $ALGO"
 if [ $ALGO = "Equihash" ]; then   
   ZM_OR_EWBF=$ZM_or_EWBF
   if [ $ZM_OR_EWBF = "ZM" ]; then
-    echo "$ALGO - Opening ZM"
+    echo -e "${BLUE}$ALGO - Opening ZM${NC}"
     API="telemetry=127.0.0.1:42000"
     MINSOFT=$ZM
   fi
   if [ $ZM_OR_EWBF = "EWBF" ]; then
-    echo "$ALGO - Opening EWBF"
+    echo -e "${BLUE}$ALGO - Opening EWBF${NC}"
     API="api 127.0.0.1:42000"
     MINSOFT=$EWB
   fi
   if [ $ZM_OR_EWBF != "ZM" ] && [ $ZM_OR_EWVF != "EWBF" ]; then 
-    echo "Error in your ZM_or_EWBF variable in 1bash"
-    exit
+    echo -e "${RED}Error in your ZM_or_EWBF variable in 1bash${NC}"
+    echo "$ALGO - Opening ZM"
+    API="telemetry=127.0.0.1:42000"
+    MINSOFT=$ZM
   fi
 fi 
 
 # ALCCMINER
 if [ $ALGO = "X11" ] || [ $ALGO = "X17" ]; then   
-  echo "$ALGO - Opening ALCCMiner"
+  echo -e "${BLUE}$ALGO - Opening ALCCMiner${NC}"
   MINSOFT=$ALCCMINER
 fi
 	
 # ETHMINER
 if [ $ALGO = "Hashimoto" ]; then 
-  echo "$ALGO - Opening Ethmminer" 
+  echo -e "${BLUE}$ALGO - Opening Ethmminer${NC}" 
   MINSOFT=$ETHMINER
 fi
 
 # XEVAN
 if [ $ALGO = "Xevan" ]; then 
-  echo "$ALGO - Opening CCMiner-Xevan" 
+  echo -e "${BLUE}$ALGO - Opening CCMiner-Xevan${NC}" 
   MINSOFT=$CCMINERXEVAN
 fi
 
 # TKCCMINER ( attention Neoscrypt is not = NeoScrypt )
 if [ $ALGO = "NeoScrypt" ]; then
- echo "$ALGO - Opening TKCCMiner " 
+ echo -e "${BLUE}$ALGO - Opening TKCCMiner${NC}" 
  MINSOFT=$TKCCMINER
 fi
 
 # CCMINER
 if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ] && [ $ALGO = "NeoScrypt" ]; then
-  echo "$ALGO - Opening CCMiner (MIX)" 
+  echo -e "${BLUE}$ALGO - Opening CCMiner${NC}" 
   MINSOFT=$CCMINER
 fi
 
@@ -259,9 +279,9 @@ PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
 ############# SET MINER VARS ##############
 
 ALGO=${ALGO,,}
-ZMEWBFSET=$(echo "--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API")
-CCMINERSET=$(echo "-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD") 
-ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD") 
+ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
+CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
+ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
 #echo $ZMEWBFSET
 #echo $CCMINERSET
 #echo $ETHSET
@@ -269,17 +289,21 @@ ETHSET=$(echo "-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD")
 ###########################################
 
 ################### RUN ###################
-
-if [ $MINSOFT = $ZM_OR_EWBF ]; then
-#  echo $MINSOFT $ZMEWBFSET
-  screen -dmSL miner $MINSOFT $ZMEWBFSET
-fi
-if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ] || [ "$MINSOFT" = "$TKCCMINER" ]; then
-#  echo "$MINSOFT $CCMINERSET"
-  screen -dmSL miner $MINSOFT $CCMINERSET
-fi
-if [ "$MINSOFT" = "$ETHMINER" ]; then
-#  echo "$MINSOFT $ETHSET"
-  screen -dmSL miner $MINSOFT $ETHSET
-fi
- }
+TRY=1
+while [[ TRY != 3 ]]; do
+  if [ $MINSOFT = $ZM_OR_EWBF ]; then
+  #  echo $MINSOFT $ZMEWBFSET
+    screen -dmSL $MINSOFT $MINSOFT $ZMEWBFSET
+  fi
+  if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ] || [ "$MINSOFT" = "$TKCCMINER" ]; then
+  #  echo "$MINSOFT $CCMINERSET"
+    screen -dmSL $MINSOFT $MINSOFT $CCMINERSET
+  fi
+  if [ "$MINSOFT" = "$ETHMINER" ]; then
+  #  echo "$MINSOFT $ETHSET"
+    screen -dmSL $MINSOFT $MINSOFT $ETHSET
+  fi
+  sleep 3
+  ifExist
+  TRY=$((TRY+1))
+done
