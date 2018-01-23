@@ -21,7 +21,7 @@ if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
 #######################################################################################
 # select one coin 
 COIN="XVG"
-#for dual seclect fisrt and second / check compatible pairs
+#for dual seclect fisrt and second / check compatible pairs go to end file
 #COIN="ETH;DCR" 
 
 #######################################################################################
@@ -586,3 +586,11 @@ SMART_INTENSITY="25"
 
 
 fi
+############ Compatible Pairs For Dual Only
+######### DUAL_ETH_DCR    DUAL_ETH_PASC    DUAL_ETH_PASL    DUAL_ETH_LBC    DUAL_ETH_SC
+######### DUAL_ETC_DCR    DUAL_ETC_PASC    DUAL_ETC_PASL    DUAL_ETC_LBC    DUAL_ETC_SC
+######### DUAL_EXP_DCR    DUAL_EXP_PASC    DUAL_EXP_PASL    DUAL_EXP_LBC    DUAL_EXP_SC
+######### DUAL_MUSIC_DCR  DUAL_MUSIC_PASC  DUAL_MUSIC_PASL  DUAL_MUSIC_LBC  DUAL_MUSIC_SC
+######### DUAL_UBQ_DCR    DUAL_UBQ_PASC    DUAL_UBQ_PASL    DUAL_UBQ_LBC    DUAL_UBQ_SC
+######### DUAL_SOIL_DCR   DUAL_SOIL_PASC   DUAL_SOIL_PASL   DUAL_SOIL_LBC   DUAL_SOIL_SC
+############
