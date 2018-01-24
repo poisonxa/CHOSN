@@ -4,7 +4,9 @@
 # 1.0 - Creation
 
 ################## TO DO ##################
-
+# detection de du envoi direct ver claymore sans passer 
+# le reste du script exemple if dual detected go to claymore
+# Patern commande claymore ok and use var DUAL1 and 2		  - DONE
 # Gives 4 options for 1Coins (All, Top, Questions, Nicehash)      - DONE
 # Mutli-Algorithms                                                - DONE
 # Add a new line in 1bash for dual " select first an second coin  - DONE
@@ -333,8 +335,8 @@ ALGO=${ALGO,,}
 ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
 CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
 ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
+CLAYMORE="-epool $(eval "echo \$$(echo ${DUAL1}_POOL)").$(eval "echo \$$(echo ${DUAL1}_PORT)") -ewal $(eval "echo \$$(echo ${DUAL1}_ADDRESS)") -epsw $(eval "echo \$$(echo ${DUAL1}_PASSWORD)") -dpool $(eval "echo \$$(echo ${DUAL2}_POOL)").$(eval "echo \$$(echo ${DUAL2}_PORT)") -dwal $(eval "echo \$$(echo ${DUAL2}_ADDRESS)") -dpsw $(eval "echo \$$(echo ${DUAL2}_PASSWORD)")  -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $(eval "echo \$$(echo ${DUAL1}_EXTENSION_ARGUMENTS)")"
 
-#CLAYMORE="-epool $COINFIRSTDUAL -ewal $ADDRESSCOINFIRSTDUAL -epsw x -dpool $COINSECDUAL -dwal $ADDRESSCOINSECDUAL -dpsw x -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS"
 
 #echo $ZMEWBFSET
 #echo $CCMINERSET
