@@ -228,6 +228,7 @@ if [[ $COIN != *";"* ]]; then
   fi
 else
   echo "Dual Mining DETECTED!"
+  DUALMIN=$CLAYMOREDUAL
   DUAL1=$(echo "${COIN%;*}")
   DUAL2=$(echo "${COIN#*;}")
   echo "DUAL1 = $DUAL1 : DUAL2 = $DUAL2"
@@ -293,6 +294,13 @@ if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $A
   MINSOFT=$CCMINER
 fi
 
+# CLaymore Dual ( only )
+if [ DUALMIN=$CLAYMOREDUAL ]; then
+ echo "Dual Mining Activated !"
+ MINSOFT=$CLAYMORE
+fi
+
+
 # OPTIMINER - MIX
 # if [ $ALGO = "Equi192,7" ] || [ $ALGO = "Mars" ]; then
 #  echo "$ALGO - Opening Optiminer"
@@ -335,7 +343,7 @@ ALGO=${ALGO,,}
 ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
 CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
 ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
-CLAYMORE="-epool $(eval "echo \$$(echo ${DUAL1}_POOL)").$(eval "echo \$$(echo ${DUAL1}_PORT)") -ewal $(eval "echo \$$(echo ${DUAL1}_ADDRESS)") -epsw $(eval "echo \$$(echo ${DUAL1}_PASSWORD)") -dpool $(eval "echo \$$(echo ${DUAL2}_POOL)").$(eval "echo \$$(echo ${DUAL2}_PORT)") -dwal $(eval "echo \$$(echo ${DUAL2}_ADDRESS)") -dpsw $(eval "echo \$$(echo ${DUAL2}_PASSWORD)")  -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $(eval "echo \$$(echo ${DUAL1}_EXTENSION_ARGUMENTS)")"
+CLAYMORESET="-epool $(eval "echo \$$(echo ${DUAL1}_POOL)").$(eval "echo \$$(echo ${DUAL1}_PORT)") -ewal $(eval "echo \$$(echo ${DUAL1}_ADDRESS)") -epsw $(eval "echo \$$(echo ${DUAL1}_PASSWORD)") -dpool $(eval "echo \$$(echo ${DUAL2}_POOL)").$(eval "echo \$$(echo ${DUAL2}_PORT)") -dwal $(eval "echo \$$(echo ${DUAL2}_ADDRESS)") -dpsw $(eval "echo \$$(echo ${DUAL2}_PASSWORD)")  -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $(eval "echo \$$(echo ${DUAL1}_EXTENSION_ARGUMENTS)")"
 
 
 #echo $ZMEWBFSET
@@ -350,15 +358,19 @@ TRY=1
 while [[ TRY != 3 ]]; do
   if [ $MINSOFT = $ZM_OR_EWBF ]; then
   #  echo $MINSOFT $ZMEWBFSET
-    screen -dmSL $MINSOFT $MINSOFT $ZMEWBFSET
+    screen -dmSL $MINSOFT $ZMEWBFSET
   fi
   if [ $MINSOFT = $CCMINER ] || [ $MINSOFT = $CCMINERXEVAN ] || [ $MINSOFT = $ALCCMINER ] || [ $MINSOFT = $TKCCMINER ]; then
   #  echo "$MINSOFT $CCMINERSET"
-    screen -dmSL $MINSOFT $MINSOFT $CCMINERSET
+    screen -dmSL $MINSOFT $CCMINERSET
   fi
   if [ $MINSOFT = $ETHMINER ]; then
   #  echo "$MINSOFT $ETHSET"
-    screen -dmSL $MINSOFT $MINSOFT $ETHSET
+    screen -dmSL $MINSOFT $ETHSET
+  fi
+  if [ $MINSOFT = $CLAYMORE ]; then
+  #  echo "$MINSOFT $CLAYMORESET"
+    screen -dmSL $MINSOFT $CLAYMORESET
   fi
   sleep 3
   ifExist
