@@ -288,7 +288,7 @@ ALGO=${ALGO,,}
 ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
 CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
 ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
-CLAYMORE="-epool $ETC_POOL -ewal $ETCADDR -epsw x -dpool $PASC_POOL -dwal $ADDR -dpsw x -dcoin pasc -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+CLAYMORE="-epool $COINFIRSTDUAL -ewal $ADDRESSCOINFIRSTDUAL -epsw x -dpool $COINSECDUAL -dwal $ADDRESSCOINSECDUAL -dpsw x -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
 #echo $ZMEWBFSET
 #echo $CCMINERSET
 #echo $ETHSET
