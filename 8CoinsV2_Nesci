@@ -10,7 +10,7 @@
 # Add a new line in 1bash for dual " select first an second coin  - DONE
 #   -Change it so it uses COIN variable - ex : COIN="ETH;DCR"     - DONE
 
-
+# CPU Mining
 # NiceHash implementation
 # Benchmark
 
