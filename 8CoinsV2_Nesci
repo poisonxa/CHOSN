@@ -4,7 +4,7 @@
 # 1.0 - Creation
 
 ################## TO DO ##################
-# detection de du envoi direct ver claymore sans passer 
+# detection de du envoi direct ver claymore sans passer 	  - need to check
 # le reste du script exemple if dual detected go to claymore
 # Patern commande claymore ok and use var DUAL1 and 2		  - DONE
 # Gives 4 options for 1Coins (All, Top, Questions, Nicehash)      - DONE
