@@ -5,9 +5,15 @@
 
 ################## TO DO ##################
 
+# Gives 4 options for 1Coins (All, Top, Questions, Nicehash)      - DONE
+# Mutli-Algorithms                                                - DONE
+# Add a new line in 1bash for dual " select first an second coin  - DONE
+#   -Change it so it uses COIN variable - ex : COIN="ETH;DCR"     - DONE
+
+
+# NiceHash implementation
 # Benchmark
-# Gives 3 options for 1Coins (All, Top, Questions) - done
-# add a new line in 1bash for dual " select first an second coin done
+
 ###########################################
 
 ################## SETUP ##################
@@ -27,13 +33,18 @@ fi
 
 ################## VARIABLES ##################
 
+DIR='/home/m1/8CoinsV2'
 BLUE='\033[0;34m'
 RED='\033[1;31m'
 NC='\033[0m'
-DIR='/home/m1/8CoinsV2'
+
+if [ $WTM_AUTO_SWITCH == "YES" ]; then
+  source ~/Logs/WTM_ccoin
+  COIN=$CCOIN
+fi
 
 #for testing purposes only
-#COIN="CRC"
+COIN="ETH;DCR"
 #rm $DIR/Coins.json
 #rm $DIR/1Coins
 #rm $DIR/1Coins-Nicehash
@@ -69,18 +80,18 @@ CLAYMORE='/home/m1/Miners/eth/Claymore/ethdcrminer64'
 
 ifExist(){
 result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
-if [ $result -ge 1 ]; then
-  echo -e "${BLUE}Miner is running!${NC}"
-  exit
-else
-  echo -e "${RED}Miner is not running, trying a lib fix $TRY/2${NC}"
-  if [[ TRY < 2 ]]; then  
-    lib_fix
-  else
-    echo -e "${RED}Error${NC}"
+  if [ $result -ge 1 ]; then
+    echo -e "${BLUE}Miner is running!${NC}"
     exit
+  else
+    echo -e "${RED}Miner is not running, trying a lib fix $TRY/2${NC}"
+    if [[ TRY < 2 ]]; then  
+      miner_start1
+    else
+      echo -e "${RED}Error${NC}"
+      exit
+    fi
   fi
-fi
 }
 
 COIN_WTM(){
@@ -92,7 +103,7 @@ COIN_WTM(){
   PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
   # SYMBREPL=$(echo '_SYMBOL=" "')
 
-  echo -e '########################################################################\n#---- You can add any other coin by following the same template ----\n########################################################################\n\n\n' >> $DIR/1Coins
+  echo -e '#####################################################################\n#---- You can add any other coin by following the same template ----#\n#####################################################################\n\n\n' >> $DIR/1Coins
   #echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
 
   for COINGEN in $COINLIST; do
@@ -101,13 +112,7 @@ COIN_WTM(){
     fi
   done
 
-  COINLIST=$(jq -c '[paths|.[1:2]]|unique' $DIR/Coins.json | sed 's/\[]//g' | sed 's/\["//g' | sed 's/\"]//g' | sed 's/,/ /g' | sed 's/\s*(\s*/(/g')
-  
-#  for COINGEN in $COINLIST; do
-#    if [ ${COINGEN:0:8} = "Nicehash" ]; then
-#      echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins-Nicehash
-#    fi
-#  done
+  echo -e '\n\n\n#####################################################################\n#---- CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM ----#\n#####################################################################\n' >> $DIR/1Coins
 }
 
 COIN_QUESTION(){
@@ -117,6 +122,20 @@ COIN_QUESTION(){
   POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
   PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
   echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins
+}
+
+COIN_NICEHASH(){
+  echo -e '###############################################################################\n#---- Edit NICEHASH_WORKER and NICEHASH_ADDRESS with your own information ----#\n###############################################################################\n\n' > $DIR/1Coins-Nicehash
+  echo -e 'NICEHASH_WORKER="WORKER_NAME"\nNICEHASH_ADDRESS="NICEHASH_BTC_ADDRESS"\n\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NICEHASH_ETHASH\nNICEHASH_ETHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"\nNICEHASH_ETHASH_PORT=3353\nNICEHASH_ETHAS_EXTENSION_ARGUMENTS=""\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NICEHASH_EQUIHASH\nNICEHASH_EQUIHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_EQUIHASH_POOL="stratum+tcp://equihash.usa.nicehash.com"\nNICEHASH_EQUIHASH_PORT=3357\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NICEHASH_LYRA2REV2\nNICEHASH_LYRA2REV2_WORKER=$NICEHASH_WORKER\nNICEHASH_LYRA2REV2_POOL="stratum+tcp://lyra2rev2.usa.nicehash.com"\nNICEHASH_LYRA2REV2_PORT=3347\nNICEHASH_LYRA2REV2_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NCIEHASH_NEOSCRYPT\nNICEHASH_NEOSCRYPT_WORKER=$NICEHASH_WORKER\nNICEHASH_NEOSCRYPT_POOL="stratum+tcp://neoscrypt.usa.nicehash.com"\nNICEHASH_NEOSCRYPT_PORT=3341\nNICEHASH_LYRA2REV2_INTENSITY=17\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NICEHASH_CRYPTONIGHT\nNICEHASH_CRYPTONIGHT_WORKER=$NICEHASH_WORKER\nNICEHASH_CRYPTONIGHT_POOL="stratum+tcp://cryptonight.usa.nicehash.com"\nNICEHASH_CRYPTONIGHT_PORT=3355\nNICEHASH_LYRA2REV2_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NICEHASH_X11GOST\nNICEHASH_X11GOST_WORKER=$NICEHASH_WORKER\nNICEHASH_X11GOST_POOL="stratum+tcp://x11gost.usa.nicehash.com"\nNICEHASH_X11GOST_PORT=3359\nNICEHASH_X11GOST_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
+  echo -e '# NICEHASH_SKUNKHASH\nNICEHASH_SKUNKHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_SKUNKHASH_POOL="stratum+tcp://skunk.usa.nicehash.com"\nNICEHASH_SKUNKHASH_PORT=3362\nNICEHASH_SKUNKHASH_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
+  echo -e "${RED}1Coins-Nicehash has been created!"
+  echo -e "Go configure it and restart afterwards!${NC}"
 }
 
 ###########################################
@@ -129,17 +148,19 @@ if [ ! -f $DIR/Algo.json ]; then
 fi
 
 # 1COINS - OPTIONS
-if [ ! -f $DIR/1Coins ] || [ ! -f $DIR/1Coins-Nicehash ]; then
+if [ ! -f $DIR/1Coins ]; then
   echo -e "${RED}1Coins hasnt been created yet"
   echo -e "${BLUE}3 options is offered :"
-  echo -e "1) Create a file with all the coins"
+  echo -e "1) Create a file with all the coins (including NiceHash)"
   echo -e "2) Create a file with the top coin for your GPUs"
   echo -e "3) Create a custom file with the coin you want"
-  read -p "Choose between option 1, 2 or 3 (1/2/3) : " CHOICE
+  echo -e "4) Create a file for NiceHash"
+  read -p "Choose between option 1, 2, 3 or 4 (1/2/3/4) : " CHOICE
   
   #CHOICE 1 - ALL COINS
-  
+ 
   if [ $CHOICE = 1 ]; then
+    COIN_NICEHASH
     echo `/usr/bin/curl -s "https://whattomine.com/calculators.json"` >> $DIR/Coins.json
     COIN_WTM
     echo -e "${RED}1Coins has been created!"
@@ -168,9 +189,14 @@ if [ ! -f $DIR/1Coins ] || [ ! -f $DIR/1Coins-Nicehash ]; then
       COIN_QUESTION
       read -p "Configure another coin? (y/n) : " CFG_CONTINUE
     done 
+    echo -e '\n\n\n#####################################################################\n#---- CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM ----#\n#####################################################################\n' >> $DIR/1Coins
     echo -e "${RED}1Coins has been created!"
     echo -e "Go configure it and restart afterwards!${NC}"
     exit
+  fi
+  
+  if [ $CHOICE = 4 ]; then
+    COIN_NICEHASH
   fi
 fi
 
@@ -178,17 +204,33 @@ fi
 
 ########### CHECK COIN/ALGO VAR ###########
 
-ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
-if [ -z "$ALGO" ]; then
-  ALGO=$(eval "echo \$$(echo ${COIN}_ALGO)")
-  if [ -z "$ALGO" ]; then
-    echo -e "${RED}Couldnt find the algorithm in our list of coin"
-    read -p "Enter the algorithm : " ALGO 
-    echo "${COIN}_ALGO=${ALGO}" >> $DIR/1Coins
+if [[ $COIN != *";"* ]]; then
+  if [ $COIN != "Nicehash" ]; then
+    ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+    if [ -z "$ALGO" ]; then
+      ALGO=$(eval "echo \$$(echo ${COIN}_ALGO)")
+      if [ -z "$ALGO" ]; then
+        echo -e "${RED}Couldnt find the algorithm in our list of coin"
+        read -p "Enter the algorithm : " ALGO 
+        echo "${COIN}_ALGO=${ALGO}" > $DIR/1Coins
+      fi
+    fi
+  
+    #TEST IF VARIABLE HAS MULTIPLE LINE (MULTI-ALGO)
+    if (( $(grep -c . <<<"$ALGO") > 1 )); then
+      echo -e "${RED}Your coin has multiple algorithms"
+      ALGO="${ALGO//$'\n'/"/"}"
+      read -p "Enter the algorithm you want ($ALGO): " ALGO
+      echo "${COIN}_ALGO=${ALGO}" > $DIR/1Coins
+    fi
   fi
+else
+  echo "Dual Mining DETECTED!"
+  DUAL1=$(echo "${COIN%;*}")
+  DUAL2=$(echo "${COIN#*;}")
+  echo "DUAL1 = $DUAL1 : DUAL2 = $DUAL2"
+  sleep 30
 fi
-
-### TEST IF VARIABLE HAS MULTIPLE ALGOS ###
 
 echo "Selected coin is : $COIN"
 echo "Algorithm is : $ALGO"
@@ -211,7 +253,8 @@ if [ $ALGO = "Equihash" ]; then
     MINSOFT=$EWB
   fi
   if [ $ZM_OR_EWBF != "ZM" ] && [ $ZM_OR_EWVF != "EWBF" ]; then 
-    echo -e "${RED}Error in your ZM_or_EWBF variable in 1bash${NC}"
+    echo -e "${RED}Error in your ZM_or_EWBF variable in 1bash"
+    echo -e "opening with default settings (DSTM)${NC}"
     echo "$ALGO - Opening ZM"
     API="telemetry=127.0.0.1:42000"
     MINSOFT=$ZM
@@ -238,8 +281,8 @@ fi
 
 # TKCCMINER ( attention Neoscrypt is not = NeoScrypt )
 if [ $ALGO = "NeoScrypt" ]; then
- echo -e "${BLUE}$ALGO - Opening TKCCMiner${NC}" 
- MINSOFT=$TKCCMINER
+  echo -e "${BLUE}$ALGO - Opening TKCCMiner${NC}" 
+  MINSOFT=$TKCCMINER
 fi
 
 # CCMINER
@@ -264,11 +307,13 @@ fi
 
 ############# SETUP COIN VARS #############
 
-ADDRESS=$(eval "echo \$$(echo ${COIN}_ADDRESS)")
-POOL=$(eval "echo \$$(echo ${COIN}_POOL)")
-PORT=$(eval "echo \$$(echo ${COIN}_PORT)")
-POOLSTRATUM=$POOL":"$PORT   
-PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
+if [ $COIN != "Nicehash" ]; then
+  ADDRESS=$(eval "echo \$$(echo ${COIN}_ADDRESS)")
+  POOL=$(eval "echo \$$(echo ${COIN}_POOL)")
+  PORT=$(eval "echo \$$(echo ${COIN}_PORT)")
+  POOLSTRATUM=$POOL":"$PORT   
+  PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
+fi
 
 #SYMBOL=$(eval "echo \$$(echo ${COIN}_SYMBOL)")
 #WORKER=$(eval "echo \$$(echo ${COIN}_WORKER)")
@@ -288,7 +333,9 @@ ALGO=${ALGO,,}
 ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
 CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
 ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
-CLAYMORE="-epool $COINFIRSTDUAL -ewal $ADDRESSCOINFIRSTDUAL -epsw x -dpool $COINSECDUAL -dwal $ADDRESSCOINSECDUAL -dpsw x -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS
+
+#CLAYMORE="-epool $COINFIRSTDUAL -ewal $ADDRESSCOINFIRSTDUAL -epsw x -dpool $COINSECDUAL -dwal $ADDRESSCOINSECDUAL -dpsw x -allcoins 1 -allpools 1 -dbg -1 $ETC_EXTENSION_ARGUMENTS"
+
 #echo $ZMEWBFSET
 #echo $CCMINERSET
 #echo $ETHSET
@@ -296,17 +343,18 @@ CLAYMORE="-epool $COINFIRSTDUAL -ewal $ADDRESSCOINFIRSTDUAL -epsw x -dpool $COIN
 ###########################################
 
 ################### RUN ###################
+
 TRY=1
 while [[ TRY != 3 ]]; do
   if [ $MINSOFT = $ZM_OR_EWBF ]; then
   #  echo $MINSOFT $ZMEWBFSET
     screen -dmSL $MINSOFT $MINSOFT $ZMEWBFSET
   fi
-  if [ "$MINSOFT" = "$CCMINER" ] || [ "$MINSOFT" = "$CCMINERXEVAN" ] || [ "$MINSOFT" = "$ALCCMINER" ] || [ "$MINSOFT" = "$TKCCMINER" ]; then
+  if [ $MINSOFT = $CCMINER ] || [ $MINSOFT = $CCMINERXEVAN ] || [ $MINSOFT = $ALCCMINER ] || [ $MINSOFT = $TKCCMINER ]; then
   #  echo "$MINSOFT $CCMINERSET"
     screen -dmSL $MINSOFT $MINSOFT $CCMINERSET
   fi
-  if [ "$MINSOFT" = "$ETHMINER" ]; then
+  if [ $MINSOFT = $ETHMINER ]; then
   #  echo "$MINSOFT $ETHSET"
     screen -dmSL $MINSOFT $MINSOFT $ETHSET
   fi
