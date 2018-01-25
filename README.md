@@ -19,6 +19,7 @@
  - name of the coin
  - worker name
  - address
- - pool + port
+ - pool
+ - port
  - intensity
  - password or symbol
