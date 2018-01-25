@@ -10,7 +10,7 @@ import requests
 import sys
 import urllib
 import urllib2
-import dfl_Zpool    ## DRAGONFLY
+import re
 
 configFile = "./WTM.json"
 topCoinLogFile = "./Logs/WTM_top_coin"
@@ -27,11 +27,47 @@ currency=cfg["currency"]
 includedCoins = includedCoins.strip(delimiter)
 
 if not includedCoins:
-    print "No incluted coins. Please, check 1bash script for WTM settings."
+    print "No included coins. Please, check 1bash script for WTM settings."
     sys.exit()
 
 includedCoins = includedCoins.split(delimiter)
 
+def IncludeSpecialCoins(data):
+    global includedCoins
+    i = 1
+    coinid = "WTM_SPECIAL_COIN_"+str(i)
+    try:
+        httpResponse = requests.get("http://whattomine.com/calculators.json")
+    except:
+        print("Can not get data from WhatToMine.com.")
+        sys.exit()
+        raise
+
+    wtmallcoins = httpResponse.json()['coins']
+#    print wtmallcoins
+    while coinid in cfg:
+        spcoin = cfg["WTM_SPECIAL_COIN_"+str(i)]
+        coinalgo = cfg["WTM_SPECIAL_ALGO_"+str(i)]
+        coinhr = cfg["WTM_SPECIAL_HASHRATE_"+str(i)]
+        coinpower = cfg["WTM_SPECIAL_POWER_"+str(i)]
+        for cn in wtmallcoins:
+            if wtmallcoins[cn]['tag'] == spcoin and wtmallcoins[cn]['algorithm'] == coinalgo:
+                cid = wtmallcoins[cn]['id']
+                url = "http://whattomine.com/coins/"+str(cid)+".json?hr="+coinhr+"&p="+coinpower+"&fee=0.0&cost=0.1&hcost=0.0"
+                try:
+                    httpResponse = requests.get(url)
+                except:
+                    print("Can not get data from WhatToMine.com.")
+                    sys.exit()
+                    raise
+                newcoin = httpResponse.json()
+                newcoin['tag'] = spcoin+"_"+coinalgo
+                includedCoins.append(spcoin+"_"+coinalgo)
+                data.append(newcoin)
+
+        i = i+1
+        coinid = "WTM_SPECIAL_COIN_"+str(i)
+    return data
 
 def saveTopCoin(data):
     logFile = open(topCoinLogFile, "w")
@@ -78,19 +114,22 @@ except:
     sys.exit()
     raise
 
+data = IncludeSpecialCoins(data)
+
 # filter WTM coins by user selection only
 for i in reversed(data):
-    if i["tag"] == "ETH":   # DRAGONFLY
-        ethRev = float(i["btc_revenue"])    # DRAGONFLY
+    if i["tag"] == "ETH": 
+        ethRev = float(i["btc_revenue"])  
     if i["tag"] not in includedCoins:
         data.remove(i)
+    if i["tag"] == "NICEHASH":
+        i["tag"] = "NICEHASH_" + re.sub(r'[\W_]+', '', i["algorithm"].upper())
 
 # calculate coin revenue
 #print currency + " Revenue"
 newRev = {}
 for i in data:
     newRev[i["tag"]] = float(i["btc_revenue"])
-newRev = dfl_Zpool.AddPoolData(newRev)  # DRAGONFLY
 newRev = sorted(newRev.items(), key=lambda x: x[1], reverse=True)
 #save current revenue
 RevLog = open("/home/m1/Logs/WTM_current_revenue", "w")
@@ -117,8 +156,10 @@ RevLog.close()
 # calculate coin profitability
 newProfits = {}
 for i in data:
-    newProfits[i["tag"]] = i["profitability"]
-newProfits = dfl_Zpool.AddPoolProfitData(newProfits, ethRev)    # DRAGONFLY
+    if "profitability" in i:
+        newProfits[i["tag"]] = i["profitability"]
+    else:
+        newProfits[i["tag"]] = "%.0f" % (100.0*float(i['btc_revenue'])/float(ethRev))
 newProfits = sorted(newProfits.items(), key=lambda x: x[1], reverse=True)
 
 # save current profit

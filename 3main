@@ -1,0 +1,671 @@
+#!/bin/bash
+
+source ~/1bash
+source ~/Resources
+source ~/8Coins
+source ~/1oc
+3MAIN_SEQUENCE_1
+TMINER=miner
+SALFTER="NO"
+
+if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+then
+SALFTER="YES"
+fi
+
+if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+then
+SALFTER="YES"
+fi
+
+
+if [ $CLEAR_LOGS_ON_BOOT == "YES" ]
+then
+sudo bash '/home/m1/clear_logs'
+fi
+
+if [ $SALFTER == "NO" ]
+then
+CHECK_MINER
+pkill -e $TMINER
+fi
+
+if [ $LOCALorREMOTE == "REMOTE" ]
+then
+export DISPLAY=:0
+fi
+
+sudo cp '/usr/lib/x86_64-linux-gnu/libOpenCL.so.1' '/usr/local/cuda/lib64/libOpenCL.so.1'
+
+___1050_or_1050ti="NO"
+
+NORMAL="NO"
+
+P106_100="NO"
+sudo chown -R m1 /tmp/
+sudo chown -R m1 /tmp
+nvidia-smi -L > /tmp/tempa
+
+if grep -q "1050" /tmp/tempa;
+then
+___1050_or_1050ti="YES"
+fi
+
+if grep -q "1060" /tmp/tempa;
+then
+NORMAL="YES"
+fi
+
+if grep -q "1070" /tmp/tempa;
+then
+NORMAL="YES"
+fi
+
+if grep -q "1080" /tmp/tempa;
+then
+NORMAL="YES"
+fi
+
+if grep -q "1080ti" /tmp/tempa;
+then
+NORMAL="YES"
+fi
+
+if grep -q "P106-100" /tmp/tempa;
+then
+___1050_or_1050ti="YES"
+P106_100="YES"
+fi
+
+sudo rm -f /tmp/tempa
+XORG="FAIL"
+
+if grep -q "28800" /etc/X11/xorg.conf;
+then
+XORG="OK"
+fi
+
+if [ $P106_100 == "YES" ]
+then
+XORG="OK"
+fi
+
+if [ $SLOW_USB_KEY_MODE == "YES" ]
+then
+sleep 6
+fi
+
+if [ $XORG == "FAIL" ]
+then
+echo "Copying NVIDIA Xorg config"
+sudo cp /etc/X11/xorg.conf.backup /etc/X11/xorg.conf
+
+connected_monitor=`nvidia-smi --query-gpu=gpu_bus_id,display_mode --format=csv,noheader | grep Enabled | wc -l`
+echo "Connected monitors: $connected_monitor"
+
+if [[ $connected_monitor == 0 ]]; then #no connected monitors, emulate connected
+	echo "Emulating connected monitor on Device0 in /etc/X11/xorg.conf"
+	sed -i -e '/^#Device0 ConnectedMonitor BEGIN$/,/^#Device0 ConnectedMonitor END$/c\\tOption "ConnectedMonitor" "DFP-0"\n\tOption "CustomEDID" "DFP-0:etc/edid.bin"' /etc/X11/xorg.conf
+else
+	echo "Connected monitor detected"
+fi
+
+
+
+internal=`lspci | grep -E "VGA|3D controller" | head -n 1 | grep -vE "NVIDIA|AMD"`
+[[ -z $internal ]] && exit 0
+
+
+busid=`echo $internal | awk '{print $1}' | sed 's/\./:/'`
+
+echo "Detected internal GPU on bus $busid to be the first one"
+sed -i -e 's/#Screen		0  "Screen0" 0 0/Screen		0  "Screen0" 0 0/' /etc/X11/xorg.conf
+
+
+sed -i -e "s/PCI:0:02:0/PCI:$busid/" /etc/X11/xorg.conf
+sudo xrandr --fb 1920x1080 > /dev/null
+fi
+connected_monitor=`nvidia-smi --query-gpu=gpu_bus_id,display_mode --format=csv,noheader | grep Enabled | wc -l`
+if [[ $connected_monitor == 0 ]]; then
+sudo xrandr --fb 1920x1080 > /dev/null
+fi
+logo
+echo ""
+3MainC
+  echo -e "${C}${B}------------------------- IMPORTANT INFORMATION -------------------------${N}"
+IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+echo ""
+  echo -e "${C}${B}This Rigs IP:${R} $IP${N}"
+echo ""
+  echo -e "${C}${B}This Rigs MAC:${R} $MAC${N}"
+echo ""
+  echo -e "${C}${B}TYPE ${B}${R}pxa ${C}${B}IN CONSOLE FOR A LIST OF COMMANDS${N}"
+echo ""
+  echo -e "${C}${B}-------------------------------------------------------------------------${N}"
+  echo -e "${N}"
+echo ""
+   IDS=$(nvidia-smi --query-gpu=pci.sub_device_id --format=csv,noheader,nounits)
+   i=0
+  echo -e "${C}${B}------------------------------- GPU LIST --------------------------------${N}"
+   for ID in $IDS
+   do
+      V_ID=${ID:6:5}
+      case $V_ID in
+         3842) V_ID="EVGA";;
+         1462) V_ID="MSI";;
+         10DE) V_ID="NVIDIA";;
+         19DA) V_ID="ZOTAC";;
+         807D|1043) V_ID="ASUS";;
+         1458) V_ID="GIGABYTE";;
+         196E) V_ID="PNY";;
+         1569) V_ID="PALIT";;
+      esac
+      MODEL=$(nvidia-smi -i $i --query-gpu=name --format=csv,noheader,nounits | tail -1)
+  echo -e "${C}${B}GPU $i${BBL} $V_ID $MODEL${N}"
+   i=$(($i + 1))
+   done
+  echo -e "${C}${B}-------------------------------------------------------------------------${N}"
+echo ""
+echo -en "${B}${Y}Getting System Ready${N}"
+echo ""
+if [ $USE_ENVIRONMENTAL_VARIBLES == "YES" ]
+then
+export GPU_FORCE_64BIT_PTR="0"
+export GPU_MAX_HEAP_SIZE="100"
+export GPU_USE_SYNC_OBJECTS="1"
+export GPU_MAX_ALLOC_PERCENT="100"
+echo ""
+echo ENVIRONMENTAL VARIBLES SET
+fi
+
+
+3Main_Sequence_2
+GPUS=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | tail -1)
+
+NVD=nvidia-settings
+
+if [ $WTM_AUTO_SWITCH == "YES" ]
+then
+
+  echo ""
+  echo -en "${B}${C}LAUNCHING:${N}  WTM AUTO SWITCH"
+  echo ""
+  cat <<EOF >/home/m1/WTM.json
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+EOF
+  i=1
+  while [[ $i -le ${WTM_SPECIAL_COINS} ]]
+  do  
+ cat <<EOF >>/home/m1/WTM.json
+ "WTM_SPECIAL_COIN_${i}": "$(eval echo \$WTM_SPECIAL_COIN_${i})",
+ "WTM_SPECIAL_ALGO_${i}": "$(eval echo \$WTM_SPECIAL_ALGO_${i})",
+ "WTM_SPECIAL_HASHRATE_${i}": "$(eval echo \$WTM_SPECIAL_HASHRATE_${i})",
+ "WTM_SPECIAL_POWER_${i}": "$(eval echo \$WTM_SPECIAL_POWER_${i})",
+EOF
+  i=$((${i}+1))
+  done 
+  cat <<EOF >>/home/m1/WTM.json
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+
+  HCD='/home/m1/8wtm_auto_switch'
+  running=$(ps -ef | awk '$NF~"8wtm_auto_switch" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r WTM_AUTO_SWITCH -e "bash /home/m1/8wtm_auto_switch"
+    running=""
+echo -en "${B}${C}process in guake terminal Tab ${R}(f12)${N}"
+echo ""
+  fi
+fi
+
+
+if [[ $WTM_PROFIT_CHECK == "YES" ]] && [[ $WTM_AUTO_SWITCH == "NO" ]]
+then
+  echo ""
+  echo -en "${B}${C}LAUNCHING:${N}  WTM PROFIT CHECK"
+  echo ""
+  cat <<EOF >/home/m1/WTM.json
+{
+ "WTM_URL": "$WTM_AUTO_SWITCH_URL",
+ "WTM_COINS": "$WTM_AUTO_SWITCH_COINS",
+ "WTM_MIN_DIFFERENCE": "$WTM_MIN_DIFFERENCE",
+EOF
+  i=1
+  while [[ $i -le ${WTM_SPECIAL_COINS} ]]
+  do  
+ cat <<EOF >>/home/m1/WTM.json
+ "WTM_SPECIAL_COIN_${i}": "$(eval echo \$WTM_SPECIAL_COIN_${i})",
+ "WTM_SPECIAL_ALGO_${i}": "$(eval echo \$WTM_SPECIAL_ALGO_${i})",
+ "WTM_SPECIAL_HASHRATE_${i}": "$(eval echo \$WTM_SPECIAL_HASHRATE_${i})",
+ "WTM_SPECIAL_POWER_${i}": "$(eval echo \$WTM_SPECIAL_POWER_${i})",
+EOF
+  i=$((${i}+1))
+  done 
+  cat <<EOF >>/home/m1/WTM.json
+ "currency":"$WTM_CURRENCY"
+}
+EOF
+
+  HCD='/home/m1/8wtm_profit_check'
+  running=$(ps -ef | awk '$NF~"8wtm_profit_check" {print $2}')
+  if [ "$running" == "" ]
+  then
+    guake -n $HCD -r WTM_PROFIT_CHECK -e "bash /home/m1/8wtm_profit_check"
+echo -en "${B}${C}process in guake terminal Tab ${R}(f12)${N}"
+echo ""
+    running=""
+  fi
+fi
+
+
+if [ $COIN == "SALFTER_NICEHASH_PROFIT_SWITCHING" ]
+then
+HOSTEDIT="YES"
+if grep -q "api.nicehash.com" /etc/hosts;
+then
+HOSTEDIT="NO"
+fi
+
+if [ $HOSTEDIT == "YES" ]
+then
+sudo -- sh -c -e "echo '' >> /etc/hosts";
+sudo -- sh -c -e "echo '104.20.158.21 api.nicehash.com' >> /etc/hosts";
+echo UPDATED HOSTS FILE WITH IPv6 FIX
+echo ""
+echo ""
+fi
+
+sleep 2
+cd /home/m1
+
+if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+then
+gpu_clks_daggerhashimoto="[$GPU0SCORE,$GPU1SCORE,$GPU2SCORE,$GPU3SCORE,$GPU4SCORE,$GPU5SCORE,$GPU6SCORE,$GPU7SCORE,$GPU8SCORE,$GPU9SCORE,$GPU10SCORE,$GPU11SCORE,$GPU12SCORE,$GPU13SCORE,$GPU14SCORE,$GPU15SCORE,$GPU16SCORE,$GPU17SCORE,$GPU18SCORE]"
+
+mem_clks_daggerhashimoto="[$GPU0SCORE,$GPU1SCORE,$GPU2SCORE,$GPU3SCORE,$GPU4SCORE,$GPU5SCORE,$GPU6SCORE,$GPU7SCORE,$GPU8SCORE,$GPU9SCORE,$GPU10SCORE,$GPU11SCORE,$GPU12SCORE,$GPU13SCORE,$GPU14SCORE,$GPU15SCORE,$GPU16SCORE,$GPU17SCORE,$GPU18SCORE]"
+
+gpu_clks_equihash=$gpu_clks_daggerhashimoto
+mem_clks_equihash=$mem_clks_daggerhashimoto
+gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
+mem_clks_neoscrypt=$mem_clks_daggerhashimoto
+gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
+mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
+gpu_clks_lbry=$gpu_clks_daggerhashimoto
+mem_clks_lbry=$mem_clks_daggerhashimoto
+else
+gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
+mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
+gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
+mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
+gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
+mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
+gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
+mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
+gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
+mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
+fi
+
+if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+then
+pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13]"
+pwr_lim_equihash=$pwr_lim_daggerhashimoto
+pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
+pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
+pwr_lim_lbry=$pwr_lim_daggerhashimoto
+else
+pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
+pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
+pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
+pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
+pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
+fi
+
+cat <<EOF >/home/m1/conf.json
+{
+ "currency": "$CURRENCY",
+ "pwrcost": $POWER_COST,
+ "min_profit": $MINIMUM_PROFIT,
+ "payment_addr": "$PAYMENT_ADDRESS",
+ "miner_name": "$WORKER_NAME",
+ "performance": 
+ {
+   "daggerhashimoto": {
+     "speed": 0.087, "power": 0.397,
+     "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
+     "cmd": "/home/m1/eth/ethminer_12dev2/ethminer -SP 2 -S daggerhashimoto.usa.nicehash.com:3353 -O {ADDR}.{MINER}:x -U" 
+   },
+   "equihash": {
+     "speed": 0.000001140, "power": 0.397,
+     "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
+     "cmd": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server equihash.usa.nicehash.com --user {ADDR}.{MINER} --pass z --port 3357"
+   },
+   "neoscrypt": {
+     "speed": 0.002160, "power": 0.397,
+     "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
+     "cmd": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.usa.nicehash.com:3341 -u {ADDR}.{MINER} -p x"
+   },
+   "lyra2rev2": {
+     "speed": 0.081, "power": 0.386,
+     "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
+     "cmd": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://lyra2rev2.usa.nicehash.com:3347 -u {ADDR}.{MINER} -p x"
+   },
+   "lbry": {
+     "speed": 0.639, "power": 0.392,
+     "power_limit": $pwr_lim_lbry, "gpu_oc": $gpu_clks_lbry, "mem_oc": $mem_clks_lbry, "fan": 0,
+     "cmd": "/home/m1/SPccminer/ccminer -a lbry -o stratum+tcp://lbry.usa.nicehash.com:3356 -u {ADDR}.{MINER} -p x"
+   }
+ }
+}
+EOF
+
+echo "LAUNCHING:  SALFTER_NICEHASH_PROFIT_SWITCHING "
+echo ""
+
+python2.7 '/home/m1/switch' /home/m1/conf.json
+CHECK_MINER
+if [ $LOCALorREMOTE == "LOCAL" ]
+then
+guake -n 1 -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
+fi
+
+BITCOIN="theGROUND"
+
+while [ $BITCOIN == "theGROUND" ]
+do
+  echo ""
+  cat current-profit
+  echo ""
+
+  if [ $LOCALorREMOTE == "LOCAL" ]
+  then
+  guake -r SALFTER_NICEHASH_PROFIT_SWITCHING -e "screen -r miner"
+  echo ""
+  echo "mining process in Guake Tab"
+  echo ""
+  sleep $PROFIT_CHECK_TIMEOUT
+  python2.7 '/home/m1/switch' /home/m1/conf.json
+  fi
+
+  if [ $LOCALorREMOTE == "REMOTE" ]
+  then
+  echo "ENTER:"
+  echo "" 
+  echo "screen -r miner"
+  echo ""
+  echo "in a terminal to view mining process"
+  sleep $PROFIT_CHECK_TIMEOUT
+  python2.7 '/home/m1/switch' /home/m1/conf.json
+  fi
+done
+fi
+
+
+if [ $COIN == "SALFTER_MPH_PROFIT_SWITCHING" ]
+then
+
+cd /home/m1
+
+if [ "$INDIVIDUAL_CLOCKS" == "YES" ]
+then
+gpu_clks_daggerhashimoto="[$GPU0SCORE,$GPU1SCORE,$GPU2SCORE,$GPU3SCORE,$GPU4SCORE,$GPU5SCORE,$GPU6SCORE,$GPU7SCORE,$GPU8SCORE,$GPU9SCORE,$GPU10SCORE,$GPU11SCORE,$GPU12SCORE,$GPU13SCORE,$GPU14SCORE,$GPU15SCORE,$GPU16SCORE,$GPU17SCORE,$GPU18SCORE]"
+
+mem_clks_daggerhashimoto="[$GPU0SCORE,$GPU1SCORE,$GPU2SCORE,$GPU3SCORE,$GPU4SCORE,$GPU5SCORE,$GPU6SCORE,$GPU7SCORE,$GPU8SCORE,$GPU9SCORE,$GPU10SCORE,$GPU11SCORE,$GPU12SCORE,$GPU13SCORE,$GPU14SCORE,$GPU15SCORE,$GPU16SCORE,$GPU17SCORE,$GPU18SCORE]"
+
+gpu_clks_equihash=$gpu_clks_daggerhashimoto
+mem_clks_equihash=$mem_clks_daggerhashimoto
+gpu_clks_neoscrypt=$gpu_clks_daggerhashimoto
+mem_clks_neoscrypt=$mem_clks_daggerhashimoto
+gpu_clks_lyra2rev2=$gpu_clks_daggerhashimoto
+mem_clks_lyra2rev2=$mem_clks_daggerhashimoto
+gpu_clks_lbry=$gpu_clks_daggerhashimoto
+mem_clks_lbry=$mem_clks_daggerhashimoto
+__Blake_Vanilla_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Blake_Vanilla_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Cryptonight_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Cryptonight_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Keccak_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Keccak_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Myriad_Groestl_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Myriad_Groestl_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Qubit_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Qubit_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Scrypt_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Scrypt_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Sia_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Sia_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__Skein_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+Skein_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+__X11_CORE_OVERCLOCK=$gpu_clks_daggerhashimoto
+X11_MEMORY_OVERCLOCK=$mem_clks_daggerhashimoto
+else
+gpu_clks_daggerhashimoto="$__daggerhashimoto_CORE_OVERCLOCK"
+mem_clks_daggerhashimoto="$daggerhashimoto_MEMORY_OVERCLOCK"
+gpu_clks_equihash="$__equihash_CORE_OVERCLOCK"
+mem_clks_equihash="$equihash_MEMORY_OVERCLOCK"
+gpu_clks_neoscrypt="$__neoscrypt_CORE_OVERCLOCK"
+mem_clks_neoscrypt="$neoscrypt_MEMORY_OVERCLOCK"
+gpu_clks_lyra2rev2="$__lyra2rev2_CORE_OVERCLOCK"
+mem_clks_lyra2rev2="$lyra2rev2_MEMORY_OVERCLOCK"
+gpu_clks_lbry="$__lbry_CORE_OVERCLOCK"
+mem_clks_lbry="$lbry_MEMORY_OVERCLOCK"
+fi
+
+if [ "$INDIVIDUAL_POWERLIMIT" == "YES" ]
+then
+pwr_lim_daggerhashimoto="[$INDIVIDUAL_POWERLIMIT_0,$INDIVIDUAL_POWERLIMIT_1,$INDIVIDUAL_POWERLIMIT_2,$INDIVIDUAL_POWERLIMIT_3,$INDIVIDUAL_POWERLIMIT_4,$INDIVIDUAL_POWERLIMIT_5,$INDIVIDUAL_POWERLIMIT_6,$INDIVIDUAL_POWERLIMIT_7,$INDIVIDUAL_POWERLIMIT_8,$INDIVIDUAL_POWERLIMIT_9,$INDIVIDUAL_POWERLIMIT_10,$INDIVIDUAL_POWERLIMIT_11,$INDIVIDUAL_POWERLIMIT_12,$INDIVIDUAL_POWERLIMIT_13]"
+pwr_lim_equihash=$pwr_lim_daggerhashimoto
+pwr_lim_neoscrypt=$pwr_lim_daggerhashimoto
+pwr_lim_lyra2rev2=$pwr_lim_daggerhashimoto
+pwr_lim_lbry=$pwr_lim_daggerhashimoto
+Blake_Vanilla_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Cryptonight_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Keccak_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Myriad_Groestl_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Qubit_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Scrypt_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Sia_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+Skein_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto
+X11_POWERLIMIT_WATTS=$pwr_lim_daggerhashimoto5
+else
+pwr_lim_daggerhashimoto=$daggerhashimoto_POWERLIMIT_WATTS
+pwr_lim_equihash=$equihash_POWERLIMIT_WATTS
+pwr_lim_neoscrypt=$neoscrypt_POWERLIMIT_WATTS
+pwr_lim_lyra2rev2=$lyra2rev2_POWERLIMIT_WATTS
+pwr_lim_lbry=$lbry_POWERLIMIT_WATTS
+fi
+
+cat <<EOF >/home/m1/mph_conf.json
+{
+  "user_name": "$MPH_USERNAME",
+  "miner_name": "$WORKER_NAME",
+  "card_type": "nvidia",
+  "currency": "$CURRENCY",
+  "pwrcost": $POWER_COST,
+  "min_profit": $MINIMUM_PROFIT,
+  "miners":
+  {
+    "Blake-Vanilla":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a vanilla -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Blake_Vanilla_POWERLIMIT_WATTS, "gpu_oc": $__Blake_Vanilla_CORE_OVERCLOCK, "mem_oc": $Blake_Vanilla_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 12.3, "power": 0.389
+    },
+    "Cryptonight":
+    {
+      "bin": "/home/m1/KTccminer-cryptonight/ccminer -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Cryptonight_POWERLIMIT_WATTS, "gpu_oc": $__Cryptonight_CORE_OVERCLOCK, "mem_oc": $Cryptonight_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.000002, "power": 0.325
+    },
+    "Equihash":
+    {
+      "bin": "/home/m1/zec/v3_4/miner --eexit 3 --fee 0 --pec --server {HOST} --user {NAME}.{MINER} --pass z --port {PORT}",
+      "power_limit": $pwr_lim_equihash, "gpu_oc": $gpu_clks_equihash, "mem_oc": $mem_clks_equihash, "fan": 0,
+      "speed": 0.000001140, "power": 0.397
+    },
+    "Ethash":
+    {
+      "bin": "/home/m1/eth/ethminer_12dev2/ethminer -S {HOST}:{PORT} -O {NAME}.{MINER}:x -U",
+      "power_limit": $pwr_lim_daggerhashimoto, "gpu_oc": $gpu_clks_daggerhashimoto, "mem_oc": $mem_clks_daggerhashimoto, "fan": 0,
+      "speed": 0.087, "power": 0.397
+    },
+    "Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a groestl -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Groestl_CORE_OVERCLOCK, "mem_oc": $Groestl_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.0853, "power": 0.392
+    },
+    "Keccak":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a keccak -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Keccak_POWERLIMIT_WATTS, "gpu_oc": $__Keccak_CORE_OVERCLOCK, "mem_oc": $Keccak_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 1.45, "power": 0.391
+    },
+    "Lyra2RE2":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a lyra2v2 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $pwr_lim_lyra2rev2, "gpu_oc": $gpu_clks_lyra2rev2, "mem_oc": $mem_clks_lyra2rev2, "fan": 0,
+      "speed": 0.081, "power": 0.386
+    },
+    "Myriad-Groestl":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a myr-gr -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Myriad_Groestl_POWERLIMIT_WATTS, "gpu_oc": $__Myriad_Groestl_CORE_OVERCLOCK, "mem_oc": $Myriad_Groestl_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.158, "power": 0.391
+    },
+    "NeoScrypt":
+    {
+      "bin": "/home/m1/KTccminer/ccminer -a neoscrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $pwr_lim_neoscrypt, "gpu_oc": $gpu_clks_neoscrypt, "mem_oc": $mem_clks_neoscrypt, "fan": 0,
+      "speed": 0.002160, "power": 0.397
+    },
+    "Qubit":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a qubit -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Qubit_POWERLIMIT_WATTS, "gpu_oc": $__Qubit_CORE_OVERCLOCK, "mem_oc": $Qubit_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.0509, "power": 0.382
+    },
+    "Scrypt":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a scrypt -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Scrypt_POWERLIMIT_WATTS, "gpu_oc": $__Scrypt_CORE_OVERCLOCK, "mem_oc": $Scrypt_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.00224, "power": 0.403
+    },
+    "Sia":
+    {
+      "bin": "/home/m1/SPccminer/ccminer -a sia -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Sia_POWERLIMIT_WATTS, "gpu_oc": $__Sia_CORE_OVERCLOCK, "mem_oc": $Sia_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 3.700, "power": 0.403
+    },
+    "Skein":
+    {
+      "bin": "/home/m1/ASccminer/ccminer -a skein -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $Skein_POWERLIMIT_WATTS, "gpu_oc": $__Skein_CORE_OVERCLOCK, "mem_oc": $Skein_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.835, "power": 0.383
+    },
+    "X11":
+    {
+      "bin": "/home/m1/TPccminer/ccminer -a x11 -o stratum+tcp://{HOST}:{PORT} -u {NAME}.{MINER} -p x",
+      "power_limit": $X11_POWERLIMIT_WATTS, "gpu_oc": $__X11_CORE_OVERCLOCK, "mem_oc": $X11_MEMORY_OVERCLOCK, "fan": 0,
+      "speed": 0.0327, "power": 0.403
+    }
+  }
+}
+EOF
+
+echo "LAUNCHING:  SALFTER_MPH_PROFIT_SWITCHING "
+echo ""
+
+python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+
+if [ $LOCALorREMOTE == "LOCAL" ]
+then
+guake -n 1 -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
+fi
+
+BITCOIN="theGROUND"
+
+while [ $BITCOIN == "theGROUND" ]
+do
+  echo ""
+  cat current-profit
+  echo ""
+
+  if [ $LOCALorREMOTE == "LOCAL" ]
+  then
+  guake -r SALFTER_MPH_PROFIT_SWITCHING -e "screen -r miner"
+  echo ""
+  echo "mining process in Guake Tab"
+  echo ""
+  sleep $PROFIT_CHECK_TIMEOUT
+  python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+  fi
+
+  if [ $LOCALorREMOTE == "REMOTE" ]
+  then
+  echo "ENTER:"
+  echo "" 
+  echo "screen -r miner"
+  echo ""
+  echo "in a terminal to view mining process"
+  sleep $PROFIT_CHECK_TIMEOUT
+  python2.7 '/home/m1/mph_switch' /home/m1/mph_conf.json
+  fi
+done
+fi
+if [ $SLOW_USB_KEY_MODE == "YES" ]
+then
+sleep 6
+fi
+3MAINOCC
+if [ $P106_100_FULL_HEADLESS_MODE == "NO" ]
+then
+if [ $AUTOMATIC_OVERCLOCK == "NO" ]; then
+if [[ $__CORE_OVERCLOCK > 0 && $MEMORY_OVERCLOCK > 0 ]]; then
+3MAIN_CHECKOC
+fi
+fi
+
+if [[ $MANUAL_FAN == "YES" ]]
+then
+gpu=0
+while [ $gpu -lt $GPUS ]
+do
+${NVD} -a [gpu:$gpu]/GPUFanControlState=1 > /dev/null
+${NVD} -a [fan:$gpu]/GPUTargetFanSpeed=${FAN_SPEED} > /dev/null
+gpu=$(($gpu+1))
+done
+fi
+
+
+
+if [[ $MANUAL_FAN == "NO" && $TEMPERATURE_CONTROL == "NO" ]]
+then
+gpu=0
+while [ $gpu -lt $GPUS ]
+do
+${NVD} -a [gpu:$gpu]/GPUFanControlState=0 > /dev/null
+gpu=$(($gpu+1))
+done
+fi
+fi
+
+3Main_Sequence_3
+##### TO ADD NEW COINS EDIT 8COINS #####
+3Main_Coin_Sequence
+if [ $LOCALorREMOTE == "LOCAL" ]
+then
+bash '/home/m1/Miners/Miner_Starter'
+fi
+while [ $Loopback == "Looper" ]
+do
+sleep 120
+done
+fi

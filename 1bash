@@ -1,0 +1,622 @@
+#!/bin/bash
+#### REMOTE 1BASH SECTION ########
+##### INPUT "YES" IF YOU ARE HOSTING YOUR 1BASH REMOTELY
+#### FOR ADVANCED USERS ONLY -- DO NOT USE UNLESS YOU KNOW WHAT YOU ARE DOING
+remotebash="NO" # "YES" or "NO" only 
+BASHURL="https://pxanetwork.com/1bash"
+#### CHANGE THIS TO YOUR REMOTE 1BASH ADDRESS (PASTEBIN) ####
+###### IF YOU SELECT YES TO REMOTEBASH, DO NOT FILL ANYTHING BELOW. DO EVERYTHING ON THE REMOTE 1BASH ########
+################## DONT TOUCH THIS PLEASE #################
+if [ $remotebash == "YES" -o $remotebash == "yes" ]; then #
+source <( curl -s -S --insecure $BASHURL ); fi 				  #
+if [ $remotebash == "NO" -o $remotebash == "no" ]; then   #
+################## DONT TOUCH THIS PLEASE #################
+#######################################################################################
+###### LIST OF SUPPORTED COINS AND CONTRIBUTORS ARE LOCATED IN THE BOTTOM OF THIS DOCUMENT
+
+#				NVOC SETTINGS BELOW THIS LINE
+
+#######################################################################################
+#### COIN SELECTION ####
+#######################################################################################
+
+COIN="LUX_PHI1612"
+
+#######################################################################################
+#			WebGui Settings -- This is not ready yet --
+#######################################################################################
+# Edit this section with your "DOMAINHERE" information to control your rig
+USE_WEBGUI="YES"    # This is to control your rig via a web control panel at "DOMAINHERE"
+
+USERNAME="poisonxa" # This is the username you created at "DOMAINHERE"
+
+RIGNAME="Beast6"    # This is the rigname you provided at "DOMAINHERE"
+
+#######################################################################################
+#			What to mine auto switcher settings.
+#######################################################################################
+WTM_AUTO_SWITCH="YES"  #( whattomine.com switcher)
+
+WTM_PROFIT_CHECK="YES" # whattomine.com Profit check for webinfo
+
+# note!! all selected COINS must HAVE ADDRESSES below (no need address if switch=no and profit=yes )
+# select which coins you want to mine/check profit (profit switch only uses this list of coins) it will auto switch/check profit of your COIN selection from this list using whattomine.com
+
+WTM_AUTO_SWITCH_COINS="BTG;ZEC;MONA;ZEN;XVG;NICEHASH" ### coins to check profit or make the switch with format "ZEC;ETH;ETC;XMR"
+
+WTM_SPECIAL_COINS=2
+
+WTM_SPECIAL_COIN_1="XVG"
+WTM_SPECIAL_ALGO_1="X17"
+WTM_SPECIAL_HASHRATE_1="6600"
+WTM_SPECIAL_POWER_1="95"
+
+WTM_SPECIAL_COIN_2="LUX"
+WTM_SPECIAL_ALGO_2="PHI1612"
+WTM_SPECIAL_HASHRATE_2="11.2"
+WTM_SPECIAL_POWER_2="95"
+
+WTM_AUTO_SWITCH_SYNC_INTERVAL="2" # Time to sync with WTM for best coin
+
+WTM_PROFIT_CHECK_INTERVAL="1" # Interval between checking profit for web info
+
+WTM_MIN_DIFFERENCE="20" # Mininumum difference in percent when switch to new coin, to prevent too many switches.
+
+WTM_CURRENCY="GBP" # USD, AUD, BRL, CAD, CHF, CLP, CNY, DKK, EUR, GBP, HKD, INR, ISK, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD
+
+#Read below for how to change the url
+WTM_AUTO_SWITCH_URL="http://whattomine.com/coins.json?utf8=%E2%9C%93&adapt_q_280x=0&adapt_q_380=0&adapt_q_fury=0&adapt_q_470=0&adapt_q_480=3&adapt_q_570=0&adapt_q_580=0&adapt_q_vega56=0&adapt_q_vega64=0&adapt_q_750Ti=0&adapt_q_1050Ti=0&adapt_q_10606=1&adapt_10606=true&adapt_q_1070=0&adapt_q_1080=0&adapt_q_1080Ti=0&eth=true&factor[eth_hr]=22.5&factor[eth_p]=90.0&grof=true&factor[gro_hr]=20.5&factor[gro_p]=90.0&x11gf=true&factor[x11g_hr]=7.2&factor[x11g_p]=90.0&cn=true&factor[cn_hr]=430.0&factor[cn_p]=70.0&eq=true&factor[eq_hr]=270.0&factor[eq_p]=90.0&lre=true&factor[lrev2_hr]=20300.0&factor[lrev2_p]=90.0&ns=true&factor[ns_hr]=500.0&factor[ns_p]=90.0&lbry=true&factor[lbry_hr]=170.0&factor[lbry_p]=90.0&bk2bf=true&factor[bk2b_hr]=990.0&factor[bk2b_p]=80.0&bk14=true&factor[bk14_hr]=1550.0&factor[bk14_p]=90.0&pas=true&factor[pas_hr]=580.0&factor[pas_p]=90.0&skh=true&factor[skh_hr]=18.0&factor[skh_p]=90.0&factor[l2z_hr]=420.0&factor[l2z_p]=300.0&factor[cost]=0.0&sort=Revenue&volume=0&revenue=current&factor[exchanges][]=&factor[exchanges][]=abucoins&factor[exchanges][]=bitfinex&factor[exchanges][]=bittrex&factor[exchanges][]=bleutrade&factor[exchanges][]=cryptopia&factor[exchanges][]=hitbtc&factor[exchanges][]=poloniex&factor[exchanges][]=yobit&dataset=Main&commit=Calculate"
+
+## Go to [ https://whattomine.com/coins ] select your cards, hash rate, power, algos, exchanges, ...
+# Set "Sort by" and Difficulty for Revenue" to "Current profit" and "Current difficulty" ... "Average last ***" are not good for auto switch.
+# Click calculate, and wait for page to load, copy the new url and add .json to /coins at the beginning of the url.
+# like this " https://whattomine.com/coins.json?utf8=✓&adapt....."
+# Above url is for 6x1060
+#######################################################################################
+#			KEEP ALIVE SETTINGS
+#######################################################################################
+# TEMPERATURE CONTROL KEEPS EVERYTHING RUNNING COOL
+TEMPERATURE_CONTROL="YES" ###### THIS IS TEMPERATURE CONTROL WILL SET FANS AND POWER TO
+#KEEP DESIRED TEMPERATURE
+
+WATCHDOG="YES" ##### WATCHDOG IS MEANT TO KEEP THE SYSTEM RUNNING
+
+#######################################################################################
+#			REMOTE - LOCAL SETTINGS
+#######################################################################################
+# LOCAL will attach the mining process to the gnome or guake terminal
+# REMOTE will leave it unattached / ready for SSH 
+LOCALorREMOTE="REMOTE"          # LOCAL  or  REMOTE
+
+# Select if you want the miner on a seperate window 
+# This is good for troubleshooting because you get to close the terminal and the miner wont close
+# Remember to kill the miner select the window and press ctrl+c closing the window will not close miner.
+DualWindows="YES"
+
+TEAMVIEWER="NO"                 # YES NO
+
+SSH="YES"                       # YES NO
+#######################################################################################
+#			MANUAL POWER LIMIT AND OVERCLOCK SETTINGS
+#######################################################################################
+POWERLIMIT="YES"              	# YES NO
+	#set this in watts as the maximum power your card can use numerical value
+	#you can also set this to MAX to run cards at maximum power
+	POWERLIMIT_WATTS=100
+
+#These are global overclocks set individual overclocks in 1oc to NO and AUTOMATIC_OVERCLOCK to no for this to work	
+__CORE_OVERCLOCK=0
+MEMORY_OVERCLOCK=0
+
+#This is to run the fans at one speed and one speed only
+MANUAL_FAN="NO"             	# YES NO
+
+	FAN_SPEED=75            # Set fan speed if MANUAL_FAN="YES"
+#######################################################################################
+#				GLOBAL WORKER NAME
+#######################################################################################
+# GLOBAL_WORKERNAME will use a single worker name for all coins
+GLOBAL_WORKERNAME="YES"         # YES NO
+
+	# HOST will use the rigs host address <-- GOOD FOR REMOTE BASHING MULTIPLE RIGS
+	# MAC will use the rigs NIC's MAC address
+	# CUSTOM will use your own
+	#	AUTO_WORKERNAME="HOST"         # HOST  or  MAC  or  CUSTOM
+	AUTO_WORKERNAME="MAC"         # HOST  or  MAC  or  CUSTOM
+
+	# if AUTO_WORKERNAME="CUSTOM" Set your workername here
+	# for nanopool use workername/email
+	CUSTOM_WORKERNAME="Beast6"
+
+#######################################################################################
+#				AUTO UPDATE SECTION
+#######################################################################################
+
+# Would you like to auto update?
+DO_UPDATES="YES"
+
+# If yes what types of updates BETA or STABLE?
+DO_UPDATETYPE="STABLE"
+
+#######################################################################################
+#            	  TELEGRAM SECTION - I HIGHLY RECOMMEND THIS!
+#######################################################################################
+# This is a simple tutorial to get you started. It will show you how to get your CHATID and API.
+# https://youtu.be/HS7Q1zH00bs
+# If you set telegram to "NO" but add CHATID and API, you will only get notifications from the system.
+# Activating this will alert you if your Watchdog restarted your miner of if it has restarted the system.
+# It will also inform you of current stats if your turn telegram_alerts to "YES"
+TELEGRAM_ALERTS="YES"           # Activating this will alert you periodically of how your system is performing.
+TELEGRAM_TIMEOUT_IN_MINUTES=60  # This is how often it will alert you.
+TELEGRAM_NAME="PXA TELEGRAM"	# This is what your telegram name will be to identify your miner/group.
+TELEGRAM_MINERRESTARTS="YES"    # This will notify you of miner software restarts by Watchdog.
+TELEGRAM_SYSTEMRESTARTS="YES"   # This will notify you of system restarts by Watchdog.
+TELEGRAM_CHATID="475279584"
+TELEGRAM_APIKEY="458417317:AAHVeP1b7ej_kyj3IT_vcQucDI-qYWQb-LI"                                   
+#######################################################################################
+# Mine XMR with CPU
+plusCPU="NO"	# YES NO
+threadCOUNT="1"  # Number of threads for plusCPU: varies per CPU
+
+### REBOOT SELECTION YES - NO  IF YOU WANT A PERIODIC RIG REBOOT
+AUTO_REBOOT="NO"
+REBOOT_TIMEOUT_IN_MINUTES=2880  # once every 48 hours
+### HEADLESS SELECTION YES - NO
+P106_100_FULL_HEADLESS_MODE="NO"
+### Donation to continue the project. Donation is less than 1% of mining in 24hr
+donate="NO"
+#######################################################################################
+# TEMPERATURE_CONTROL
+#######################################################################################
+# Set the target temperature; Recommended ranges: 55 - 75.  Don't set it too low, if the temperature can't be reached with fan adjustments it will decrease power.  If the actual temp is above the target temp this script will up the fan speed.  If actual temp is above value set above and fan speed is 100, the script will lower the power limit.
+
+TARGET_TEMP=69
+
+__FAN_ADJUST=5      # Adjustment size in percent
+
+POWER_ADJUST=5     # Adjustment size in watts
+
+# Difference in actual temperature allowed before action:  Works only if current is BELOW target temp
+
+ALLOWED_TEMP_DIFF=3
+
+# Restore original power limit if fan speed is lower than this percentage
+
+RESTORE_POWER_LIMIT=90
+
+# lowest fan speed that will be used
+
+MINIMAL_FAN_SPEED=50
+
+########################################################################################
+# Set for automatic overclocks. May not work for certain algos 
+# make sure you adjust your temps to maximum level that trigger autotemps
+# or this may not work if this crashes your system turn it off
+AUTOMATIC_OVERCLOCK="YES"
+# to edit settings for overclocks edit 1oc file
+#
+#This option will share your overclock information with a database to help optimize overclocks for specific graphics cards.
+SHARE_OC_INFO="YES"
+########################################################################################
+#                               Dont Touch Below Here Please
+########################################################################################
+IPW=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+IP_AS_WORKER=$(echo -n $IPW | tail -c -3 | sed 'y/./0/')
+MAC=$(ifconfig -a | grep -Po 'HWaddr \K.*$')
+MAC_AS_WORKER=$(echo -n $MAC | sed 'y/:/_/')
+if [ $GLOBAL_WORKERNAME == "YES" ]
+then
+if [ $AUTO_WORKERNAME == "HOST" ]
+then
+WORKERNAME=$IP_AS_WORKER
+fi
+if [ $AUTO_WORKERNAME == "MAC" ]
+then
+WORKERNAME=$MAC_AS_WORKER
+fi
+if [ $AUTO_WORKERNAME == "CUSTOM" ]
+then
+WORKERNAME=$CUSTOM_WORKERNAME
+fi
+fi
+########################################################################################
+#                               Dont Touch Above Here Please
+########################################################################################
+
+########################################################################################
+
+# set YOUR ADDRESSES, WORKERS, POOL, INTENSITY and PORT:
+BTC_ADDRESS="1PAktaUVg9HpLvk1sCLcRguwR73Rso9pEz"
+
+# Set the miner password
+MINER_PWD="x"
+
+ZM_or_EWBF="ZM"  # choose  ZM  or  EWBF
+
+#DSTM ZM  Miner optional arguments add "--telemetry=$IPW:42000" if you want web info
+ZM_OPTS="--telemetry=$IPW:42000"
+
+#EWBF ZEC Miner version
+EWBF_VERSION="3_4" # choose 3_3  or  3_4
+#EWBF ZEC Miner optional arguments. add "--api $IPW:42000" if you want web info
+EWBF_OPTS="--api $IPW:42000"
+# change EWBF_PERCENT to alter donation percent for EWBF Miner
+EWBF_PERCENT="0"
+###############################################
+# AUTO ALGO OR MANUAL ALGO SECTION
+# Select if to if you want to use auto algo intensity. YES - NO
+AUTO_ALGO="YES"
+# Select how aggressive the intensity should be. SAFE - LITE - MED - HIGH - BRUTAL
+ALGO_I="MED"
+# if auto algo is set to NO select algo intensity below
+ALGOI="21"
+# if using manual algo, reboot your rig to take effect
+###############################################
+
+NICEHASH_WORKER="$WORKERNAME"
+NICEHASH_ADDRESS="36qSRi6qqi4cwNLnMbcaxxKTjz2eKyHcNK"
+
+# NICEHASH_ETHASH
+NICEHASH_ETHASH_WORKER="$WORKERNAME"
+NICEHASH_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"
+NICEHASH_ETHASH_PORT="3353"
+NICEHASH_ETHASH_EXTENSION_ARGUMENTS="" # add any additional claymore arguments desired here #
+
+# NICEHASH_EQUIHASH
+NICEHASH_EQUIHASH_WORKER="$WORKERNAME"
+NICEHASH_EQUIHASH_ADDRESS="$BTC_ADDRESS"
+NICEHASH_EQUIHASH_POOL="stratum+tcp://equihash.usa.nicehash.com"
+NICEHASH_EQUIHASH_PORT="3357"
+
+# NICEHASH_LYRA2REV2
+NICEHASH_LYRA2REV2_WORKER="$WORKERNAME"
+NICEHASH_LYRA2REV2_POOL="stratum+tcp://lyra2rev2.usa.nicehash.com"
+NICEHASH_LYRA2REV2_PORT="3347"
+NICEHASH_LYRA2REV2_INTENSITY="21"
+
+# NICEHASH_NEOSCRYPT
+NICEHASH_NEOSCRYPT_WORKER="$WORKERNAME"
+NICEHASH_NEOSCRYPT_POOL="stratum+tcp://neoscrypt.usa.nicehash.com"
+NICEHASH_NEOSCRYPT_PORT="3341"
+NICEHASH_NEOSCRYPT_INTENSITY="17"
+
+# NICEHASH_CRYPTONIGHT
+NICEHASH_CRYPTONIGHT_WORKER="$WORKERNAME"
+NICEHASH_CRYPTONIGHT_POOL="stratum+tcp://cryptonight.usa.nicehash.com:3355"
+NICEHASH_CRYPTONIGHT_PORT="3355"
+NICEHASH_CRYPTONIGHT_INTENSITY="21"
+
+# NICEHASH_X11GOST
+NICEHASH_X11GOST_WORKER="$WORKERNAME"
+NICEHASH_X11GOST_POOL="stratum+tcp://x11gost.usa.nicehash.com"
+NICEHASH_X11GOST_PORT="3359"
+NICEHASH_X11GOST_INTENSITY="21"
+
+# NICEHASH_SKUNKHASH
+NICEHASH_SKUNKHASH_WORKER="$WORKERNAME"
+NICEHASH_SKUNKHASH_POOL="stratum+tcp://skunk.usa.nicehash.com:"
+NICEHASH_SKUNKHASH_PORT="3362"
+NICEHASH_SKUNKHASH_INTENSITY="21"
+
+
+#ZCash
+ZEC_WORKER=$WORKERNAME
+ZEC_ADDRESS="t1gSkECXrMJwjJ585ef15uYrsuFyaaLHu9D" 
+ZEC_POOL="zec-us-east1.nanopool.org"
+ZEC_PORT="6666"
+
+#BTG
+BTG_WORKER=$WORKERNAME
+BTG_ADDRESS="poisonxa" 
+BTG_POOL="btg.suprnova.cc"
+BTG_PORT="8816"
+
+#MNX
+MNX_WORKER=$WORKERNAME
+MNX_ADDRESS="MNX address" 
+MNX_POOL="eu.minexpool.nl"
+MNX_PORT="9999"
+
+#ZClassic
+ZCL_WORKER=$WORKERNAME
+ZCL_ADDRESS="replace_with_your_ZCL_address"
+ZCL_POOL="us.zclmine.pro"
+ZCL_PORT="9009"
+
+#For Nice Equihash
+NICE_EQUIHASH_WORKER=$WORKERNAME
+NICE_EQUIHASH_ADDRESS=$BTC_ADDRESS
+NICE_EQUIHASH_POOL="equihash.usa.nicehash.com"
+NICE_EQUIHASH_PORT="3357"
+
+#KMD
+KMD_WORKER=$WORKERNAME
+KMD_ADDRESS="replace_with_your_KMD_address"
+KMD_POOL="luckpool.org"
+KMD_PORT="3857"
+
+#ZEN
+ZEN_WORKER=$WORKERNAME
+ZEN_ADDRESS="dragonflyuk"
+ZEN_POOL="zen.suprnova.cc"
+ZEN_PORT="3618"
+
+#BTX
+BTX_WORKER="yourSuprNovaWorker"
+BTX_ADDRESS="yourSuprNovaLogin"
+BTX_POOL="stratum+tcp://btx.suprnova.cc:3629"
+BTX_INTENSITY="21"
+
+#ZDASH or HUSH
+HUSH_WORKER=$WORKERNAME
+HUSH_ADDRESS="replace_with_your_HUSH_address"
+HUSH_POOL="luckpool.org"
+HUSH_PORT="3757"
+
+#XZC or ZCOIN
+ZCOIN_WORKER="Your Miningpoolhub Worker Name"
+ZCOIN_ADDRESS="replace_with_your_miningpoolhub_account login name"
+ZCOIN_POOL="us-east.lyra2z-hub.miningpoolhub.com:20581"
+
+#ETN
+ETN_WORKER=$WORKERNAME
+ETN_ADDRESS="yourETNAddress"
+ETN_POOL="STRATUM/POOL:PORT"
+
+#KRB
+KRB_WORKER=$WORKERNAME
+KRB_ADDRESS="replace_with_your_KRB_address"
+KRB_POOL="stratum+tcp://krb.sberex.com:5555"
+
+#SIB
+SIB_WORKER="Your Suprnova Worker name"
+SIB_ADDRESS="Your Suprnova Account name"
+SIB_POOL="stratum+tcp://sib.suprnova.cc:3458"
+SIB_INTENSITY="21"
+
+#PXC
+PXC_WORKER="$WORKERNAME"
+PXC_ADDRESS="replace_with_your_GRS_address"
+PXC_POOL="stratum+tcp://atlas.phoenixcoin.org:10554"
+PXC_INTENSITY="23"
+
+# ZPOOL_SKUNK HERE
+SKUNK_AUTOCONVERT_TO_BTC="YES"        #YES  NO
+SKUNK_WORKER="$WORKERNAME"
+SKUNK_ADDRESS=$BTC_ADDRESS
+SKUNK_POOL="stratum+tcp://skunk.mine.zpool.ca:8433"
+SKUNK_INTENSITY="22"
+
+#ALTCOM
+ALTCOM_WORKER="$WORKERNAME"
+ALTCOM_ADDRESS="replace_with_your_ALTCOM_address"
+ALTCOM_POOL="STRATUM:ALTCOM POOL:PORT"
+
+# Used to add worker name on ZPOOL 
+ZPOOLPASS="$WORKERNAME,c=btc"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_LYRA2V2_POOL="stratum+tcp://lyra2v2.mine.zpool.ca:4533"
+ZPOOL_LYRA2V2_INTENSITY="22"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_BLAKE2S_POOL="stratum+tcp://blake2s.mine.zpool.ca:5766"
+ZPOOL_BLAKE2S_INTENSITY="21"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_EQUIHASH_POOL="equihash.mine.zpool.ca"
+ZPOOL_EQUIHASH_PORT="2142"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_LBRY_POOL="stratum+tcp://lbc.mine.zpool.ca:3334"
+ZPOOL_LBRY_INTENSITY="23"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_NEOSCRYPT_POOL="stratum+tcp://neoscrypt.mine.zpool.ca:4233"
+ZPOOL_NEOSCRYPT_INTENSITY="22"
+
+# ZPOOL uses your BTC_ADDRESS
+ZPOOL_SKEIN_POOL="stratum+tcp://skein.mine.zpool.ca:4933"
+ZPOOL_SKEIN_INTENSITY="22"
+
+#MPH_EQUIHASH
+MPH_WORKER="Your Miningpoolhub Worker Name"
+MPH_ADDRESS="Your Miningpoolhub account name"
+MPH_EQUIHASH_POOL="us-east.equihash-hub.miningpoolhub.com"
+MPH_EQUIHASH_PORT="20570"
+
+#MPH_ETHASH
+MPH_WORKER="Your Miningpoolhub Worker Name"
+MPH_ADDRESS="Your Miningpoolhub account name"
+MPH_ETHASH_POOL="us-east.ethash-hub.miningpoolhub.com:17020"
+
+#PIRL
+PIRL_WORKER=$WORKERNAME
+PIRL_ADDRESS="ENTER PIRL ADDRESS"
+PIRL_POOL="pirl.pool.sexy:6006"
+
+#GRS
+GRS_WORKER=$WORKERNAME
+GRS_ADDRESS="replace_with_your_GRS_address"
+GRS_POOL="stratum+tcp://moria.dwarfpool.com:3345"
+GRS_INTENSITY="23"
+
+#XMY
+XMY_WORKER=$WORKERNAME
+XMY_ADDRESS="Your Miningpoolhub Account Name"
+XMY_POOL="stratum+tcp://us-east1.myriadcoin-groestl.miningpoolhub.com:20479"
+XMY_INTENSITY="23"
+
+#MONA
+MONA_WORKER=$WORKERNAME
+MONA_ADDRESS="poisonxa"
+MONA_POOL="mona.suprnova.cc"
+MONA_PORT="2995"
+
+#XVG
+XVG_WORKER="no2"
+#XVG_ADDRESS="D9TUvoSyu6vHTSp2zhn8jRTSv8mhcMYbyE"
+XVG_ADDRESS="dragonfly"
+#XVG_POOL="stratum+tcp://x17.mine.zpool.ca:3737"
+#XVG_POOL="stratum+tcp://yiimp.eu:3777"
+#XVG_POOL="stratum+tcp://x17.us.hashrefinery.com:3737"
+XVG_POOL="stratum+tcp://xvg-x17.suprnova.cc:7477"
+#XVG_PASSWORD="c=XVG"
+XVG_PASSWORD="x"
+
+#XLR
+XLR_WORKER=$WORKERNAME
+XLR_ADDRESS="replace_with_your_CRC_address"
+XLR_POOL="stratum+tcp://lycheebit.com:3739"
+# PASSWORD = SYMBOL
+XLR_PASSWORD="c=XLR_XEVAN"
+
+#CRC
+CRC_WORKER=$WORKERNAME
+CRC_ADDRESS="replace_with_your_CRC_address"
+CRC_POOL="stratum+tcp://eu1.altminer.net:10004"
+# PASSWORD = SYMBOL
+CRC_PASSWORD="c=CRC"
+
+#LUX 
+LUX_WORKER=$WORKERNAME 
+LUX_ADDRESS="LSUzuLbp5YuZiLkvekhT1RaD49eKp3Mr48" 
+LUX_POOL="stratum+tcp://yiimp.eu:8333"
+LUX_PWD="c=LUX"
+
+#BTC
+VTC_AUTOCONVERT_TO_BTC="NO"        #YES  NO
+VTC_WORKER="Your Miningpoolhub Worker Name"
+VTC_ADDRESS="Your Miningpoolhub Account Name"
+VTC_POOL="stratum+tcp://hub.miningpoolhub.com:20507"
+
+#TZC
+TZC_WORKER="$WORKERNAME"
+TZC_ADDRESS="TgsUKmwLHMKnyGwcKKTcUrJhphK4jYiH5H"
+TZC_POOL="stratum+tcp://eu1.altminer.net:10002"
+TZC_PWD="c=TZC"
+
+# NICE_ETHASH autoconverts to BTC: ensure you update BTC_ADDRESS if you use NICE_ETHASH
+NICE_ETHASH_WORKER="$WORKERNAME"
+NICE_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
+GENOIL_NICE_ETHASH_POOL="daggerhashimoto.usa.nicehash.com:3353"
+NICE_ETHASH_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
+
+# if YES ensure you update BTC_ADDRESS
+DGB_AUTOCONVERT_TO_BTC="NO"        #YES  NO
+DGB_INTENSITY="24"
+DGB_WORKER="Your Miningpoolhub Worker Name"
+DGB_ADDRESS="Your Miningpoolhub Account Name"
+DGB_POOL="stratum+tcp://hub.miningpoolhub.com:20527"
+
+#LBC
+LBC_WORKER="Your Suprnova Worker name"
+LBC_ADDRESS="Your Suprnova Account name"
+LBC_POOL="stratum+tcp://lbry.suprnova.cc:6256"
+LBC_INTENSITY="23"
+
+#FTC
+FTC_WORKER="Your Miningpoolhub Worker Name"
+FTC_ADDRESS="Your Miningpoolhub Account Name"
+FTC_POOL="stratum+tcp://hub.miningpoolhub.com:20510"
+FTC_INTENSITY="23"
+
+#ORB
+ORB_WORKER="Your DNB Worker Name"
+ORB_ADDRESS="Your DNB Account Name"
+ORB_POOL="stratum+tcp://strat.dnb.io:3031"
+
+#VIVO
+VIVO_WORKER="$WORKERNAME"
+VIVO_ADDRESS="VIVO ADDRESS"
+VIVO_POOL="stratum+tcp://VIVOPOOL:PORT"
+
+#ONION
+ONION_ADDRESS="replace_with_your_ONION_address"
+ONION_POOL="stratum+tcp://kawaiipool.party:3633"
+
+####################################################################################################################
+USE_ENVIRONMENTAL_VARIBLES="NO"   #YES  NO
+# NOTE DEFAULT CHANGED FROM SLASH to DOT
+DOT_POOL_FORMAT_or_FORWARD_SLASH_POOL_FORMAT="DOT"    # DOT  or  SLASH    # formerly ETHERMINEdotORG
+
+CLAYMORE_VERSION="10_2"    # choose 10_2 10_0  or  9_8  or  9_7  or  9_5  or  9_4  or  8_0
+
+ETHMINER_or_GENOIL_or_CLAYMORE="CLAYMORE"  # choose  ETHMINER  or  GENOIL  or  CLAYMORE
+
+
+ETH_WORKER=$WORKERNAME
+# replace_with_your_ETH_address
+ETH_ADDRESS="0x4dcA66d28328dbd65cb701661B2984AC6d43d642"    
+# NOTE DEFAULT ETH POOL CHANGED TO ETHERMINE.ORG
+ETH_POOL="us2.ethermine.org:4444"
+ETH_EXTENSION_ARGUMENTS=""    # add any additional claymore arguments desired here
+
+ETC_WORKER=$WORKERNAME
+ETC_ADDRESS="replace_with_your_ETC_address" 
+# NOTE DEFAULT ETC POOL CHANGED TO ETHERMINE.ORG
+ETC_POOL="us1-etc.ethermine.org:4444"
+ETC_EXTENSION_ARGUMENTS=""    # add any additional claymore arguments desired here
+
+EXP_WORKER=$WORKERNAME
+EXP_ADDRESS="replace_with_your_EXP_address"
+EXP_POOL="exp-us.dwarfpool.com:81"
+EXP_EXTENSION_ARGUMENTS=""   # add any additional claymore arguments desired here
+
+UBQ_WORKER=$WORKERNAME
+UBQ_ADDRESS="replace_with_your_UBIQ_address"
+UBQ_POOL="stratum+tcp://us.ubiqpool.io:8008"
+UBQ_EXTENSION_ARGUMENTS=""
+
+MUSIC_WORKER=$WORKERNAME
+MUSIC_ADDRESS="replace_with_your_MUSIC_address"
+MUSIC_POOL="eus.gmc.epool.io:8008"
+MUSIC_EXTENSION_ARGUMENTS=""
+
+SOIL_WORKER=$WORKERNAME
+SOIL_ADDRESS="replace_with_your_SOIL_address"
+SOIL_POOL="stratum+tcp://soil.pool.sexy:9009"
+SOIL_EXTENSION_ARGUMENTS=""
+
+DUAL_WORKER=$WORKERNAME
+DUAL_BTC_ADDRESS=$BTC_ADDRESS
+DUAL_ETHASH_POOL="stratum+tcp://daggerhashimoto.usa.nicehash.com:3353"
+DUAL_DCR_POOL="stratum+tcp://decred.usa.nicehash.com:3354"
+DUAL_EXTENSION_ARGUMENTS="-dcri 40"
+
+SC_WORKER=$WORKERNAME
+SC_ADDRESS="replace_with_your_SIA_address"
+SC_POOL="sia-us-east1.nanopool.org:7777"
+SC_GW_POOL="sia-us-east1.nanopool.org:9980"
+
+DCR_WORKER=$WORKERNAME
+DCR_ADDRESS="replace_with_your_DCR_address"
+DCR_POOL="stratum+tcp://yiimp.eu:3252"
+
+PASC_WORKER=$WORKERNAME
+PASC_ADDRESS="replace_with_your_PASC_ACCOUNT"
+PASC_POOL="pasc-us-east1.nanopool.org:15555"
+
+PASL_WORKER=$WORKERNAME
+PASL_ADDRESS="replace_with_your_PASL_ACCOUNT"
+PASL_POOL="stratum+tcp://mine.pasl.fairpool.xyz:4009"
+
+# XMR : if plusCPU is "YES" replace with your XMR info  ##
+XMR_WORKER=$WORKERNAME
+XMR_ADDRESS="poisonxa"
+XMR_POOL="us-east.cryptonight-hub.miningpoolhub.com"
+XMR_PORT="20580"
+
+BTCZ_WORKER="yourSuprnovaWorkerName"
+BTCZ_ADDRESS="yourSuprnovaLoginName"
+BTCZ_POOL="btcz.suprnova.cc"
+BTCZ_PORT="5586"
+
+SMART_WORKER="yourWorkerName"
+SMART_ADDRESS="yourPoolLoginName"
+SMART_POOL="stratum+tcp://pool-eu.smartcash.cc:3333"
+SMART_INTENSITY="25"
+
+
+fi
+
