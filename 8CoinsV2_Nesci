@@ -65,6 +65,7 @@ EWBF='/home/m1/Miners/zec/ewbf/./ewbf'	# ewbf this program is a binary the updat
 ALCCMINER='/home/m1/Miners/alccminer/./ccminer'
 TKCCMINER='/home/m1/Miners/TKccminer/./ccminer'
 CLAYMORE='/home/m1/Miners/eth/Claymore/ethdcrminer64'
+CPUMINEROPT='/home/m1/Miners/cpuminer-opt/./cpuminer'
 
 # OPTIMINER="/home/m1/Miners/optiminer-equihash/optiminer-equihash"
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
