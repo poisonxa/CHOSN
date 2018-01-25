@@ -94,6 +94,10 @@ result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
   fi
 }
 
+CHECK_MULTIPLE(){
+
+}
+
 COIN_WTM(){
   COINLIST=$(jq '.coins | .[] | .tag' $DIR/Coins.json | sed 's/\"//' | sed 's/\"//')
   WKN=$(echo '_WORKER=$WORKERNAME')
@@ -108,7 +112,15 @@ COIN_WTM(){
 
   for COINGEN in $COINLIST; do
     if [ $COINGEN != "NICEHASH" ]; then
-      echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+      ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+      if (( $(grep -c . <<<"$ALGO") > 1 )); then
+        ALG=`sed -n ${LINE}p <<< "$ALGO"
+	echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
+      	LINE=$((LINE+1))
+      else
+        LINE=1
+        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+      fi
     fi
   done
 
@@ -121,6 +133,7 @@ COIN_QUESTION(){
   POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
   POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
   PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
+  CHECK_MULTIPLE
   echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins
 }
 
