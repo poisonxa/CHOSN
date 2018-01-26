@@ -9,8 +9,8 @@
 
 # Dual-Mining (Claymore)					- To be tested
 
-# Extra options on miners
-# CPU Mining 		ONLY MONERO but adaptable all coins
+# Extra options on miners	a verifier	EXTARGTS	   - DONE	
+# CPU Mining  cpu mining is already present in resources 	   - DONE		
 # NiceHash implementation
 # Benchmark
 
@@ -65,8 +65,8 @@ EWBF='/home/m1/Miners/zec/ewbf/./ewbf'	# ewbf this program is a binary the updat
 ALCCMINER='/home/m1/Miners/alccminer/./ccminer'
 TKCCMINER='/home/m1/Miners/TKccminer/./ccminer'
 CLAYMORE='/home/m1/Miners/eth/Claymore/ethdcrminer64'
-CPUMINEROPT='/home/m1/Miners/cpuminer-opt/./cpuminer'
 
+# CPUMINEROPT='/home/m1/Miners/cpuminer-opt/./cpuminer'
 # OPTIMINER="/home/m1/Miners/optiminer-equihash/optiminer-equihash"
 # $cgminer = '/home/m1/Miners/cgminer/cgminer'# cgminer this program is a binary the update is simple - multi algo
 # $vertminer='/home/m1/Miners/vertminer/ccminer'
@@ -102,6 +102,8 @@ COIN_WTM(){
   POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
   POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
   PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
+  EXTARGTS=$(echo '_ARGUMENTS="" # exemple intensity -i 1 to 26')
+  
   # SYMBREPL=$(echo '_SYMBOL=" "')
 
   echo -e '#####################################################################\n#---- You can add any other coin by following the same template ----#\n#####################################################################\n\n\n' >> $DIR/1Coins
@@ -113,11 +115,11 @@ COIN_WTM(){
       ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
       if (( $(grep -c . <<<"$ALGO") > 1 )); then
         ALG=`sed -n ${LINE}p <<< "$ALGO"
-	echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
+	echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
       	LINE=$((LINE+1))
       else
         LINE=1
-        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
       fi
     fi
   done
@@ -131,15 +133,16 @@ COIN_QUESTION(){
   POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
   POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
   PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
+  EXTARGTS=$(echo '_ARGUMENTS="" # exemple intensity -i 1 to 26 0 is auto ')
   
   LINE=1
   if (( $(grep -c . <<<"$ALGO") > 1 )); then
     ALG=`sed -n ${LINE}p <<< "$ALGO"
-    echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
+    echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
     LINE=$((LINE+1))
   else
     LINE=1
-    echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+    echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
   fi
 }
 
@@ -340,6 +343,7 @@ if [ $COIN != "Nicehash" ]; then
   PORT=$(eval "echo \$$(echo ${COIN}_PORT)")
   POOLSTRATUM=$POOL":"$PORT   
   PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
+  ARGMENTS=$(eval "echo \$$(echo ${COIN}_EXTARGTS)")
 fi
 
 #SYMBOL=$(eval "echo \$$(echo ${COIN}_SYMBOL)")
@@ -358,9 +362,9 @@ fi
 
 ALGO=${ALGO,,}
 ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
-CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
+CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD -i $ARGMENTS" 
 ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
-CLAYMORESET="-epool $(eval "echo \$$(echo ${DUAL1}_POOL)").$(eval "echo \$$(echo ${DUAL1}_PORT)") -ewal $(eval "echo \$$(echo ${DUAL1}_ADDRESS)") -epsw $(eval "echo \$$(echo ${DUAL1}_PASSWORD)") -dpool $(eval "echo \$$(echo ${DUAL2}_POOL)").$(eval "echo \$$(echo ${DUAL2}_PORT)") -dwal $(eval "echo \$$(echo ${DUAL2}_ADDRESS)") -dpsw $(eval "echo \$$(echo ${DUAL2}_PASSWORD)")  -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $(eval "echo \$$(echo ${DUAL1}_EXTENSION_ARGUMENTS)")"
+CLAYMORESET="-epool $(eval "echo \$$(echo ${DUAL1}_POOL)").$(eval "echo \$$(echo ${DUAL1}_PORT)") -ewal $(eval "echo \$$(echo ${DUAL1}_ADDRESS)") -epsw $(eval "echo \$$(echo ${DUAL1}_PASSWORD)") -dpool $(eval "echo \$$(echo ${DUAL2}_POOL)").$(eval "echo \$$(echo ${DUAL2}_PORT)") -dwal $(eval "echo \$$(echo ${DUAL2}_ADDRESS)") -dpsw $(eval "echo \$$(echo ${DUAL2}_PASSWORD)")  -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $(eval "echo \$$(echo ${DUAL1}_EXTARGTS)")"
 
 
 #echo $ZMEWBFSET
