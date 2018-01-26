@@ -5,12 +5,13 @@
 
 ################## TO DO ##################
 # Gives 4 options for 1Coins (All, Top, Questions, Nicehash)      - DONE
-# Mutli-Algorithms                                                - DONE
+# Mutli-Algorithms                                                - DONE	
+# CPU Mining  cpu mining is already present in resources 	        - DONE	
+#     - Centralized it to 8Coins
 
-# Dual-Mining (Claymore)					- To be tested
-
-# Extra options on miners	a verifier	EXTARGTS	   - DONE	
-# CPU Mining  cpu mining is already present in resources 	   - DONE		
+# Extra options on miners	(EXTARGTS)          	                  - To be tested
+# Dual-Mining (Claymore)					                                - To be tested
+	
 # NiceHash implementation
 # Benchmark
 
@@ -45,10 +46,10 @@ fi
 
 #for testing purposes only
 COIN="ETH;DCR"
-#rm $DIR/Coins.json
-#rm $DIR/1Coins
-#rm $DIR/1Coins-Nicehash
-#rm $DIR/Algo.json
+rm $DIR/Coins.json
+rm $DIR/1Coins
+rm $DIR/1Coins-Nicehash
+rm $DIR/Algo.json
 
 ###########################################
 
@@ -113,14 +114,16 @@ COIN_WTM(){
   for COINGEN in $COINLIST; do
     if [ $COINGEN != "NICEHASH" ]; then
       ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+
       if (( $(grep -c . <<<"$ALGO") > 1 )); then
-        ALG=`sed -n ${LINE}p <<< "$ALGO"
-	echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
+        ALG=$(sed -n ${LINE}p <<< "$ALGO")
+	      echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
       	LINE=$((LINE+1))
       else
         LINE=1
         echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
       fi
+      
     fi
   done
 
@@ -133,11 +136,14 @@ COIN_QUESTION(){
   POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
   POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
   PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
-  EXTARGTS=$(echo '_ARGUMENTS="" # exemple intensity -i 1 to 26 0 is auto ')
+  EXTARGTS=$(echo '_ARGUMENTS="" # exemple intensity -i 1 to 26 0 is auto')
   
   LINE=1
+  ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
   if (( $(grep -c . <<<"$ALGO") > 1 )); then
-    ALG=`sed -n ${LINE}p <<< "$ALGO"
+    ALG=$(sed -n ${LINE}p <<< "$ALGO")
+    echo "ALG = $ALG"
+    sleep 30
     echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
     LINE=$((LINE+1))
   else
