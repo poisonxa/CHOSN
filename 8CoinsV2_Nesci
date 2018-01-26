@@ -4,30 +4,22 @@
 # 1.0 - Creation
 
 ################## TO DO ##################
+
 # Gives 4 options for 1Coins (All, Top, Questions, Nicehash)      - DONE
-# Mutli-Algorithms                                                - DONE
+# Mutli-Algorithms                                                - DONE	
+# CPU Mining  cpu mining is already present in resources 	        - DONE	
+#     - Centralize it to 8Coins
 
-# Dual-Mining (Claymore)					- To be tested
 
-# Extra options on miners	a verifier	EXTARGTS	   - DONE	
-# CPU Mining  cpu mining is already present in resources 	   - DONE		
+# Extra options on miners	(OPTS)          	                      - To be tested
+#                             Tested on ZM and ALCCMiner
+# Dual-Mining (Claymore)					                                - To be tested
+	
+	
+# Dual-Mining non-dual coins (ex : ZEN and XVG) 
+#                             by adding GPUS options
 # NiceHash implementation
 # Benchmark
-
-###########################################
-
-################## SETUP ##################
-
-source ~/1bash
-source ~/Resources
-
-if [ -f ~/1Coins ]; then
-  source ~/1Coins
-fi
-
-if [ -f ~/1Coins-Nicehash ]; then
-  source ~/1Coins-Nicehash
-fi
 
 ###########################################
 
@@ -38,13 +30,32 @@ BLUE='\033[0;34m'
 RED='\033[1;31m'
 NC='\033[0m'
 
-if [ $WTM_AUTO_SWITCH == "YES" ]; then
+###########################################
+
+################## SETUP ##################
+
+source ~/1bash
+source ~/Resources
+
+if [ -f $DIR/1Coins ]; then
+  source $DIR/1Coins
+fi
+
+if [ -f $DIR/1Coins-Nicehash ]; then
+  source $DIR/1Coins-Nicehash
+fi
+
+if [ $WTM_AUTO_SWITCH = "YES" ]; then
   source ~/Logs/WTM_ccoin
   COIN=$CCOIN
 fi
 
-#for testing purposes only
-# COIN="ETH;DCR"
+###########################################
+
+################# TESTING #################
+
+# For testing purposes only
+COIN="XVG"
 #rm $DIR/Coins.json
 #rm $DIR/1Coins
 #rm $DIR/1Coins-Nicehash
@@ -57,13 +68,13 @@ fi
 # DIRSOFTMIN='/home/m1/Miners'
 # soft launch with ./  which is much more readable and less error-prone 
 
-ETHMINER='/home/m1/Miners/ethminer/./ethminer' # ethminer this program is a binary the update is simple - Ethereum
-CCMINER='/home/m1/Miners/ccminer/./ccminer' # -All other
-CCMINERXEVAN='/home/m1/Miners/ccminer-xevan/./ccminer' # special ccminer-xevan
-ZM='/home/m1/Miners/zec/zm/./zm'		# zm this program is a binary the update is simple? - Equihash
-EWBF='/home/m1/Miners/zec/ewbf/./ewbf'	# ewbf this program is a binary the update is simple - Equihash
-ALCCMINER='/home/m1/Miners/alccminer/./ccminer'
-TKCCMINER='/home/m1/Miners/TKccminer/./ccminer'
+ETHMINER='/home/m1/Miners/ethminer/ethminer' # ethminer this program is a binary the update is simple - Ethereum
+CCMINER='/home/m1/Miners/ccminer/ccminer' # -All other
+CCMINERXEVAN='/home/m1/Miners/ccminer-xevan/ccminer' # special ccminer-xevan
+ZM='/home/m1/Miners/zec/zm/5_8/zm'		# zm this program is a binary the update is simple? - Equihash
+EWBF='/home/m1/Miners/zec/ewbf/ewbf'	# ewbf this program is a binary the update is simple - Equihash
+ALCCMINER='/home/m1/Miners/alccminer/ccminer'
+TKCCMINER='/home/m1/Miners/TKccminer/ccminer'
 CLAYMORE='/home/m1/Miners/eth/Claymore/ethdcrminer64'
 
 # CPUMINEROPT='/home/m1/Miners/cpuminer-opt/./cpuminer'
@@ -85,10 +96,16 @@ result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
     echo -e "${BLUE}Miner is running!${NC}"
     exit
   else
-    echo -e "${RED}Miner is not running, trying a lib fix $TRY/2${NC}"
-    if [[ TRY < 2 ]]; then  
+    echo -e "${RED}Miner is not running, trying a lib fix $TRY/3${NC}"
+    if [[ $TRY = 1 ]]; then  
+      miner_fix2
+      sleep 5
+    fi
+    if [[ $TRY = 2 ]]; then
       miner_start1
-    else
+      sleep 5
+    fi
+    if [[ $TRY = 3 ]]; then
       echo -e "${RED}Error${NC}"
       exit
     fi
@@ -97,29 +114,24 @@ result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
 
 COIN_WTM(){
   COINLIST=$(jq '.coins | .[] | .tag' $DIR/Coins.json | sed 's/\"//' | sed 's/\"//')
-  WKN=$(echo '_WORKER=$WORKERNAME')
-  ADDREPL=$(echo '_ADDRESS="replace_with_your_address - Account.WorkerName if on Suprnova"')
-  POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
-  POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
-  PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
-  EXTARGTS=$(echo '_ARGUMENTS="" # exemple intensity -i 1 to 26')
-  
-  # SYMBREPL=$(echo '_SYMBOL=" "')
 
   echo -e '#####################################################################\n#---- You can add any other coin by following the same template ----#\n#####################################################################\n\n\n' >> $DIR/1Coins
-  #echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
   
-  LINE=1
+  COINTEST="a"
   for COINGEN in $COINLIST; do
     if [ $COINGEN != "NICEHASH" ]; then
-      ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm')
+      ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COINGEN" '.coins[] | select(.tag==$COIN) | .algorithm')
       if (( $(grep -c . <<<"$ALGO") > 1 )); then
-        ALG=$(sed -n ${LINE}p <<< "$ALGO")
-	echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
-      	LINE=$((LINE+1))
+        if [ "$COINTEST" == "$COINGEN" ]; then
+          continue 2
+        else
+          COINTEST=$COINGEN
+          printf '%s\n' "$ALGO" | while IFS= read -r ALG; do
+	          echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
+          done
+        fi
       else
-        LINE=1
-        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$OPTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
       fi
     fi
   done
@@ -128,21 +140,20 @@ COIN_WTM(){
 }
 
 COIN_QUESTION(){
-  WKN=$(echo '_WORKER=$WORKERNAME')
-  ADDREPL=$(echo '_ADDRESS="replace_with_your_address - Account.WorkerName if on Suprnova"')
-  POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
-  POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
-  PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
-  EXTARGTS=$(echo '_ARGUMENTS="" # exemple intensity -i 1 to 26 0 is auto ')
-  
-  LINE=1
+  ALGO=$(cat $DIR/Algo.json | jq -r --arg COIN "$COINGEN" '.coins[] | select(.tag==$COIN) | .algorithm')
   if (( $(grep -c . <<<"$ALGO") > 1 )); then
-    ALG=$(sed -n ${LINE}p <<< "$ALGO")
-    echo -e "#---- BEGINNING OF $COINGEN_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
-    LINE=$((LINE+1))
+    echo ${RED} | read -p "Multiple algorithms detected, do you want all of them? (y/n) : " CHOICE | echo ${NC}
+    if [ $CHOICE = "y" ]; then
+      printf '%s\n' "$ALGO" | while IFS= read -r ALG; do
+        echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF ${COINGEN}_${ALG} ----\n"  >> $DIR/1Coins
+      done
+    else
+      ALG="${ALGO//$'\n'/"/"}"
+      read -p "Enter the algorithm you want ($ALG): " ALG
+      echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF ${COINGEN}_${ALG} ----\n"  >> $DIR/1Coins
+    fi
   else
-    LINE=1
-    echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n${COINGEN}_${ALG}$EXTARGTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+    echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$OPTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
   fi
 }
 
@@ -171,6 +182,13 @@ fi
 
 # 1COINS - OPTIONS
 if [ ! -f $DIR/1Coins ]; then
+  WKN=$(echo '_WORKER=$WORKERNAME')
+  ADDREPL=$(echo '_ADDRESS="replace_with_your_address - Account.WorkerName if on Suprnova"')
+  POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
+  POOLPORT=$(echo '_PORT=replace_with_the_pool_port')
+  PASSREPL=$(echo '_PASSWORD="x" # or Symbol c=')
+  OPTS=$(echo '_OPTS="" # exemple intensity -i 1 to 26 0 is auto')
+  
   echo -e "${RED}1Coins hasnt been created yet"
   echo -e "${BLUE}3 options is offered :"
   echo -e "1) Create a file with all the coins (including NiceHash)"
@@ -234,29 +252,32 @@ if [[ $COIN != *";"* ]]; then
       if [ -z "$ALGO" ]; then
         echo -e "${RED}Couldnt find the algorithm in our list of coin"
         read -p "Enter the algorithm : " ALGO 
-        echo "${COIN}_ALGO=${ALGO}" > $DIR/1Coins
+        echo "${COIN}_ALGO=${ALGO}" >> $DIR/1Coins
       fi
     fi
   
     #TEST IF VARIABLE HAS MULTIPLE LINE (MULTI-ALGO)
+    ALGO_TEST=$ALGO
     if (( $(grep -c . <<<"$ALGO") > 1 )); then
-      echo -e "${RED}Your coin has multiple algorithms"
-      ALGO="${ALGO//$'\n'/"/"}"
-      read -p "Enter the algorithm you want ($ALGO): " ALGO
-      echo "${COIN}_ALGO=${ALGO}" > $DIR/1Coins
+      ALGO=$(eval "echo \$$(echo ${COIN}_ALGO)")
+      if [ -z "$ALGO" ]; then   
+        echo -e "${RED}Your coin has multiple algorithms"
+        ALGO="${ALGO_TEST//$'\n'/"/"}"
+        read -p "Enter the algorithm you want ($ALGO): " ALGO
+        echo "${COIN}_ALGO=${ALGO}" >> $DIR/1Coins      
+      fi  
     fi
   fi
+  echo "Selected coin is : $COIN"
+  echo "Algorithm is : $ALGO"
 else
   echo "Dual Mining DETECTED!"
-  DUALMIN=$CLAYMOREDUAL
   DUAL1=$(echo "${COIN%;*}")
   DUAL2=$(echo "${COIN#*;}")
-  echo "DUAL1 = $DUAL1 : DUAL2 = $DUAL2"
-  sleep 30
+  echo "DUAL1 = $DUAL1\nDUAL2 = $DUAL2"
+  COIN="Dual"
+  ALGO="Dual"
 fi
-
-echo "Selected coin is : $COIN"
-echo "Algorithm is : $ALGO"
 
 ###########################################
 
@@ -273,7 +294,7 @@ if [ $ALGO = "Equihash" ]; then
   if [ $ZM_OR_EWBF = "EWBF" ]; then
     echo -e "${BLUE}$ALGO - Opening EWBF${NC}"
     API="api 127.0.0.1:42000"
-    MINSOFT=$EWB
+    MINSOFT=$EWBF
   fi
   if [ $ZM_OR_EWBF != "ZM" ] && [ $ZM_OR_EWVF != "EWBF" ]; then 
     echo -e "${RED}Error in your ZM_or_EWBF variable in 1bash"
@@ -302,21 +323,21 @@ if [ $ALGO = "Xevan" ]; then
   MINSOFT=$CCMINERXEVAN
 fi
 
-# TKCCMINER ( attention Neoscrypt is not = NeoScrypt )
+# TKCCMINER ( attention Neoscrypt != NeoScrypt )
 if [ $ALGO = "NeoScrypt" ]; then
   echo -e "${BLUE}$ALGO - Opening TKCCMiner${NC}" 
   MINSOFT=$TKCCMINER
 fi
 
 # CCMINER
-if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ] && [ $ALGO = "NeoScrypt" ]; then
+if [ $ALGO != "Equihash" ] && [ $ALGO != "ETH" ] && [ $ALGO != "XEVAN" ] && [ $ALGO != "Hashimoto" ] && [ $ALGO != "Scrypt" ] && [ $ALGO != "X11" ] && [ $ALGO != "X17" ] && [ $ALGO != "NeoScrypt" ] && [ $ALGO != "Dual" ]; then
   echo -e "${BLUE}$ALGO - Opening CCMiner${NC}" 
   MINSOFT=$CCMINER
 fi
 
 # CLaymore Dual ( only )
-if [ DUALMIN=$CLAYMOREDUAL ]; then
- echo "Dual Mining Activated !"
+if [ $ALGO = "Dual" ]; then
+ echo "${BLUE}Dual Mining - Opening Claymore"
  MINSOFT=$CLAYMORE
 fi
 
@@ -337,13 +358,41 @@ fi
 
 ############# SETUP COIN VARS #############
 
-if [ $COIN != "Nicehash" ]; then
-  ADDRESS=$(eval "echo \$$(echo ${COIN}_ADDRESS)")
-  POOL=$(eval "echo \$$(echo ${COIN}_POOL)")
-  PORT=$(eval "echo \$$(echo ${COIN}_PORT)")
-  POOLSTRATUM=$POOL":"$PORT   
-  PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
-  ARGMENTS=$(eval "echo \$$(echo ${COIN}_EXTARGTS)")
+if [ $COIN != "Nicehash" ] && [ $COIN != "Dual" ]; then
+  COIN_ALGO=$(eval "echo \$$(echo ${COIN}_ALGO)")
+  if [ -z $COIN_ALGO ]; then
+    # echo "NO CUSTOM"
+    ADDRESS=$(eval "echo \$$(echo ${COIN}_ADDRESS)")
+    POOL=$(eval "echo \$$(echo ${COIN}_POOL)")
+    PORT=$(eval "echo \$$(echo ${COIN}_PORT)")
+    POOLSTRATUM=$POOL":"$PORT   
+    PASSWORD=$(eval "echo \$$(echo ${COIN}_PASSWORD)")
+    OPTS=$(eval "echo \$$(echo ${COIN}_OPTS)")
+  else
+    # echo "CUSTOM"
+    ADDRESS=$(eval "echo \$$(echo ${COIN}_${COIN_ALGO}_ADDRESS)")
+    POOL=$(eval "echo \$$(echo ${COIN}_${COIN_ALGO}_POOL)")
+    PORT=$(eval "echo \$$(echo ${COIN}_${COIN_ALGO}_PORT)")
+    POOLSTRATUM=$POOL":"$PORT   
+    PASSWORD=$(eval "echo \$$(echo ${COIN}_${COIN_ALGO}_PASSWORD)")
+    OPTS=$(eval "echo \$$(echo ${COIN}_${COIN_ALGO}_OPTS)")
+  fi
+fi
+
+if [ $COIN = "Dual" ]; then
+  DUAL1_ADDRESS=$(eval "echo \$$(echo ${DUAL1}_ADDRESS)")
+  DUAL1_POOL=$(eval "echo \$$(echo ${DUAL1}_POOL)")
+  DUAL1_PORT=$(eval "echo \$$(echo ${DUAL1}_PORT)")
+  DUAL1_POOLSTRATUM=$DUAL1_POOL":"$DUAL1_PORT   
+  DUAL1_PASSWORD=$(eval "echo \$$(echo ${DUAL1}_PASSWORD)")
+  DUAL1_OPTS=$(eval "echo \$$(echo ${DUAL1}_OPTS)")
+
+  DUAL2_ADDRESS=$(eval "echo \$$(echo ${DUAL2}_ADDRESS)")
+  DUAL2_POOL=$(eval "echo \$$(echo ${DUAL2}_POOL)")
+  DUAL2_PORT=$(eval "echo \$$(echo ${DUAL2}_PORT)")
+  DUAL2_POOLSTRATUM=$DUAL2_POOL":"$DUAL2_PORT   
+  DUAL2_PASSWORD=$(eval "echo \$$(echo ${DUAL2}_PASSWORD)")
+  DUAL2_OPTS=$(eval "echo \$$(echo ${DUAL2}_OPTS)")
 fi
 
 #SYMBOL=$(eval "echo \$$(echo ${COIN}_SYMBOL)")
@@ -354,44 +403,55 @@ fi
 #echo $POOL
 #echo $PORT
 #echo $PASSWORD
-#echo $SYMBOL
+#echo $OPTS
+#exit
 
 ###########################################
 
 ############# SET MINER VARS ##############
 
 ALGO=${ALGO,,}
-ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
-CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD -i $ARGMENTS" 
-ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
-CLAYMORESET="-epool $(eval "echo \$$(echo ${DUAL1}_POOL)").$(eval "echo \$$(echo ${DUAL1}_PORT)") -ewal $(eval "echo \$$(echo ${DUAL1}_ADDRESS)") -epsw $(eval "echo \$$(echo ${DUAL1}_PASSWORD)") -dpool $(eval "echo \$$(echo ${DUAL2}_POOL)").$(eval "echo \$$(echo ${DUAL2}_PORT)") -dwal $(eval "echo \$$(echo ${DUAL2}_ADDRESS)") -dpsw $(eval "echo \$$(echo ${DUAL2}_PASSWORD)")  -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $(eval "echo \$$(echo ${DUAL1}_EXTARGTS)")"
 
+if [ -z "$OPTS" ]; then
+  # echo "OPTS IS EMPTY"
+  ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT --$API"
+  CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD" 
+  ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD"
+  CLAYMORESET="-epool $DUAL1_POOLSTRATUM -ewal $DUAL1_ADDRESS -epsw $DUAL1_PASSWORD -dpool $DUAL2_POOLSTRATUM -dwal $DUAL2_ADDRESS -dpsw  $DUAL2_PASSWORD -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1"
+else
+  ZMEWBFSET="--server $POOL --user $ADDRESS --pass $PASSWORD --port $PORT $OPTS --$API"
+  CCMINERSET="-a $ALGO -o $POOLSTRATUM -u $ADDRESS -p $PASSWORD $OPTS" 
+  ETHSET="-G -S -SP 2 $POOLSTRATUM -O $ADDRESS -p $PASSWORD $OPTS"
+  CLAYMORESET="-epool $DUAL1_POOLSTRATUM -ewal $DUAL1_ADDRESS -epsw $DUAL1_PASSWORD -dpool $DUAL2_POOLSTRATUM -dwal $DUAL2_ADDRESS -dpsw $DUAL2_PASSWORD -dcoin "$DUAL2" -allcoins 1 -allpools 1 -dbg -1 $DUAL2_OPTS"
+fi
 
-#echo $ZMEWBFSET
-#echo $CCMINERSET
-#echo $ETHSET
+# echo $ZMEWBFSET
+# echo $CCMINERSET
+# echo $ETHSET
 
 ###########################################
 
 ################### RUN ###################
 
+gnome-terminal -e "bash '/home/m1/Miners/Miner_Window'"
+miner_start1
 TRY=1
-while [[ TRY != 3 ]]; do
-  if [ $MINSOFT = $ZM_OR_EWBF ]; then
-  #  echo $MINSOFT $ZMEWBFSET
-    screen -dmSL $MINSOFT $ZMEWBFSET
+while [[ TRY != 4 ]]; do
+  if [ $MINSOFT = $ZM ] || [ $MINSOFT = $EWBF ]; then
+    # echo $MINSOFT $ZMEWBFSET
+    screen -dmSL miner $MINSOFT $ZMEWBFSET
   fi
   if [ $MINSOFT = $CCMINER ] || [ $MINSOFT = $CCMINERXEVAN ] || [ $MINSOFT = $ALCCMINER ] || [ $MINSOFT = $TKCCMINER ]; then
-  #  echo "$MINSOFT $CCMINERSET"
-    screen -dmSL $MINSOFT $CCMINERSET
+    # echo "$MINSOFT $CCMINERSET"
+    screen -dmSL miner $MINSOFT $CCMINERSET
   fi
   if [ $MINSOFT = $ETHMINER ]; then
-  #  echo "$MINSOFT $ETHSET"
-    screen -dmSL $MINSOFT $ETHSET
+    # echo "$MINSOFT $ETHSET"
+    screen -dmSL miner $MINSOFT $ETHSET
   fi
   if [ $MINSOFT = $CLAYMORE ]; then
-  #  echo "$MINSOFT $CLAYMORESET"
-    screen -dmSL $MINSOFT $CLAYMORESET
+    # echo "$MINSOFT $CLAYMORESET"
+    screen -dmSL miner $MINSOFT $CLAYMORESET
   fi
   sleep 3
   ifExist
