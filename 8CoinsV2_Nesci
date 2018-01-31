@@ -25,7 +25,8 @@
 
 ################## VARIABLES ##################
 
-DIR='/home/m1/8CoinsV2'
+DIR='/home/m1/CHOSN'
+HOME='/home/m1'
 BLUE='\033[0;34m'
 RED='\033[1;31m'
 NC='\033[0m'
@@ -35,14 +36,14 @@ NC='\033[0m'
 ################## SETUP ##################
 
 source ~/1bash
-source ~/Resources
-
-if [ -f $DIR/1Coins ]; then
-  source $DIR/1Coins
+source ~/CHOSN/Resources
+3Main_Coin_Sequence(){
+if [ -f $HOME/1Coins ]; then
+  source $HOME/1Coins
 fi
 
-if [ -f $DIR/1Coins-Nicehash ]; then
-  source $DIR/1Coins-Nicehash
+if [ -f $HOME/1Coins-Nicehash ]; then
+  source $HOME/1Coins-Nicehash
 fi
 
 if [ $WTM_AUTO_SWITCH = "YES" ]; then
@@ -55,10 +56,9 @@ fi
 ################# TESTING #################
 
 # For testing purposes only
-COIN="XVG"
 #rm $DIR/Coins.json
-#rm $DIR/1Coins
-#rm $DIR/1Coins-Nicehash
+#rm $HOME/1Coins
+#rm $HOME/1Coins-Nicehash
 #rm $DIR/Algo.json
 
 ###########################################
@@ -94,7 +94,8 @@ ifExist(){
 result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
   if [ $result -ge 1 ]; then
     echo -e "${BLUE}Miner is running!${NC}"
-    exit
+	TRY=4
+	:
   else
     echo -e "${RED}Miner is not running, trying a lib fix $TRY/3${NC}"
     if [[ $TRY = 1 ]]; then  
@@ -107,7 +108,7 @@ result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
     fi
     if [[ $TRY = 3 ]]; then
       echo -e "${RED}Error${NC}"
-      exit
+ 	:
     fi
   fi
 }
@@ -115,7 +116,7 @@ result=`ps aux | grep -i $MINSOFT | grep -v "grep" | wc -l`
 COIN_WTM(){
   COINLIST=$(jq '.coins | .[] | .tag' $DIR/Coins.json | sed 's/\"//' | sed 's/\"//')
 
-  echo -e '#####################################################################\n#---- You can add any other coin by following the same template ----#\n#####################################################################\n\n\n' >> $DIR/1Coins
+  echo -e '#####################################################################\n#---- You can add any other coin by following the same template ----#\n#####################################################################\n\n\n' >> $HOME/1Coins
   
   COINTEST="a"
   for COINGEN in $COINLIST; do
@@ -127,16 +128,16 @@ COIN_WTM(){
         else
           COINTEST=$COINGEN
           printf '%s\n' "$ALGO" | while IFS= read -r ALG; do
-	          echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $DIR/1Coins
+	          echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF $COINGEN_${ALG} ----\n"  >> $HOME/1Coins
           done
         fi
       else
-        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$OPTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+        echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$OPTS\n#---- END OF $COINGEN ----\n"  >> $HOME/1Coins	
       fi
     fi
   done
 
-  echo -e '\n\n\n#####################################################################\n#---- CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM ----#\n#####################################################################\n' >> $DIR/1Coins
+  echo -e '\n\n\n#####################################################################\n#---- CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM ----#\n#####################################################################\n' >> $HOME/1Coins
 }
 
 COIN_QUESTION(){
@@ -145,28 +146,28 @@ COIN_QUESTION(){
     echo ${RED} | read -p "Multiple algorithms detected, do you want all of them? (y/n) : " CHOICE | echo ${NC}
     if [ $CHOICE = "y" ]; then
       printf '%s\n' "$ALGO" | while IFS= read -r ALG; do
-        echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF ${COINGEN}_${ALG} ----\n"  >> $DIR/1Coins
+        echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF ${COINGEN}_${ALG} ----\n"  >> $HOME/1Coins
       done
     else
       ALG="${ALGO//$'\n'/"/"}"
       read -p "Enter the algorithm you want ($ALG): " ALG
-      echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF ${COINGEN}_${ALG} ----\n"  >> $DIR/1Coins
+      echo -e "#---- BEGINNING OF ${COINGEN}_$ALG----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}_${ALG}$ADDREPL\n#${COINGEN}_${ALG}$POOLREPL\n#${COINGEN}_${ALG}$POOLPORT\n#${COINGEN}_${ALG}$PASSREPL\n#${COINGEN}_${ALG}$OPTS\n#---- END OF ${COINGEN}_${ALG} ----\n"  >> $HOME/1Coins
     fi
   else
-    echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$OPTS\n#---- END OF $COINGEN ----\n"  >> $DIR/1Coins	
+    echo -e "#---- BEGINNING OF $COINGEN----\n#Fill in your informations and uncomment the lines below\n#${COINGEN}$ADDREPL\n#${COINGEN}$POOLREPL\n#${COINGEN}$POOLPORT\n#${COINGEN}$PASSREPL\n#${COINGEN}$OPTS\n#---- END OF $COINGEN ----\n"  >> $HOME/1Coins	
   fi
 }
 
 COIN_NICEHASH(){
-  echo -e '###############################################################################\n#---- Edit NICEHASH_WORKER and NICEHASH_ADDRESS with your own information ----#\n###############################################################################\n\n' > $DIR/1Coins-Nicehash
-  echo -e 'NICEHASH_WORKER="WORKER_NAME"\nNICEHASH_ADDRESS="NICEHASH_BTC_ADDRESS"\n\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NICEHASH_ETHASH\nNICEHASH_ETHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"\nNICEHASH_ETHASH_PORT=3353\nNICEHASH_ETHAS_EXTENSION_ARGUMENTS=""\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NICEHASH_EQUIHASH\nNICEHASH_EQUIHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_EQUIHASH_POOL="stratum+tcp://equihash.usa.nicehash.com"\nNICEHASH_EQUIHASH_PORT=3357\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NICEHASH_LYRA2REV2\nNICEHASH_LYRA2REV2_WORKER=$NICEHASH_WORKER\nNICEHASH_LYRA2REV2_POOL="stratum+tcp://lyra2rev2.usa.nicehash.com"\nNICEHASH_LYRA2REV2_PORT=3347\nNICEHASH_LYRA2REV2_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NCIEHASH_NEOSCRYPT\nNICEHASH_NEOSCRYPT_WORKER=$NICEHASH_WORKER\nNICEHASH_NEOSCRYPT_POOL="stratum+tcp://neoscrypt.usa.nicehash.com"\nNICEHASH_NEOSCRYPT_PORT=3341\nNICEHASH_LYRA2REV2_INTENSITY=17\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NICEHASH_CRYPTONIGHT\nNICEHASH_CRYPTONIGHT_WORKER=$NICEHASH_WORKER\nNICEHASH_CRYPTONIGHT_POOL="stratum+tcp://cryptonight.usa.nicehash.com"\nNICEHASH_CRYPTONIGHT_PORT=3355\nNICEHASH_LYRA2REV2_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NICEHASH_X11GOST\nNICEHASH_X11GOST_WORKER=$NICEHASH_WORKER\nNICEHASH_X11GOST_POOL="stratum+tcp://x11gost.usa.nicehash.com"\nNICEHASH_X11GOST_PORT=3359\nNICEHASH_X11GOST_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
-  echo -e '# NICEHASH_SKUNKHASH\nNICEHASH_SKUNKHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_SKUNKHASH_POOL="stratum+tcp://skunk.usa.nicehash.com"\nNICEHASH_SKUNKHASH_PORT=3362\nNICEHASH_SKUNKHASH_INTENSITY=21\n' >> $DIR/1Coins-Nicehash
+  echo -e '###############################################################################\n#---- Edit NICEHASH_WORKER and NICEHASH_ADDRESS with your own information ----#\n###############################################################################\n\n' > $HOME/1Coins-Nicehash
+  echo -e 'NICEHASH_WORKER="WORKER_NAME"\nNICEHASH_ADDRESS="NICEHASH_BTC_ADDRESS"\n\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NICEHASH_ETHASH\nNICEHASH_ETHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_ETHASH_POOL="daggerhashimoto.usa.nicehash.com"\nNICEHASH_ETHASH_PORT=3353\nNICEHASH_ETHAS_EXTENSION_ARGUMENTS=""\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NICEHASH_EQUIHASH\nNICEHASH_EQUIHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_EQUIHASH_POOL="stratum+tcp://equihash.usa.nicehash.com"\nNICEHASH_EQUIHASH_PORT=3357\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NICEHASH_LYRA2REV2\nNICEHASH_LYRA2REV2_WORKER=$NICEHASH_WORKER\nNICEHASH_LYRA2REV2_POOL="stratum+tcp://lyra2rev2.usa.nicehash.com"\nNICEHASH_LYRA2REV2_PORT=3347\nNICEHASH_LYRA2REV2_INTENSITY=21\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NCIEHASH_NEOSCRYPT\nNICEHASH_NEOSCRYPT_WORKER=$NICEHASH_WORKER\nNICEHASH_NEOSCRYPT_POOL="stratum+tcp://neoscrypt.usa.nicehash.com"\nNICEHASH_NEOSCRYPT_PORT=3341\nNICEHASH_LYRA2REV2_INTENSITY=17\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NICEHASH_CRYPTONIGHT\nNICEHASH_CRYPTONIGHT_WORKER=$NICEHASH_WORKER\nNICEHASH_CRYPTONIGHT_POOL="stratum+tcp://cryptonight.usa.nicehash.com"\nNICEHASH_CRYPTONIGHT_PORT=3355\nNICEHASH_LYRA2REV2_INTENSITY=21\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NICEHASH_X11GOST\nNICEHASH_X11GOST_WORKER=$NICEHASH_WORKER\nNICEHASH_X11GOST_POOL="stratum+tcp://x11gost.usa.nicehash.com"\nNICEHASH_X11GOST_PORT=3359\nNICEHASH_X11GOST_INTENSITY=21\n' >> $HOME/1Coins-Nicehash
+  echo -e '# NICEHASH_SKUNKHASH\nNICEHASH_SKUNKHASH_WORKER=$NICEHASH_WORKER\nNICEHASH_SKUNKHASH_POOL="stratum+tcp://skunk.usa.nicehash.com"\nNICEHASH_SKUNKHASH_PORT=3362\nNICEHASH_SKUNKHASH_INTENSITY=21\n' >> $HOME/1Coins-Nicehash
   echo -e "${RED}1Coins-Nicehash has been created!"
   echo -e "Go configure it and restart afterwards!${NC}"
 }
@@ -181,7 +182,7 @@ if [ ! -f $DIR/Algo.json ]; then
 fi
 
 # 1COINS - OPTIONS
-if [ ! -f $DIR/1Coins ]; then
+if [ ! -f $HOME/1Coins ]; then
   WKN=$(echo '_WORKER=$WORKERNAME')
   ADDREPL=$(echo '_ADDRESS="replace_with_your_address - Account.WorkerName if on Suprnova"')
   POOLREPL=$(echo '_POOL="replace_with_the_pool_server without port"')
@@ -221,15 +222,15 @@ if [ ! -f $DIR/1Coins ]; then
   #CHOICE 3 - CUSTOM
   
   if [ $CHOICE = 3 ]; then
-    echo -e '########################################################################\n#---- You can add any other coin by following the same template ----\n########################################################################\n\n\n' >> $DIR/1Coins
-    #echo -e '################# NICEHASH ################' >> $DIR/1Coins-Nicehash
+    echo -e '########################################################################\n#---- You can add any other coin by following the same template ----\n########################################################################\n\n\n' >> $HOME/1Coins
+    #echo -e '################# NICEHASH ################' >> $HOME/1Coins-Nicehash
     while [[ ${CFG_CONTINUE} != "n" ]]; do
       echo -e "${BLUE}"
       read -p "Enter the symbol of the coin you want to configure (Ex: Zencash = ZEN) : " COINGEN
       COIN_QUESTION
       read -p "Configure another coin? (y/n) : " CFG_CONTINUE
     done 
-    echo -e '\n\n\n#####################################################################\n#---- CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM ----#\n#####################################################################\n' >> $DIR/1Coins
+    echo -e '\n\n\n#####################################################################\n#---- CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM - CUSTOM ----#\n#####################################################################\n' >> $HOME/1Coins
     echo -e "${RED}1Coins has been created!"
     echo -e "Go configure it and restart afterwards!${NC}"
     exit
@@ -252,7 +253,7 @@ if [[ $COIN != *";"* ]]; then
       if [ -z "$ALGO" ]; then
         echo -e "${RED}Couldnt find the algorithm in our list of coin"
         read -p "Enter the algorithm : " ALGO 
-        echo "${COIN}_ALGO=${ALGO}" >> $DIR/1Coins
+        echo "${COIN}_ALGO=${ALGO}" >> $HOME/1Coins
       fi
     fi
   
@@ -264,7 +265,7 @@ if [[ $COIN != *";"* ]]; then
         echo -e "${RED}Your coin has multiple algorithms"
         ALGO="${ALGO_TEST//$'\n'/"/"}"
         read -p "Enter the algorithm you want ($ALGO): " ALGO
-        echo "${COIN}_ALGO=${ALGO}" >> $DIR/1Coins      
+        echo "${COIN}_ALGO=${ALGO}" >> $HOME/1Coins      
       fi  
     fi
   fi
@@ -433,10 +434,9 @@ fi
 
 ################### RUN ###################
 
-gnome-terminal -e "bash '/home/m1/Miners/Miner_Window'"
 miner_start1
 TRY=1
-while [[ TRY != 4 ]]; do
+while [[ $TRY -le 3 ]]; do
   if [ $MINSOFT = $ZM ] || [ $MINSOFT = $EWBF ]; then
     # echo $MINSOFT $ZMEWBFSET
     screen -dmSL miner $MINSOFT $ZMEWBFSET
@@ -457,3 +457,4 @@ while [[ TRY != 4 ]]; do
   ifExist
   TRY=$((TRY+1))
 done
+}
