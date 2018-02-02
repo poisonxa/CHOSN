@@ -1,5 +1,0 @@
-#!/bin/bash 
-COIN="ETN"
-ALGO=`/usr/bin/curl -s https://whattomine.com/calculators.json | jq -r --arg COIN "$COIN" '.coins[] | select(.tag==$COIN) | .algorithm'`
-echo $ALGO
-
